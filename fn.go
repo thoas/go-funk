@@ -15,6 +15,25 @@ func equal(expected, actual interface{}) bool {
 
 }
 
+// Chunk is ...
+func Chunk(arr interface{}, size int) interface{} {
+	return nil
+}
+
+// ForEach is ...
+func ForEach(arr interface{}, mapFunc interface{}) {
+}
+
+// Filter is ...
+func Filter(arr interface{}, mapFunc interface{}) interface{} {
+	return nil
+}
+
+// Find is ...
+func Find(arr interface{}, mapFunc interface{}) interface{} {
+	return nil
+}
+
 // Contains is ...
 func Contains(in interface{}, elem interface{}) bool {
 	inValue := reflect.ValueOf(in)
@@ -130,8 +149,8 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 	return resultSlice.Interface()
 }
 
-// MakeSlice is ...
-func MakeSlice(in interface{}) interface{} {
+// SliceOf is ...
+func SliceOf(in interface{}) interface{} {
 	value := reflect.ValueOf(in)
 
 	sliceType := reflect.SliceOf(reflect.TypeOf(in))
@@ -143,7 +162,7 @@ func MakeSlice(in interface{}) interface{} {
 	return slice.Elem().Interface()
 }
 
-// MakeZero is ...
-func MakeZero(in interface{}) interface{} {
+// ZeroOf is ...
+func ZeroOf(in interface{}) interface{} {
 	return reflect.Zero(reflect.TypeOf(in)).Interface()
 }

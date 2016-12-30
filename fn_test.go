@@ -29,7 +29,7 @@ func (f Foo) TableName() string {
 	return "foo"
 }
 
-func TestMakeSlice(t *testing.T) {
+func TestSliceOf(t *testing.T) {
 	assert := assert.New(t)
 
 	f := &Foo{
@@ -42,7 +42,7 @@ func TestMakeSlice(t *testing.T) {
 		},
 	}
 
-	result := MakeSlice(f)
+	result := SliceOf(f)
 
 	resultType := reflect.TypeOf(result)
 
