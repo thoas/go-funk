@@ -9,6 +9,15 @@ This project has started as an experiment to learn reflect_, feel free to use it
     :alt: Build Status
     :target: http://travis-ci.org/thoas/go-fn
 
+.. image:: https://godoc.org/github.com/thoas/go-fn?status.svg
+    :alt: GoDoc
+    :target: https://godoc.org/github.com/thoas/go-fn
+
+.. image:: https://goreportcard.com/badge/github.com/thoas/go-fn
+    :alt: Go report
+    :target: https://goreportcard.com/report/github.com/thoas/go-fn
+
+
 Installation
 ------------
 
