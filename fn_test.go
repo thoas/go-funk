@@ -1,6 +1,7 @@
 package fn
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -139,9 +140,27 @@ func TestMap(t *testing.T) {
 		return "Hello"
 	})
 
-	_, ok := r.([]string)
+	result, ok := r.([]string)
 
 	assert.True(ok)
+	assert.Equal(len(result), 4)
+
+	mapping := map[int]string{
+		1: "Florent",
+		2: "Gilles",
+	}
+
+	r = Map(mapping, func(k int, v string) string {
+		return "Hello"
+	})
+
+	assert.True(reflect.TypeOf(r).Kind() == reflect.Slice)
+
+	r = Map(mapping, func(k int, v string) (string, string) {
+		return fmt.Sprintf("%d", k), v
+	})
+
+	assert.True(reflect.TypeOf(r).Kind() == reflect.Map)
 }
 
 func TestFilter(t *testing.T) {
@@ -166,4 +185,13 @@ func TestForEach(t *testing.T) {
 	})
 
 	assert.Equal(results, []int{2, 4})
+
+	mapping := map[int]string{
+		1: "Florent",
+		2: "Gilles",
+	}
+
+	ForEach(mapping, func(k int, v string) {
+		assert.Equal(v, mapping[k])
+	})
 }

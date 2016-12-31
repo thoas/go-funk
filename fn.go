@@ -26,39 +26,75 @@ func ForEach(arr interface{}, mapFunc interface{}) {
 		panic("First parameter must be neither array nor slice")
 	}
 
-	if !IsFunction(mapFunc, 1, 0) {
-		panic("Second argument must be function")
+	var (
+		funcValue = reflect.ValueOf(mapFunc)
+		arrValue  = reflect.ValueOf(arr)
+		arrType   = arrValue.Type()
+		funcType  = funcValue.Type()
+	)
+
+	if arrType.Kind() == reflect.Slice || arrType.Kind() == reflect.Array {
+		if !IsFunction(mapFunc, 1, 0) {
+			panic("Second argument must be a function with one parameter")
+		}
+
+		arrElemType := arrValue.Type().Elem()
+
+		// Checking whether element type is convertible to function's first argument's type.
+		if !arrElemType.ConvertibleTo(funcType.In(0)) {
+			panic("Map function's argument is not compatible with type of array.")
+		}
+
+		for i := 0; i < arrValue.Len(); i++ {
+			funcValue.Call([]reflect.Value{arrValue.Index(i)})
+		}
 	}
 
-	funcValue := reflect.ValueOf(mapFunc)
+	if arrType.Kind() == reflect.Map {
+		if !IsFunction(mapFunc, 2, 0) {
+			panic("Second argument must be a function with two parameters")
+		}
 
-	funcType := funcValue.Type()
+		// Type checking for Map<key, value> = (key, value)
+		keyType := arrType.Key()
+		valueType := arrType.Elem()
 
-	arrValue := reflect.ValueOf(arr)
+		if !keyType.ConvertibleTo(funcType.In(0)) {
+			panic(fmt.Sprintf("function first argument is not compatible with %s", keyType.String()))
+		}
 
-	// Retrieve array type
-	arrElemType := arrValue.Type().Elem()
+		if !valueType.ConvertibleTo(funcType.In(1)) {
+			panic(fmt.Sprintf("function second argument is not compatible with %s", valueType.String()))
+		}
 
-	// Checking whether element type is convertible to function's first argument's type.
-	if !arrElemType.ConvertibleTo(funcType.In(0)) {
-		panic("Map function's argument is not compatible with type of array.")
-	}
-
-	for i := 0; i < arrValue.Len(); i++ {
-		funcValue.Call([]reflect.Value{arrValue.Index(i)})
+		for _, key := range arrValue.MapKeys() {
+			funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
+		}
 	}
 }
 
-func IsFunction(in interface{}, numIn int, numOut int) bool {
+func IsFunction(in interface{}, num ...int) bool {
 	funcType := reflect.TypeOf(in)
 
-	return funcType.Kind() == reflect.Func && funcType.NumIn() == numIn && funcType.NumOut() == numOut
+	result := funcType.Kind() == reflect.Func
+
+	if len(num) >= 1 {
+		result = result && funcType.NumIn() == num[0]
+	}
+
+	if len(num) == 2 {
+		result = result && funcType.NumOut() == num[1]
+	}
+
+	return result
 }
 
 func IsIterable(in interface{}) bool {
 	arrType := reflect.TypeOf(in)
 
-	return arrType.Kind() == reflect.Array || arrType.Kind() == reflect.Slice
+	kind := arrType.Kind()
+
+	return kind == reflect.Array || kind == reflect.Slice || kind == reflect.Map
 }
 
 // Filter is ...
@@ -81,8 +117,10 @@ func Filter(arr interface{}, mapFunc interface{}) interface{} {
 
 	arrValue := reflect.ValueOf(arr)
 
+	arrType := arrValue.Type()
+
 	// Get slice type corresponding to array type
-	resultSliceType := reflect.SliceOf(arrValue.Type().Elem())
+	resultSliceType := reflect.SliceOf(arrType.Elem())
 
 	// MakeSlice takes a slice kind type, and makes a slice.
 	resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
@@ -188,13 +226,13 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 		panic("First parameter must be neither array nor slice")
 	}
 
+	if !IsFunction(mapFunc) {
+		panic("Second argument must be function")
+	}
+
 	funcValue := reflect.ValueOf(mapFunc)
 
 	funcType := funcValue.Type()
-
-	if !IsFunction(mapFunc, 1, 1) {
-		panic("Second argument must be function")
-	}
 
 	arrValue := reflect.ValueOf(arr)
 
@@ -202,23 +240,75 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 
 	arrElemType := arrType.Elem()
 
-	// Checking whether element type is convertible to function's first argument's type.
-	if !arrElemType.ConvertibleTo(funcType.In(0)) {
-		panic("Map function's argument is not compatible with type of array.")
+	if arrType.Kind() == reflect.Slice || arrType.Kind() == reflect.Array {
+		if funcType.NumIn() != 1 || funcType.NumOut() == 0 {
+			panic("Map function with an array must have one parameter and must return at least one parameter")
+		}
+
+		// Checking whether element type is convertible to function's first argument's type.
+		if !arrElemType.ConvertibleTo(funcType.In(0)) {
+			panic("Map function's argument is not compatible with type of array.")
+		}
+
+		// Get slice type corresponding to function's return value's type.
+		resultSliceType := reflect.SliceOf(funcType.Out(0))
+
+		// MakeSlice takes a slice kind type, and makes a slice.
+		resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
+
+		for i := 0; i < arrValue.Len(); i++ {
+			result := funcValue.Call([]reflect.Value{arrValue.Index(i)})[0]
+
+			resultSlice = reflect.Append(resultSlice, result)
+		}
+
+		return resultSlice.Interface()
 	}
 
-	// Get slice type corresponding to function's return value's type.
-	resultSliceType := reflect.SliceOf(funcType.Out(0))
+	if arrType.Kind() == reflect.Map {
+		if funcType.NumIn() != 2 {
+			panic("Map function with an array must have one parameter")
+		}
 
-	// MakeSlice takes a slice kind type, and makes a slice.
-	resultSlice := reflect.MakeSlice(resultSliceType, 0, arrValue.Len())
+		// Only one returned parameter, should be a slice
+		if funcType.NumOut() == 1 {
+			// Get slice type corresponding to function's return value's type.
+			resultSliceType := reflect.SliceOf(funcType.Out(0))
 
-	for i := 0; i < arrValue.Len(); i++ {
-		resultSlice = reflect.Append(resultSlice, funcValue.Call([]reflect.Value{arrValue.Index(i)})[0])
+			// MakeSlice takes a slice kind type, and makes a slice.
+			resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
+
+			for _, key := range arrValue.MapKeys() {
+				results := funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
+
+				result := results[0]
+
+				resultSlice = reflect.Append(resultSlice, result)
+			}
+
+			return resultSlice.Interface()
+		}
+
+		// two parameters, should be a map
+		if funcType.NumOut() == 2 {
+			// value of the map will be the input type
+			collectionType := reflect.MapOf(funcType.Out(0), funcType.Out(1))
+
+			// create a map from scratch
+			collection := reflect.MakeMap(collectionType)
+
+			for _, key := range arrValue.MapKeys() {
+				results := funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
+
+				collection.SetMapIndex(results[0], results[1])
+
+			}
+
+			return collection.Interface()
+		}
 	}
 
-	// Convering resulting slice back to generic interface.
-	return resultSlice.Interface()
+	panic(fmt.Sprintf("Type %s is not supported by Map", arrType.String()))
 }
 
 // SliceOf is ...
