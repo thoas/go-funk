@@ -230,39 +230,56 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 		panic("Second argument must be function")
 	}
 
-	funcValue := reflect.ValueOf(mapFunc)
-
-	funcType := funcValue.Type()
-
-	arrValue := reflect.ValueOf(arr)
-
-	arrType := arrValue.Type()
-
-	arrElemType := arrType.Elem()
+	var (
+		funcValue = reflect.ValueOf(mapFunc)
+		funcType  = funcValue.Type()
+		arrValue  = reflect.ValueOf(arr)
+		arrType   = arrValue.Type()
+	)
 
 	if arrType.Kind() == reflect.Slice || arrType.Kind() == reflect.Array {
 		if funcType.NumIn() != 1 || funcType.NumOut() == 0 {
 			panic("Map function with an array must have one parameter and must return at least one parameter")
 		}
 
+		arrElemType := arrType.Elem()
+
 		// Checking whether element type is convertible to function's first argument's type.
 		if !arrElemType.ConvertibleTo(funcType.In(0)) {
 			panic("Map function's argument is not compatible with type of array.")
 		}
 
-		// Get slice type corresponding to function's return value's type.
-		resultSliceType := reflect.SliceOf(funcType.Out(0))
+		if funcType.NumOut() == 1 {
+			// Get slice type corresponding to function's return value's type.
+			resultSliceType := reflect.SliceOf(funcType.Out(0))
 
-		// MakeSlice takes a slice kind type, and makes a slice.
-		resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
+			// MakeSlice takes a slice kind type, and makes a slice.
+			resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
 
-		for i := 0; i < arrValue.Len(); i++ {
-			result := funcValue.Call([]reflect.Value{arrValue.Index(i)})[0]
+			for i := 0; i < arrValue.Len(); i++ {
+				result := funcValue.Call([]reflect.Value{arrValue.Index(i)})[0]
 
-			resultSlice = reflect.Append(resultSlice, result)
+				resultSlice = reflect.Append(resultSlice, result)
+			}
+
+			return resultSlice.Interface()
 		}
 
-		return resultSlice.Interface()
+		if funcType.NumOut() == 2 {
+			// value of the map will be the input type
+			collectionType := reflect.MapOf(funcType.Out(0), funcType.Out(1))
+
+			// create a map from scratch
+			collection := reflect.MakeMap(collectionType)
+
+			for i := 0; i < arrValue.Len(); i++ {
+				results := funcValue.Call([]reflect.Value{arrValue.Index(i)})
+
+				collection.SetMapIndex(results[0], results[1])
+			}
+
+			return collection.Interface()
+		}
 	}
 
 	if arrType.Kind() == reflect.Map {

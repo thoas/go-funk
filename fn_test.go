@@ -145,22 +145,37 @@ func TestMap(t *testing.T) {
 	assert.True(ok)
 	assert.Equal(len(result), 4)
 
+	r = Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
+		return x, x
+	})
+
+	resultType := reflect.TypeOf(r)
+
+	assert.True(resultType.Kind() == reflect.Map)
+	assert.True(resultType.Key().Kind() == reflect.Int)
+	assert.True(resultType.Elem().Kind() == reflect.Int)
+
 	mapping := map[int]string{
 		1: "Florent",
 		2: "Gilles",
 	}
 
-	r = Map(mapping, func(k int, v string) string {
-		return "Hello"
+	r = Map(mapping, func(k int, v string) int {
+		return k
 	})
 
 	assert.True(reflect.TypeOf(r).Kind() == reflect.Slice)
+	assert.True(reflect.TypeOf(r).Elem().Kind() == reflect.Int)
 
 	r = Map(mapping, func(k int, v string) (string, string) {
 		return fmt.Sprintf("%d", k), v
 	})
 
-	assert.True(reflect.TypeOf(r).Kind() == reflect.Map)
+	resultType = reflect.TypeOf(r)
+
+	assert.True(resultType.Kind() == reflect.Map)
+	assert.True(resultType.Key().Kind() == reflect.String)
+	assert.True(resultType.Elem().Kind() == reflect.String)
 }
 
 func TestFilter(t *testing.T) {
