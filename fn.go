@@ -73,6 +73,7 @@ func ForEach(arr interface{}, mapFunc interface{}) {
 	}
 }
 
+// IsFunction is ...
 func IsFunction(in interface{}, num ...int) bool {
 	funcType := reflect.TypeOf(in)
 
@@ -89,6 +90,7 @@ func IsFunction(in interface{}, num ...int) bool {
 	return result
 }
 
+// IsIterable is ...
 func IsIterable(in interface{}) bool {
 	arrType := reflect.TypeOf(in)
 
@@ -141,6 +143,35 @@ func Filter(arr interface{}, mapFunc interface{}) interface{} {
 
 // Find is ...
 func Find(arr interface{}, mapFunc interface{}) interface{} {
+	if !IsIterable(arr) {
+		panic("First parameter must be neither array nor slice")
+	}
+
+	if !IsFunction(mapFunc, 1, 1) {
+		panic("Second argument must be function")
+	}
+
+	funcValue := reflect.ValueOf(mapFunc)
+
+	funcType := funcValue.Type()
+
+	if funcType.Out(0).Kind() != reflect.Bool {
+		panic("Return argument should be a boolean")
+	}
+
+	arrValue := reflect.ValueOf(arr)
+
+	for i := 0; i < arrValue.Len(); i++ {
+		elem := arrValue.Index(i)
+
+		result := funcValue.Call([]reflect.Value{elem})[0].Interface().(bool)
+
+		if result == true {
+			return elem.Interface()
+		}
+	}
+
+	// Convering resulting slice back to generic interface.
 	return nil
 }
 

@@ -188,6 +188,16 @@ func TestFilter(t *testing.T) {
 	assert.Equal(r, []int{2, 4})
 }
 
+func TestFind(t *testing.T) {
+	assert := assert.New(t)
+
+	r := Find([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 0
+	})
+
+	assert.Equal(r, 2)
+}
+
 func TestForEach(t *testing.T) {
 	assert := assert.New(t)
 
