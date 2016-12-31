@@ -143,3 +143,13 @@ func TestMap(t *testing.T) {
 
 	assert.True(ok)
 }
+
+func TestFilter(t *testing.T) {
+	assert := assert.New(t)
+
+	r := Filter([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 0
+	})
+
+	assert.Equal(r, []int{2, 4})
+}

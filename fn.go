@@ -24,9 +24,56 @@ func Chunk(arr interface{}, size int) interface{} {
 func ForEach(arr interface{}, mapFunc interface{}) {
 }
 
+func IsFunction(in interface{}, numIn int, numOut int) bool {
+	funcType := reflect.TypeOf(in)
+
+	return funcType.Kind() == reflect.Func && funcType.NumIn() == numIn && funcType.NumOut() == numOut
+}
+
+func IsIterable(in interface{}) bool {
+	arrType := reflect.TypeOf(in)
+
+	return arrType.Kind() == reflect.Array || arrType.Kind() == reflect.Slice
+}
+
 // Filter is ...
 func Filter(arr interface{}, mapFunc interface{}) interface{} {
-	return nil
+	if !IsIterable(arr) {
+		panic("First parameter must be neither array nor slice")
+	}
+
+	if !IsFunction(mapFunc, 1, 1) {
+		panic("Second argument must be function")
+	}
+
+	funcValue := reflect.ValueOf(mapFunc)
+
+	funcType := funcValue.Type()
+
+	if funcType.Out(0).Kind() != reflect.Bool {
+		panic("Return argument should be a boolean")
+	}
+
+	arrValue := reflect.ValueOf(arr)
+
+	// Get slice type corresponding to array type
+	resultSliceType := reflect.SliceOf(arrValue.Type().Elem())
+
+	// MakeSlice takes a slice kind type, and makes a slice.
+	resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
+
+	for i := 0; i < arrValue.Len(); i++ {
+		elem := arrValue.Index(i)
+
+		result := funcValue.Call([]reflect.Value{elem})[0].Interface().(bool)
+
+		if result == true {
+			resultSlice = reflect.Append(resultSlice, elem)
+		}
+	}
+
+	// Convering resulting slice back to generic interface.
+	return resultSlice.Interface()
 }
 
 // Find is ...
@@ -112,23 +159,23 @@ func ToMap(in interface{}, pivot string) interface{} {
 
 // Map is ...
 func Map(arr interface{}, mapFunc interface{}) interface{} {
-	funcValue := reflect.ValueOf(mapFunc)
-	arrValue := reflect.ValueOf(arr)
-
-	// Retrieve the type, and check if it is one of the array or slice.
-	arrType := arrValue.Type()
-	arrElemType := arrType.Elem()
-	if arrType.Kind() != reflect.Array && arrType.Kind() != reflect.Slice {
-		panic("Array parameter's type is neither array nor slice.")
+	if !IsIterable(arr) {
+		panic("First parameter must be neither array nor slice")
 	}
+
+	funcValue := reflect.ValueOf(mapFunc)
 
 	funcType := funcValue.Type()
 
-	// Checking whether the second argument is function or not.
-	// And also checking whether its signature is func ({type A}) {type B}.
-	if funcType.Kind() != reflect.Func || funcType.NumIn() != 1 || funcType.NumOut() != 1 {
-		panic("Second argument must be map function.")
+	if !IsFunction(mapFunc, 1, 1) {
+		panic("Second argument must be function")
 	}
+
+	arrValue := reflect.ValueOf(arr)
+
+	arrType := arrValue.Type()
+
+	arrElemType := arrType.Elem()
 
 	// Checking whether element type is convertible to function's first argument's type.
 	if !arrElemType.ConvertibleTo(funcType.In(0)) {
