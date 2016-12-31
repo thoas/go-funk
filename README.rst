@@ -5,6 +5,10 @@ go-fn
 
 This project has been started as an experiment to learn reflect_, feel free to use it :)
 
+.. image:: https://secure.travis-ci.org/thoas/go-fn.png?branch=master
+    :alt: Build Status
+    :target: http://travis-ci.org/thoas/go-fn
+
 Installation
 ------------
 
@@ -54,7 +58,7 @@ You can import ``go-fn`` using a basic statement:
 fn.SliceOf
 ..........
 
-``SliceOf`` will return a slice based on an element.
+``fn.SliceOf`` will return a slice based on an element.
 
 .. code-block:: go
 
@@ -63,7 +67,7 @@ fn.SliceOf
 fn.Contains
 ...........
 
-``Contains`` will return if an element is present in a iterable container (slice, map, string).
+``fn.Contains`` will return if an element is present in a iterable (slice, map, string).
 
 It's one frustrating thing in Go to implement ``contains`` methods for each types, for example:
 
@@ -87,11 +91,50 @@ this can be replaced by calling:
 
     # slice of *Foo
     fn.Contains([]*Foo{f}, f) # true
+    fn.Contains([]*Foo{f}, nil) # false
+
+	b := &Foo{
+		ID:        2,
+		FirstName: "Florent",
+		LastName:  "Messa",
+		Age:       28,
+	}
+
+    fn.Contains([]*Foo{f}, b) # false
 
     # string
     fn.Contains("florent", "rent") # true
+    fn.Contains("florent", "foo") # false
 
     # even map
     fn.Contains(map[int]string{1: "Florent"}, 1) # true
+
+fn.ToMap
+........
+
+``fn.ToMap`` will transform a slice of structs to a map based on a ``pivot`` field.
+
+.. code-block:: go
+
+	f := &Foo{
+		ID:        1,
+		FirstName: "Drew",
+		LastName:  "Olson",
+		Age:       30,
+		Bar: &Bar{
+			Name: "Test",
+		},
+	}
+
+	b := &Foo{
+		ID:        2,
+		FirstName: "Florent",
+		LastName:  "Messa",
+		Age:       28,
+	}
+
+	results := []*Foo{f, b}
+
+	mapping := ToMap(results, "ID") # map[int]*Foo{1: f, 2: b}
 
 .. _reflect: https://golang.org/pkg/reflect/

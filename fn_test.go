@@ -88,6 +88,7 @@ func TestContains(t *testing.T) {
 	results := []*Foo{f}
 
 	assert.True(Contains(results, f))
+	assert.False(Contains(results, nil))
 	assert.False(Contains(results, b))
 
 	assert.True(Contains("florent", "rent"))
