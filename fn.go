@@ -22,6 +22,31 @@ func Chunk(arr interface{}, size int) interface{} {
 
 // ForEach is ...
 func ForEach(arr interface{}, mapFunc interface{}) {
+	if !IsIterable(arr) {
+		panic("First parameter must be neither array nor slice")
+	}
+
+	if !IsFunction(mapFunc, 1, 0) {
+		panic("Second argument must be function")
+	}
+
+	funcValue := reflect.ValueOf(mapFunc)
+
+	funcType := funcValue.Type()
+
+	arrValue := reflect.ValueOf(arr)
+
+	// Retrieve array type
+	arrElemType := arrValue.Type().Elem()
+
+	// Checking whether element type is convertible to function's first argument's type.
+	if !arrElemType.ConvertibleTo(funcType.In(0)) {
+		panic("Map function's argument is not compatible with type of array.")
+	}
+
+	for i := 0; i < arrValue.Len(); i++ {
+		funcValue.Call([]reflect.Value{arrValue.Index(i)})
+	}
 }
 
 func IsFunction(in interface{}, numIn int, numOut int) bool {
