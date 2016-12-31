@@ -23,7 +23,7 @@ Usage
 
     import "github.com/thoas/go-fn"
 
-These examples will be based on following data model:
+These examples will be based on the following data model:
 
 .. code-block:: go
 
@@ -201,7 +201,7 @@ fn.ForEach
 .. code-block:: go
 
 	fn.ForEach([]int{1, 2, 3, 4}, func(x int) {
-        fmt.Println(x)
+		fmt.Println(x)
 	})
 
 .. _reflect: https://golang.org/pkg/reflect/
