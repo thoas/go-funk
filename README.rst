@@ -38,7 +38,7 @@ These examples will be based on following data model:
         return "foo"
     }
 
-    # fixtures
+    // fixtures
 	f := &Foo{
 		ID:        1,
 		FirstName: "Drew",
@@ -86,12 +86,12 @@ this can be replaced by calling:
 
 .. code-block:: go
 
-    # slice of string
-    fn.Contains([]string{"foo", "bar"}, "bar") # true
+    // slice of string
+    fn.Contains([]string{"foo", "bar"}, "bar") // true
 
-    # slice of *Foo
-    fn.Contains([]*Foo{f}, f) # true
-    fn.Contains([]*Foo{f}, nil) # false
+    // slice of *Foo
+    fn.Contains([]*Foo{f}, f) // true
+    fn.Contains([]*Foo{f}, nil) // false
 
 	b := &Foo{
 		ID:        2,
@@ -100,14 +100,14 @@ this can be replaced by calling:
 		Age:       28,
 	}
 
-    fn.Contains([]*Foo{f}, b) # false
+    fn.Contains([]*Foo{f}, b) // false
 
-    # string
-    fn.Contains("florent", "rent") # true
-    fn.Contains("florent", "foo") # false
+    // string
+    fn.Contains("florent", "rent") // true
+    fn.Contains("florent", "foo") // false
 
-    # even map
-    fn.Contains(map[int]string{1: "Florent"}, 1) # true
+    // even map
+    fn.Contains(map[int]string{1: "Florent"}, 1) // true
 
 fn.ToMap
 ........
@@ -135,6 +135,6 @@ fn.ToMap
 
 	results := []*Foo{f, b}
 
-	mapping := ToMap(results, "ID") # map[int]*Foo{1: f, 2: b}
+	mapping := ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
 
 .. _reflect: https://golang.org/pkg/reflect/
