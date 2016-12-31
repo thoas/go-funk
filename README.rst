@@ -3,7 +3,7 @@ go-fn
 
 ``go-fn`` is a modern Go library based on reflect_.
 
-This project has been started as an experiment to learn reflect_, feel free to use it :)
+This project has started as an experiment to learn reflect_, feel free to use it :)
 
 .. image:: https://secure.travis-ci.org/thoas/go-fn.png?branch=master
     :alt: Build Status
@@ -136,5 +136,64 @@ fn.ToMap
 	results := []*Foo{f, b}
 
 	mapping := ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
+
+fn.Filter
+.........
+
+``fn.Filter`` will filter a slice based on a callback.
+
+.. code-block:: go
+
+	r := Filter([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 0
+	}) // []int{2, 4}
+
+fn.Find
+.........
+
+``fn.Find`` will find an element in a slice based on a callback.
+
+.. code-block:: go
+
+	r := Filter([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 0
+	}) // 2
+
+fn.Map
+......
+
+``fn.Map`` allows you to manipulate an iterable (map, slice) and transform it to another type:
+
+* map -> slice
+* map -> map
+* slice -> map
+* slice -> slice
+
+.. code-block:: go
+
+	r := Map([]int{1, 2, 3, 4}, func(x int) int {
+		return "Hello"
+	}) // []int{2, 4, 6, 8}
+
+	r := Map([]int{1, 2, 3, 4}, func(x int) string {
+		return "Hello"
+	}) // []string{"Hello", "Hello", "Hello", "Hello"}
+
+	r = Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
+		return x, x
+	}) // map[int]int{1: 1, 2: 2, 3: 3, 4: 4}
+
+	mapping := map[int]string{
+		1: "Florent",
+		2: "Gilles",
+	}
+
+	r = Map(mapping, func(k int, v string) int {
+		return k
+	}) // []int{1, 2}
+
+	r = Map(mapping, func(k int, v string) (string, string) {
+		return fmt.Sprintf("%d", k), v
+	}) // map[string]string{"1": "Florent", "2": "Gilles"}
 
 .. _reflect: https://golang.org/pkg/reflect/
