@@ -171,7 +171,6 @@ func Find(arr interface{}, mapFunc interface{}) interface{} {
 		}
 	}
 
-	// Convering resulting slice back to generic interface.
 	return nil
 }
 
