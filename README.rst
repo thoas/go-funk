@@ -146,7 +146,7 @@ fn.ToMap
 fn.Filter
 .........
 
-``fn.Filter`` filters a slice based on a callback.
+``fn.Filter`` filters a slice based on a predicate.
 
 .. code-block:: go
 
@@ -157,7 +157,7 @@ fn.Filter
 fn.Find
 .........
 
-``fn.Find`` finds an element in a slice based on a callback.
+``fn.Find`` finds an element in a slice based on a predicate.
 
 .. code-block:: go
 
@@ -168,7 +168,7 @@ fn.Find
 fn.Map
 ......
 
-``fn.Map`` allows you to manipulate an iteratee (map, slice) and transform it to another type:
+``fn.Map`` allows you to manipulate an iteratee (map, slice) and to transform it to another type:
 
 * map -> slice
 * map -> map

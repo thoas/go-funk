@@ -15,26 +15,29 @@ func equal(expected, actual interface{}) bool {
 
 }
 
-// Chunk is ...
+// Chunk creates an array of elements split into groups the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
 func Chunk(arr interface{}, size int) interface{} {
 	return nil
 }
 
-// ForEach is ...
-func ForEach(arr interface{}, mapFunc interface{}) {
+// ForEach iterates over elements of collection and invokes iteratee
+// for each element.
+func ForEach(arr interface{}, predicate interface{}) {
 	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
 	}
 
 	var (
-		funcValue = reflect.ValueOf(mapFunc)
+		funcValue = reflect.ValueOf(predicate)
 		arrValue  = reflect.ValueOf(arr)
 		arrType   = arrValue.Type()
 		funcType  = funcValue.Type()
 	)
 
 	if arrType.Kind() == reflect.Slice || arrType.Kind() == reflect.Array {
-		if !IsFunction(mapFunc, 1, 0) {
+		if !IsFunction(predicate, 1, 0) {
 			panic("Second argument must be a function with one parameter")
 		}
 
@@ -51,7 +54,7 @@ func ForEach(arr interface{}, mapFunc interface{}) {
 	}
 
 	if arrType.Kind() == reflect.Map {
-		if !IsFunction(mapFunc, 2, 0) {
+		if !IsFunction(predicate, 2, 0) {
 			panic("Second argument must be a function with two parameters")
 		}
 
@@ -73,7 +76,7 @@ func ForEach(arr interface{}, mapFunc interface{}) {
 	}
 }
 
-// IsFunction is ...
+// IsFunction will return if the argument is a function.
 func IsFunction(in interface{}, num ...int) bool {
 	funcType := reflect.TypeOf(in)
 
@@ -90,7 +93,7 @@ func IsFunction(in interface{}, num ...int) bool {
 	return result
 }
 
-// IsIteratee is ...
+// IsIteratee will return if the argument is an iteratee.
 func IsIteratee(in interface{}) bool {
 	arrType := reflect.TypeOf(in)
 
@@ -99,17 +102,18 @@ func IsIteratee(in interface{}) bool {
 	return kind == reflect.Array || kind == reflect.Slice || kind == reflect.Map
 }
 
-// Filter is ...
-func Filter(arr interface{}, mapFunc interface{}) interface{} {
+// Filter iterates over elements of collection, returning an array of
+// all elements predicate returns truthy for.
+func Filter(arr interface{}, predicate interface{}) interface{} {
 	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
 	}
 
-	if !IsFunction(mapFunc, 1, 1) {
+	if !IsFunction(predicate, 1, 1) {
 		panic("Second argument must be function")
 	}
 
-	funcValue := reflect.ValueOf(mapFunc)
+	funcValue := reflect.ValueOf(predicate)
 
 	funcType := funcValue.Type()
 
@@ -137,21 +141,21 @@ func Filter(arr interface{}, mapFunc interface{}) interface{} {
 		}
 	}
 
-	// Convering resulting slice back to generic interface.
 	return resultSlice.Interface()
 }
 
-// Find is ...
-func Find(arr interface{}, mapFunc interface{}) interface{} {
+// Find iterates over elements of collection, returning the first
+// element predicate returns truthy for.
+func Find(arr interface{}, predicate interface{}) interface{} {
 	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
 	}
 
-	if !IsFunction(mapFunc, 1, 1) {
+	if !IsFunction(predicate, 1, 1) {
 		panic("Second argument must be function")
 	}
 
-	funcValue := reflect.ValueOf(mapFunc)
+	funcValue := reflect.ValueOf(predicate)
 
 	funcType := funcValue.Type()
 
@@ -174,7 +178,7 @@ func Find(arr interface{}, mapFunc interface{}) interface{} {
 	return nil
 }
 
-// Contains is ...
+// Contains returns true if an element is present in a iteratee.
 func Contains(in interface{}, elem interface{}) bool {
 	inValue := reflect.ValueOf(in)
 
@@ -207,7 +211,7 @@ func Contains(in interface{}, elem interface{}) bool {
 	return false
 }
 
-// ToMap transforms a slice of instances to a Map
+// ToMap transforms a slice of instances to a Map.
 // []*Foo => Map<int, *Foo>
 func ToMap(in interface{}, pivot string) interface{} {
 	value := reflect.ValueOf(in)
@@ -250,7 +254,7 @@ func ToMap(in interface{}, pivot string) interface{} {
 	return collection.Interface()
 }
 
-// Map is ...
+// Map manipulates an iteratee and transforms it to another type.
 func Map(arr interface{}, mapFunc interface{}) interface{} {
 	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
@@ -358,7 +362,7 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 	panic(fmt.Sprintf("Type %s is not supported by Map", arrType.String()))
 }
 
-// SliceOf is ...
+// SliceOf will returns a slice which contains the element.
 func SliceOf(in interface{}) interface{} {
 	value := reflect.ValueOf(in)
 
@@ -371,7 +375,7 @@ func SliceOf(in interface{}) interface{} {
 	return slice.Elem().Interface()
 }
 
-// ZeroOf is ...
+// ZeroOf will returns a zero value of an element.
 func ZeroOf(in interface{}) interface{} {
 	return reflect.Zero(reflect.TypeOf(in)).Interface()
 }
