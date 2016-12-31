@@ -5,7 +5,7 @@ go-fn
 
 This project has started as an experiment to learn reflect_, feel free to use it :)
 
-.. image:: https://secure.travis-ci.org/thoas/go-fn.png?branch=master
+.. image:: https://secure.travis-ci.org/thoas/go-fn.svg?branch=master
     :alt: Build Status
     :target: http://travis-ci.org/thoas/go-fn
 
