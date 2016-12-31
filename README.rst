@@ -44,12 +44,9 @@ With fixtures:
 
 	f := &Foo{
 		ID:        1,
-		FirstName: "Drew",
-		LastName:  "Olson",
+		FirstName: "Foo",
+		LastName:  "Bar",
 		Age:       30,
-		Bar: &Bar{
-			Name: "Test",
-		},
 	}
 
 You can import ``go-fn`` using a basic statement:
@@ -70,7 +67,7 @@ fn.SliceOf
 fn.Contains
 ...........
 
-``fn.Contains`` returns true if an element is present in a iterable (slice, map, string).
+``fn.Contains`` returns true if an element is present in a iteratee (slice, map, string).
 
 It's one frustrating thing in Go to implement ``contains`` methods for each types, for example:
 
@@ -85,7 +82,7 @@ It's one frustrating thing in Go to implement ``contains`` methods for each type
         return false
     }
 
-this can be replaced by calling:
+this can be replaced by ``fn.Contains``:
 
 .. code-block:: go
 
@@ -121,24 +118,21 @@ fn.ToMap
 
 	f := &Foo{
 		ID:        1,
-		FirstName: "Drew",
-		LastName:  "Olson",
-		Age:       30,
-		Bar: &Bar{
-			Name: "Test",
-		},
+		FirstName: "Gilles",
+		LastName:  "Fabio",
+		Age:       70,
 	}
 
 	b := &Foo{
 		ID:        2,
 		FirstName: "Florent",
 		LastName:  "Messa",
-		Age:       28,
+		Age:       80,
 	}
 
 	results := []*Foo{f, b}
 
-	mapping := ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
+	mapping := fn.ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
 
 fn.Filter
 .........
@@ -147,7 +141,7 @@ fn.Filter
 
 .. code-block:: go
 
-	r := Filter([]int{1, 2, 3, 4}, func(x int) bool {
+	r := fn.Filter([]int{1, 2, 3, 4}, func(x int) bool {
 		return x%2 == 0
 	}) // []int{2, 4}
 
@@ -158,14 +152,14 @@ fn.Find
 
 .. code-block:: go
 
-	r := Filter([]int{1, 2, 3, 4}, func(x int) bool {
+	r := fn.Find([]int{1, 2, 3, 4}, func(x int) bool {
 		return x%2 == 0
 	}) // 2
 
 fn.Map
 ......
 
-``fn.Map`` allows you to manipulate an iterable (map, slice) and transform it to another type:
+``fn.Map`` allows you to manipulate an iteratee (map, slice) and transform it to another type:
 
 * map -> slice
 * map -> map
@@ -174,15 +168,15 @@ fn.Map
 
 .. code-block:: go
 
-	r := Map([]int{1, 2, 3, 4}, func(x int) int {
+	r := fn.Map([]int{1, 2, 3, 4}, func(x int) int {
 		return "Hello"
 	}) // []int{2, 4, 6, 8}
 
-	r := Map([]int{1, 2, 3, 4}, func(x int) string {
+	r := fn.Map([]int{1, 2, 3, 4}, func(x int) string {
 		return "Hello"
 	}) // []string{"Hello", "Hello", "Hello", "Hello"}
 
-	r = Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
+	r = fn.Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
 		return x, x
 	}) // map[int]int{1: 1, 2: 2, 3: 3, 4: 4}
 
@@ -191,12 +185,23 @@ fn.Map
 		2: "Gilles",
 	}
 
-	r = Map(mapping, func(k int, v string) int {
+	r = fn.Map(mapping, func(k int, v string) int {
 		return k
 	}) // []int{1, 2}
 
-	r = Map(mapping, func(k int, v string) (string, string) {
+	r = fn.Map(mapping, func(k int, v string) (string, string) {
 		return fmt.Sprintf("%d", k), v
 	}) // map[string]string{"1": "Florent", "2": "Gilles"}
+
+fn.ForEach
+..........
+
+``fn.ForEach`` allows you to range over an iteratee (map, slice)
+
+.. code-block:: go
+
+	fn.ForEach([]int{1, 2, 3, 4}, func(x int) {
+        fmt.Println(x)
+	})
 
 .. _reflect: https://golang.org/pkg/reflect/

@@ -22,7 +22,7 @@ func Chunk(arr interface{}, size int) interface{} {
 
 // ForEach is ...
 func ForEach(arr interface{}, mapFunc interface{}) {
-	if !IsIterable(arr) {
+	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
 	}
 
@@ -90,8 +90,8 @@ func IsFunction(in interface{}, num ...int) bool {
 	return result
 }
 
-// IsIterable is ...
-func IsIterable(in interface{}) bool {
+// IsIteratee is ...
+func IsIteratee(in interface{}) bool {
 	arrType := reflect.TypeOf(in)
 
 	kind := arrType.Kind()
@@ -101,7 +101,7 @@ func IsIterable(in interface{}) bool {
 
 // Filter is ...
 func Filter(arr interface{}, mapFunc interface{}) interface{} {
-	if !IsIterable(arr) {
+	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
 	}
 
@@ -143,7 +143,7 @@ func Filter(arr interface{}, mapFunc interface{}) interface{} {
 
 // Find is ...
 func Find(arr interface{}, mapFunc interface{}) interface{} {
-	if !IsIterable(arr) {
+	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
 	}
 
@@ -252,7 +252,7 @@ func ToMap(in interface{}, pivot string) interface{} {
 
 // Map is ...
 func Map(arr interface{}, mapFunc interface{}) interface{} {
-	if !IsIterable(arr) {
+	if !IsIteratee(arr) {
 		panic("First parameter must be neither array nor slice")
 	}
 
