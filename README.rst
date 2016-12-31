@@ -38,7 +38,10 @@ These examples will be based on following data model:
         return "foo"
     }
 
-    // fixtures
+With fixtures:
+
+.. code-block:: go
+
 	f := &Foo{
 		ID:        1,
 		FirstName: "Drew",
@@ -67,7 +70,7 @@ fn.SliceOf
 fn.Contains
 ...........
 
-``fn.Contains`` will return if an element is present in a iterable (slice, map, string).
+``fn.Contains`` returns true if an element is present in a iterable (slice, map, string).
 
 It's one frustrating thing in Go to implement ``contains`` methods for each types, for example:
 
@@ -112,7 +115,7 @@ this can be replaced by calling:
 fn.ToMap
 ........
 
-``fn.ToMap`` will transform a slice of structs to a map based on a ``pivot`` field.
+``fn.ToMap`` transforms a slice of structs to a map based on a ``pivot`` field.
 
 .. code-block:: go
 
@@ -140,7 +143,7 @@ fn.ToMap
 fn.Filter
 .........
 
-``fn.Filter`` will filter a slice based on a callback.
+``fn.Filter`` filters a slice based on a callback.
 
 .. code-block:: go
 
@@ -151,7 +154,7 @@ fn.Filter
 fn.Find
 .........
 
-``fn.Find`` will find an element in a slice based on a callback.
+``fn.Find`` finds an element in a slice based on a callback.
 
 .. code-block:: go
 
