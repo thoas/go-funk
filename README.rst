@@ -62,14 +62,14 @@ fn.SliceOf
 
 .. code-block:: go
 
-	result := fn.SliceOf(f) // will return a []*Foo
+	result := fn.SliceOf(f) // will return a []*Foo{f}
 
 fn.Contains
 ...........
 
 ``fn.Contains`` returns true if an element is present in a iteratee (slice, map, string).
 
-It's one frustrating thing in Go to implement ``contains`` methods for each types, for example:
+One frustrating thing in Go is to implement ``contains`` methods for each types, for example:
 
 .. code-block:: go
 
