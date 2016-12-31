@@ -1,0 +1,6 @@
+language: go
+before_install:
+  - go get golang.org/x/tools/cmd/cover
+go:
+  - 1.7
+script: make test

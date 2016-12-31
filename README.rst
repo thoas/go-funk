@@ -62,7 +62,7 @@ fn.SliceOf
 
 .. code-block:: go
 
-	result := fn.SliceOf(f) # will return a []*Foo
+	result := fn.SliceOf(f) // will return a []*Foo
 
 fn.Contains
 ...........
