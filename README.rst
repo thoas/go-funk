@@ -213,4 +213,14 @@ fn.ForEach
 		fmt.Println(x)
 	})
 
+fn.Chunk
+........
+
+``fn.Chunk`` creates an array of elements split into groups with the length
+of the size. If array can't be split evenly, the final chunk will be the remaining element.
+
+.. code-block:: go
+
+	fn.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
+
 .. _reflect: https://golang.org/pkg/reflect/
