@@ -225,9 +225,13 @@ func TestForEach(t *testing.T) {
 func TestChunk(t *testing.T) {
 	assert := assert.New(t)
 
-	elements := []int{0, 1, 2, 3, 4}
-
-	results := Chunk(elements, 2)
+	results := Chunk([]int{0, 1, 2, 3, 4}, 2).([][]int)
 
 	assert.Len(results, 3)
+	assert.Len(results[0], 2)
+	assert.Len(results[1], 2)
+	assert.Len(results[2], 1)
+
+	assert.Len(Chunk([]int{}, 2), 0)
+	assert.Len(Chunk([]int{1}, 2), 1)
 }

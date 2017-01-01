@@ -29,7 +29,6 @@ func Chunk(arr interface{}, size int) interface{} {
 
 	resultSliceType := reflect.SliceOf(arrType)
 
-	// MakeSlice takes a slice kind type, and makes a slice.
 	resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
 
 	itemType := arrType.Elem()
