@@ -221,3 +221,13 @@ func TestForEach(t *testing.T) {
 		assert.Equal(v, mapping[k])
 	})
 }
+
+func TestChunk(t *testing.T) {
+	assert := assert.New(t)
+
+	elements := []int{0, 1, 2, 3, 4}
+
+	results := Chunk(elements, 2)
+
+	assert.Len(results, 3)
+}

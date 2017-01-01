@@ -19,14 +19,51 @@ func equal(expected, actual interface{}) bool {
 // If array can't be split evenly, the final chunk will be
 // the remaining element.
 func Chunk(arr interface{}, size int) interface{} {
-	return nil
+	if !IsIteratee(arr) {
+		panic("First parameter must be neither array nor slice")
+	}
+
+	arrValue := reflect.ValueOf(arr)
+
+	arrType := arrValue.Type()
+
+	resultSliceType := reflect.SliceOf(arrType)
+
+	// MakeSlice takes a slice kind type, and makes a slice.
+	resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
+
+	itemType := arrType.Elem()
+
+	var itemSlice reflect.Value
+
+	itemSliceType := reflect.SliceOf(itemType)
+
+	length := arrValue.Len()
+
+	for i := 0; i < length; i++ {
+		if i%size == 0 || i == 0 {
+			if itemSlice.Kind() != reflect.Invalid {
+				resultSlice = reflect.Append(resultSlice, itemSlice)
+			}
+
+			itemSlice = reflect.MakeSlice(itemSliceType, 0, 0)
+		}
+
+		itemSlice = reflect.Append(itemSlice, arrValue.Index(i))
+
+		if i == length-1 {
+			resultSlice = reflect.Append(resultSlice, itemSlice)
+		}
+	}
+
+	return resultSlice.Interface()
 }
 
 // ForEach iterates over elements of collection and invokes iteratee
 // for each element.
 func ForEach(arr interface{}, predicate interface{}) {
 	if !IsIteratee(arr) {
-		panic("First parameter must be neither array nor slice")
+		panic("First parameter must be an iteratee")
 	}
 
 	var (
@@ -106,7 +143,7 @@ func IsIteratee(in interface{}) bool {
 // all elements predicate returns truthy for.
 func Filter(arr interface{}, predicate interface{}) interface{} {
 	if !IsIteratee(arr) {
-		panic("First parameter must be neither array nor slice")
+		panic("First parameter must be an iteratee")
 	}
 
 	if !IsFunction(predicate, 1, 1) {
@@ -148,7 +185,7 @@ func Filter(arr interface{}, predicate interface{}) interface{} {
 // element predicate returns truthy for.
 func Find(arr interface{}, predicate interface{}) interface{} {
 	if !IsIteratee(arr) {
-		panic("First parameter must be neither array nor slice")
+		panic("First parameter must be an iteratee")
 	}
 
 	if !IsFunction(predicate, 1, 1) {
@@ -257,7 +294,7 @@ func ToMap(in interface{}, pivot string) interface{} {
 // Map manipulates an iteratee and transforms it to another type.
 func Map(arr interface{}, mapFunc interface{}) interface{} {
 	if !IsIteratee(arr) {
-		panic("First parameter must be neither array nor slice")
+		panic("First parameter must be an iteratee")
 	}
 
 	if !IsFunction(mapFunc) {
