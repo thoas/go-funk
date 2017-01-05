@@ -1,21 +1,21 @@
-go-fn
-=====
+go-funk
+=======
 
-``go-fn`` is a modern Go library based on reflect_.
+``go-funk`` is a modern Go library based on reflect_.
 
 This project has started as an experiment to learn reflect_, feel free to use it :)
 
-.. image:: https://secure.travis-ci.org/thoas/go-fn.svg?branch=master
+.. image:: https://secure.travis-ci.org/thoas/go-funk.svg?branch=master
     :alt: Build Status
-    :target: http://travis-ci.org/thoas/go-fn
+    :target: http://travis-ci.org/thoas/go-funk
 
-.. image:: https://godoc.org/github.com/thoas/go-fn?status.svg
+.. image:: https://godoc.org/github.com/thoas/go-funk?status.svg
     :alt: GoDoc
-    :target: https://godoc.org/github.com/thoas/go-fn
+    :target: https://godoc.org/github.com/thoas/go-funk
 
-.. image:: https://goreportcard.com/badge/github.com/thoas/go-fn
+.. image:: https://goreportcard.com/badge/github.com/thoas/go-funk
     :alt: Go report
-    :target: https://goreportcard.com/report/github.com/thoas/go-fn
+    :target: https://goreportcard.com/report/github.com/thoas/go-funk
 
 
 Installation
@@ -23,14 +23,14 @@ Installation
 
 .. code-block:: bash
 
-    go get github.com/thoas/go-fn
+    go get github.com/thoas/go-funk
 
 Usage
 -----
 
 .. code-block:: go
 
-    import "github.com/thoas/go-fn"
+    import "github.com/thoas/go-funk"
 
 These examples will be based on the following data model:
 
@@ -58,25 +58,25 @@ With fixtures:
 		Age:       30,
 	}
 
-You can import ``go-fn`` using a basic statement:
+You can import ``go-funk`` using a basic statement:
 
 .. code-block:: go
 
-    import "github.com/thoas/go-fn"
+    import "github.com/thoas/go-funk"
 
-fn.SliceOf
-..........
+funk.SliceOf
+............
 
-``fn.SliceOf`` will return a slice based on an element.
+``funk.SliceOf`` will return a slice based on an element.
 
 .. code-block:: go
 
-	result := fn.SliceOf(f) // will return a []*Foo{f}
+	result := funk.SliceOf(f) // will return a []*Foo{f}
 
-fn.Contains
-...........
+funk.Contains
+.............
 
-``fn.Contains`` returns true if an element is present in a iteratee (slice, map, string).
+``funk.Contains`` returns true if an element is present in a iteratee (slice, map, string).
 
 One frustrating thing in Go is to implement ``contains`` methods for each types, for example:
 
@@ -91,16 +91,16 @@ One frustrating thing in Go is to implement ``contains`` methods for each types,
         return false
     }
 
-this can be replaced by ``fn.Contains``:
+this can be replaced by ``funk.Contains``:
 
 .. code-block:: go
 
     // slice of string
-    fn.Contains([]string{"foo", "bar"}, "bar") // true
+    funk.Contains([]string{"foo", "bar"}, "bar") // true
 
     // slice of *Foo
-    fn.Contains([]*Foo{f}, f) // true
-    fn.Contains([]*Foo{f}, nil) // false
+    funk.Contains([]*Foo{f}, f) // true
+    funk.Contains([]*Foo{f}, nil) // false
 
 	b := &Foo{
 		ID:        2,
@@ -109,19 +109,19 @@ this can be replaced by ``fn.Contains``:
 		Age:       28,
 	}
 
-    fn.Contains([]*Foo{f}, b) // false
+    funk.Contains([]*Foo{f}, b) // false
 
     // string
-    fn.Contains("florent", "rent") // true
-    fn.Contains("florent", "foo") // false
+    funk.Contains("florent", "rent") // true
+    funk.Contains("florent", "foo") // false
 
     // even map
-    fn.Contains(map[int]string{1: "Florent"}, 1) // true
+    funk.Contains(map[int]string{1: "Florent"}, 1) // true
 
-fn.ToMap
-........
+funk.ToMap
+..........
 
-``fn.ToMap`` transforms a slice of structs to a map based on a ``pivot`` field.
+``funk.ToMap`` transforms a slice of structs to a map based on a ``pivot`` field.
 
 .. code-block:: go
 
@@ -141,34 +141,34 @@ fn.ToMap
 
 	results := []*Foo{f, b}
 
-	mapping := fn.ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
+	mapping := funk.ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
 
-fn.Filter
-.........
+funk.Filter
+...........
 
-``fn.Filter`` filters a slice based on a predicate.
+``funk.Filter`` filters a slice based on a predicate.
 
 .. code-block:: go
 
-	r := fn.Filter([]int{1, 2, 3, 4}, func(x int) bool {
+	r := funk.Filter([]int{1, 2, 3, 4}, func(x int) bool {
 		return x%2 == 0
 	}) // []int{2, 4}
 
-fn.Find
+funk.Find
 .........
 
-``fn.Find`` finds an element in a slice based on a predicate.
+``funk.Find`` finds an element in a slice based on a predicate.
 
 .. code-block:: go
 
-	r := fn.Find([]int{1, 2, 3, 4}, func(x int) bool {
+	r := funk.Find([]int{1, 2, 3, 4}, func(x int) bool {
 		return x%2 == 0
 	}) // 2
 
-fn.Map
-......
+funk.Map
+........
 
-``fn.Map`` allows you to manipulate an iteratee (map, slice) and to transform it to another type:
+``funk.Map`` allows you to manipulate an iteratee (map, slice) and to transform it to another type:
 
 * map -> slice
 * map -> map
@@ -177,15 +177,15 @@ fn.Map
 
 .. code-block:: go
 
-	r := fn.Map([]int{1, 2, 3, 4}, func(x int) int {
+	r := funk.Map([]int{1, 2, 3, 4}, func(x int) int {
 		return "Hello"
 	}) // []int{2, 4, 6, 8}
 
-	r := fn.Map([]int{1, 2, 3, 4}, func(x int) string {
+	r := funk.Map([]int{1, 2, 3, 4}, func(x int) string {
 		return "Hello"
 	}) // []string{"Hello", "Hello", "Hello", "Hello"}
 
-	r = fn.Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
+	r = funk.Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
 		return x, x
 	}) // map[int]int{1: 1, 2: 2, 3: 3, 4: 4}
 
@@ -194,33 +194,33 @@ fn.Map
 		2: "Gilles",
 	}
 
-	r = fn.Map(mapping, func(k int, v string) int {
+	r = funk.Map(mapping, func(k int, v string) int {
 		return k
 	}) // []int{1, 2}
 
-	r = fn.Map(mapping, func(k int, v string) (string, string) {
+	r = funk.Map(mapping, func(k int, v string) (string, string) {
 		return fmt.Sprintf("%d", k), v
 	}) // map[string]string{"1": "Florent", "2": "Gilles"}
 
-fn.ForEach
-..........
+funk.ForEach
+............
 
-``fn.ForEach`` allows you to range over an iteratee (map, slice)
+``funk.ForEach`` allows you to range over an iteratee (map, slice)
 
 .. code-block:: go
 
-	fn.ForEach([]int{1, 2, 3, 4}, func(x int) {
+	funk.ForEach([]int{1, 2, 3, 4}, func(x int) {
 		fmt.Println(x)
 	})
 
-fn.Chunk
-........
+funk.Chunk
+..........
 
-``fn.Chunk`` creates an array of elements split into groups with the length
+``funk.Chunk`` creates an array of elements split into groups with the length
 of the size. If array can't be split evenly, the final chunk will be the remaining element.
 
 .. code-block:: go
 
-	fn.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
+	funk.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
 
 .. _reflect: https://golang.org/pkg/reflect/

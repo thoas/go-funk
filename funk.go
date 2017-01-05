@@ -1,4 +1,4 @@
-package fn
+package funk
 
 import (
 	"fmt"
@@ -29,6 +29,7 @@ func Chunk(arr interface{}, size int) interface{} {
 
 	resultSliceType := reflect.SliceOf(arrType)
 
+	// Initialize final result slice which will contains slice
 	resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
 
 	itemType := arrType.Elem()
