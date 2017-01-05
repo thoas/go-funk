@@ -15,6 +15,107 @@ func equal(expected, actual interface{}) bool {
 
 }
 
+func sliceElem(rtype reflect.Type) reflect.Type {
+	if rtype.Kind() == reflect.Slice || rtype.Kind() == reflect.Array {
+		return sliceElem(rtype.Elem())
+	}
+
+	return rtype
+}
+
+func Flatten(out interface{}) interface{} {
+	value := reflect.ValueOf(out)
+
+	results := flatten(value)
+
+	resultType := reflect.SliceOf(sliceElem(value.Type()))
+
+	length := len(results)
+
+	resultSlice := reflect.MakeSlice(resultType, length, length)
+
+	for i := 0; i < length; i++ {
+		resultSlice.Index(i).Set(results[i])
+	}
+
+	return resultSlice.Interface()
+}
+
+func flatten(value reflect.Value) []reflect.Value {
+	results := []reflect.Value{}
+
+	length := value.Len()
+
+	for i := 0; i < length; i++ {
+		item := value.Index(i)
+		kind := item.Kind()
+
+		if kind == reflect.Slice || kind == reflect.Array {
+			results = append(results, flatten(item)...)
+		} else {
+			results = append(results, item)
+		}
+	}
+
+	return results
+}
+
+// Get retrieves the value at path of object.
+func Get(out interface{}, path string) interface{} {
+	value := reflect.ValueOf(out)
+
+	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
+		var resultSlice reflect.Value
+
+		length := value.Len()
+
+		for i := 0; i < length; i++ {
+			result := Get(value.Index(i).Interface(), path)
+
+			resultValue := reflect.ValueOf(result)
+			resultType := resultValue.Type()
+
+			if resultSlice.Kind() == reflect.Invalid {
+				resultType := reflect.SliceOf(resultType)
+
+				resultSlice = reflect.MakeSlice(resultType, 0, 0)
+			}
+
+			resultSlice = reflect.Append(resultSlice, resultValue)
+		}
+
+		return Flatten(resultSlice.Interface())
+	}
+
+	parts := strings.Split(path, ".")
+
+	for _, part := range parts {
+		valueType := value.Type()
+		kind := valueType.Kind()
+
+		if kind == reflect.Ptr {
+			value = value.Elem()
+
+			valueType = value.Type()
+			kind = valueType.Kind()
+		}
+
+		if kind == reflect.Struct {
+			value = value.FieldByName(part)
+			continue
+		}
+
+		if kind == reflect.Slice || kind == reflect.Array {
+			result := Get(value.Interface(), part)
+			value = reflect.ValueOf(result)
+
+			continue
+		}
+	}
+
+	return value.Interface()
+}
+
 // Chunk creates an array of elements split into groups with the length of size.
 // If array can't be split evenly, the final chunk will be
 // the remaining element.

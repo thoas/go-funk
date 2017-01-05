@@ -11,6 +11,8 @@ import (
 // Bar is
 type Bar struct {
 	Name string
+	Bar  *Bar
+	Bars []*Bar
 }
 
 func (b Bar) TableName() string {
@@ -24,10 +26,41 @@ type Foo struct {
 	LastName  string `tag_name:"tag 2"`
 	Age       int    `tag_name:"tag 3"`
 	Bar       *Bar
+	Bars      []*Bar
 }
 
 func (f Foo) TableName() string {
 	return "foo"
+}
+
+var bar *Bar = &Bar{
+	Name: "Test",
+	Bars: []*Bar{
+		&Bar{
+			Name: "Level1-1",
+			Bar: &Bar{
+				Name: "Level2-1",
+			},
+		},
+		&Bar{
+			Name: "Level1-2",
+			Bar: &Bar{
+				Name: "Level2-2",
+			},
+		},
+	},
+}
+
+var foo *Foo = &Foo{
+	ID:        1,
+	FirstName: "Drew",
+	LastName:  "Olson",
+	Age:       30,
+	Bar:       bar,
+	Bars: []*Bar{
+		bar,
+		bar,
+	},
 }
 
 func TestSliceOf(t *testing.T) {
@@ -234,4 +267,37 @@ func TestChunk(t *testing.T) {
 
 	assert.Len(Chunk([]int{}, 2), 0)
 	assert.Len(Chunk([]int{1}, 2), 1)
+}
+
+func TestGetSimple(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Get(foo, "ID"), 1)
+	result := Get(foo, "Bar.Bars.Name")
+
+	assert.Equal(result, []string{"Level1-1", "Level1-2"})
+
+	result = Get(foo, "Bar.Bars.Bar.Name")
+
+	assert.Equal(result, []string{"Level2-1", "Level2-2"})
+}
+
+func TestGetSlice(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Get(SliceOf(foo), "ID"), []int{1})
+	assert.Equal(Get(SliceOf(foo), "Bar.Name"), []string{"Test"})
+	assert.Equal(Get(SliceOf(foo), "Bar"), []*Bar{bar})
+}
+
+func TestFlatten(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Flatten([][]int{[]int{1, 2}, []int{3, 4}}), []int{1, 2, 3, 4})
+}
+
+func TestGetSliceMultiLevel(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Get(SliceOf(foo), "Bar.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
 }
