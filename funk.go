@@ -23,7 +23,7 @@ func sliceElem(rtype reflect.Type) reflect.Type {
 	return rtype
 }
 
-func Flatten(out interface{}) interface{} {
+func FlattenDeep(out interface{}) interface{} {
 	value := reflect.ValueOf(out)
 
 	results := flatten(value)
@@ -84,7 +84,11 @@ func Get(out interface{}, path string) interface{} {
 			resultSlice = reflect.Append(resultSlice, resultValue)
 		}
 
-		return Flatten(resultSlice.Interface())
+		if resultSlice.Type().Elem().Kind() == reflect.Slice {
+			return FlattenDeep(resultSlice.Interface())
+		}
+
+		return resultSlice.Interface()
 	}
 
 	parts := strings.Split(path, ".")

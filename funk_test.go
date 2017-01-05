@@ -290,10 +290,10 @@ func TestGetSlice(t *testing.T) {
 	assert.Equal(Get(SliceOf(foo), "Bar"), []*Bar{bar})
 }
 
-func TestFlatten(t *testing.T) {
+func TestFlattenDeep(t *testing.T) {
 	assert := assert.New(t)
 
-	assert.Equal(Flatten([][]int{[]int{1, 2}, []int{3, 4}}), []int{1, 2, 3, 4})
+	assert.Equal(FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}), []int{1, 2, 3, 4})
 }
 
 func TestGetSliceMultiLevel(t *testing.T) {
