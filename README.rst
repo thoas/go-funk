@@ -5,6 +5,8 @@ go-funk
 
 This project has started as an experiment to learn reflect_, feel free to use it :)
 
+As it relies a lot on reflect_, be careful this code runs exclusively on runtime so you must have a good test suite.
+
 .. image:: https://secure.travis-ci.org/thoas/go-funk.svg?branch=master
     :alt: Build Status
     :target: http://travis-ci.org/thoas/go-funk
