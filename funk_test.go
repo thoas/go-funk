@@ -1,6 +1,7 @@
 package funk
 
 import (
+	"database/sql"
 	"fmt"
 	"reflect"
 	"testing"
@@ -21,12 +22,13 @@ func (b Bar) TableName() string {
 
 // Foo is
 type Foo struct {
-	ID        int
-	FirstName string `tag_name:"tag 1"`
-	LastName  string `tag_name:"tag 2"`
-	Age       int    `tag_name:"tag 3"`
-	Bar       *Bar
-	Bars      []*Bar
+	ID         int
+	FirstName  string `tag_name:"tag 1"`
+	LastName   string `tag_name:"tag 2"`
+	Age        int    `tag_name:"tag 3"`
+	Bar        *Bar
+	Bars       []*Bar
+	EmptyValue sql.NullInt64
 }
 
 func (f Foo) TableName() string {
@@ -57,10 +59,21 @@ var foo *Foo = &Foo{
 	LastName:  "Olson",
 	Age:       30,
 	Bar:       bar,
+	EmptyValue: sql.NullInt64{
+		Valid: true,
+		Int64: 10,
+	},
 	Bars: []*Bar{
 		bar,
 		bar,
 	},
+}
+
+var foo2 *Foo = &Foo{
+	ID:        1,
+	FirstName: "Drew",
+	LastName:  "Olson",
+	Age:       30,
 }
 
 func TestSliceOf(t *testing.T) {
@@ -279,10 +292,6 @@ func TestGetSimple(t *testing.T) {
 	result := Get(foo, "Bar.Bars.Name")
 
 	assert.Equal(result, []string{"Level1-1", "Level1-2"})
-
-	result = Get(foo, "Bar.Bars.Bar.Name")
-
-	assert.Equal(result, []string{"Level2-1", "Level2-2"})
 }
 
 func TestGetSlice(t *testing.T) {
@@ -302,5 +311,20 @@ func TestFlattenDeep(t *testing.T) {
 func TestGetSliceMultiLevel(t *testing.T) {
 	assert := assert.New(t)
 
+	assert.Equal(Get(foo, "Bar.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
 	assert.Equal(Get(SliceOf(foo), "Bar.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
+}
+
+func TestGetNull(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Get(foo, "EmptyValue.Int64"), int64(10))
+	assert.Equal(Get(SliceOf(foo), "EmptyValue.Int64"), []int64{10})
+}
+
+func TestGetNil(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Get(foo2, "Bar.Name"), nil)
+	assert.Equal(Get([]*Foo{foo, foo2}, "Bar.Name"), []string{"Test"})
 }

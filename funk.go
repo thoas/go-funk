@@ -55,7 +55,13 @@ func flatten(value reflect.Value, result reflect.Value) reflect.Value {
 
 // Get retrieves the value at path of struct(s).
 func Get(out interface{}, path string) interface{} {
-	return get(reflect.ValueOf(out), path).Interface()
+	result := get(reflect.ValueOf(out), path)
+
+	if result.Kind() != reflect.Invalid {
+		return result.Interface()
+	}
+
+	return nil
 }
 
 func get(value reflect.Value, path string) reflect.Value {
@@ -65,9 +71,16 @@ func get(value reflect.Value, path string) reflect.Value {
 		length := value.Len()
 
 		for i := 0; i < length; i++ {
-			result := Get(value.Index(i).Interface(), path)
+			item := value.Index(i)
+
+			result := Get(item.Interface(), path)
 
 			resultValue := reflect.ValueOf(result)
+
+			if resultValue.Kind() == reflect.Invalid {
+				continue
+			}
+
 			resultType := resultValue.Type()
 
 			if resultSlice.Kind() == reflect.Invalid {
@@ -93,8 +106,16 @@ func get(value reflect.Value, path string) reflect.Value {
 		valueType := value.Type()
 		kind := valueType.Kind()
 
+		if kind == reflect.Invalid {
+			continue
+		}
+
 		if kind == reflect.Ptr {
 			value = value.Elem()
+
+			if value.Kind() == reflect.Invalid {
+				continue
+			}
 
 			valueType = value.Type()
 			kind = valueType.Kind()
