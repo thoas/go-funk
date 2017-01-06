@@ -51,12 +51,12 @@ With fixtures:
 
 .. code-block:: go
 
-	f := &Foo{
-		ID:        1,
-		FirstName: "Foo",
-		LastName:  "Bar",
-		Age:       30,
-	}
+    f := &Foo{
+        ID:        1,
+        FirstName: "Foo",
+        LastName:  "Bar",
+        Age:       30,
+    }
 
 You can import ``go-funk`` using a basic statement:
 
@@ -71,7 +71,7 @@ funk.SliceOf
 
 .. code-block:: go
 
-	result := funk.SliceOf(f) // will return a []*Foo{f}
+    result := funk.SliceOf(f) // will return a []*Foo{f}
 
 funk.Contains
 .............
@@ -102,12 +102,12 @@ this can be replaced by ``funk.Contains``:
     funk.Contains([]*Foo{f}, f) // true
     funk.Contains([]*Foo{f}, nil) // false
 
-	b := &Foo{
-		ID:        2,
-		FirstName: "Florent",
-		LastName:  "Messa",
-		Age:       28,
-	}
+    b := &Foo{
+        ID:        2,
+        FirstName: "Florent",
+        LastName:  "Messa",
+        Age:       28,
+    }
 
     funk.Contains([]*Foo{f}, b) // false
 
@@ -125,23 +125,23 @@ funk.ToMap
 
 .. code-block:: go
 
-	f := &Foo{
-		ID:        1,
-		FirstName: "Gilles",
-		LastName:  "Fabio",
-		Age:       70,
-	}
+    f := &Foo{
+        ID:        1,
+        FirstName: "Gilles",
+        LastName:  "Fabio",
+        Age:       70,
+    }
 
-	b := &Foo{
-		ID:        2,
-		FirstName: "Florent",
-		LastName:  "Messa",
-		Age:       80,
-	}
+    b := &Foo{
+        ID:        2,
+        FirstName: "Florent",
+        LastName:  "Messa",
+        Age:       80,
+    }
 
-	results := []*Foo{f, b}
+    results := []*Foo{f, b}
 
-	mapping := funk.ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
+    mapping := funk.ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
 
 funk.Filter
 ...........
@@ -150,9 +150,9 @@ funk.Filter
 
 .. code-block:: go
 
-	r := funk.Filter([]int{1, 2, 3, 4}, func(x int) bool {
-		return x%2 == 0
-	}) // []int{2, 4}
+    r := funk.Filter([]int{1, 2, 3, 4}, func(x int) bool {
+        return x%2 == 0
+    }) // []int{2, 4}
 
 funk.Find
 .........
@@ -161,9 +161,9 @@ funk.Find
 
 .. code-block:: go
 
-	r := funk.Find([]int{1, 2, 3, 4}, func(x int) bool {
-		return x%2 == 0
-	}) // 2
+    r := funk.Find([]int{1, 2, 3, 4}, func(x int) bool {
+        return x%2 == 0
+    }) // 2
 
 funk.Map
 ........
@@ -177,30 +177,30 @@ funk.Map
 
 .. code-block:: go
 
-	r := funk.Map([]int{1, 2, 3, 4}, func(x int) int {
-		return "Hello"
-	}) // []int{2, 4, 6, 8}
+    r := funk.Map([]int{1, 2, 3, 4}, func(x int) int {
+        return "Hello"
+    }) // []int{2, 4, 6, 8}
 
-	r := funk.Map([]int{1, 2, 3, 4}, func(x int) string {
-		return "Hello"
-	}) // []string{"Hello", "Hello", "Hello", "Hello"}
+    r := funk.Map([]int{1, 2, 3, 4}, func(x int) string {
+        return "Hello"
+    }) // []string{"Hello", "Hello", "Hello", "Hello"}
 
-	r = funk.Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
-		return x, x
-	}) // map[int]int{1: 1, 2: 2, 3: 3, 4: 4}
+    r = funk.Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
+        return x, x
+    }) // map[int]int{1: 1, 2: 2, 3: 3, 4: 4}
 
-	mapping := map[int]string{
-		1: "Florent",
-		2: "Gilles",
-	}
+    mapping := map[int]string{
+        1: "Florent",
+        2: "Gilles",
+    }
 
-	r = funk.Map(mapping, func(k int, v string) int {
-		return k
-	}) // []int{1, 2}
+    r = funk.Map(mapping, func(k int, v string) int {
+        return k
+    }) // []int{1, 2}
 
-	r = funk.Map(mapping, func(k int, v string) (string, string) {
-		return fmt.Sprintf("%d", k), v
-	}) // map[string]string{"1": "Florent", "2": "Gilles"}
+    r = funk.Map(mapping, func(k int, v string) (string, string) {
+        return fmt.Sprintf("%d", k), v
+    }) // map[string]string{"1": "Florent", "2": "Gilles"}
 
 funk.ForEach
 ............
@@ -209,9 +209,9 @@ funk.ForEach
 
 .. code-block:: go
 
-	funk.ForEach([]int{1, 2, 3, 4}, func(x int) {
-		fmt.Println(x)
-	})
+    funk.ForEach([]int{1, 2, 3, 4}, func(x int) {
+        fmt.Println(x)
+    })
 
 funk.Chunk
 ..........
@@ -221,7 +221,7 @@ of the size. If array can't be split evenly, the final chunk will be the remaini
 
 .. code-block:: go
 
-	funk.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
+    funk.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
 
 funk.FlattenDeep
 ................
@@ -269,8 +269,8 @@ funk.Get
         },
     }
 
-	Get([]*Foo{foo}, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
-	Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
-	Get(foo, "Bar.Name") // Test
+    Get([]*Foo{foo}, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
+    Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
+    Get(foo, "Bar.Name") // Test
 
 .. _reflect: https://golang.org/pkg/reflect/
