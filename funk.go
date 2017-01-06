@@ -53,7 +53,7 @@ func flatten(value reflect.Value, result reflect.Value) reflect.Value {
 	return result
 }
 
-// Get retrieves the value at path of object.
+// Get retrieves the value at path of struct(s).
 func Get(out interface{}, path string) interface{} {
 	return get(reflect.ValueOf(out), path).Interface()
 }

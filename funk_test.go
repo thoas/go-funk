@@ -273,6 +273,9 @@ func TestGetSimple(t *testing.T) {
 	assert := assert.New(t)
 
 	assert.Equal(Get(foo, "ID"), 1)
+
+	assert.Equal(Get(foo, "Bar.Name"), "Test")
+
 	result := Get(foo, "Bar.Bars.Name")
 
 	assert.Equal(result, []string{"Level1-1", "Level1-2"})

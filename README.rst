@@ -223,4 +223,54 @@ of the size. If array can't be split evenly, the final chunk will be the remaini
 
 	funk.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
 
+funk.FlattenDeep
+................
+
+``funk.FlattenDeep`` recursively flattens array.
+
+.. code-block:: go
+
+    funk.FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}) // []int{1, 2, 3, 4}
+
+funk.Get
+........
+
+``funk.Get`` retrieves the value at path of struct(s).
+
+.. code-block:: go
+
+    var bar *Bar = &Bar{
+        Name: "Test",
+        Bars: []*Bar{
+            &Bar{
+                Name: "Level1-1",
+                Bar: &Bar{
+                    Name: "Level2-1",
+                },
+            },
+            &Bar{
+                Name: "Level1-2",
+                Bar: &Bar{
+                    Name: "Level2-2",
+                },
+            },
+        },
+    }
+
+    var foo *Foo = &Foo{
+        ID:        1,
+        FirstName: "Drew",
+        LastName:  "Olson",
+        Age:       30,
+        Bar:       bar,
+        Bars: []*Bar{
+            bar,
+            bar,
+        },
+    }
+
+	Get([]*Foo{foo}, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
+	Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
+	Get(foo, "Bar.Name") // Test
+
 .. _reflect: https://golang.org/pkg/reflect/
