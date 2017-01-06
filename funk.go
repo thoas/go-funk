@@ -73,9 +73,7 @@ func get(value reflect.Value, path string) reflect.Value {
 		for i := 0; i < length; i++ {
 			item := value.Index(i)
 
-			result := Get(item.Interface(), path)
-
-			resultValue := reflect.ValueOf(result)
+			resultValue := get(item, path)
 
 			if resultValue.Kind() == reflect.Invalid {
 				continue
