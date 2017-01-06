@@ -23,6 +23,14 @@ func sliceElem(rtype reflect.Type) reflect.Type {
 	return rtype
 }
 
+func redirectValue(value reflect.Value) reflect.Value {
+	if value.Kind() == reflect.Ptr {
+		return redirectValue(value.Elem())
+	}
+
+	return value
+}
+
 // FlattenDeep recursively flattens array.
 func FlattenDeep(out interface{}) interface{} {
 	return flattenDeep(reflect.ValueOf(out)).Interface()
@@ -101,22 +109,11 @@ func get(value reflect.Value, path string) reflect.Value {
 	parts := strings.Split(path, ".")
 
 	for _, part := range parts {
-		valueType := value.Type()
-		kind := valueType.Kind()
+		value = redirectValue(value)
+		kind := value.Kind()
 
 		if kind == reflect.Invalid {
 			continue
-		}
-
-		if kind == reflect.Ptr {
-			value = value.Elem()
-
-			if value.Kind() == reflect.Invalid {
-				continue
-			}
-
-			valueType = value.Type()
-			kind = valueType.Kind()
 		}
 
 		if kind == reflect.Struct {
