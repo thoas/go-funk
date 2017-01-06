@@ -146,6 +146,34 @@ func TestContains(t *testing.T) {
 	assert.False(Contains(mapping, 2))
 }
 
+func TestIndexOf(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(IndexOf([]string{"foo", "bar"}, "bar"), 1)
+
+	f := &Foo{
+		ID:        1,
+		FirstName: "Drew",
+		LastName:  "Olson",
+		Age:       30,
+		Bar: &Bar{
+			Name: "Test",
+		},
+	}
+
+	b := &Foo{
+		ID:        2,
+		FirstName: "Florent",
+		LastName:  "Messa",
+		Age:       28,
+	}
+
+	results := []*Foo{f}
+
+	assert.Equal(IndexOf(results, f), 0)
+	assert.Equal(IndexOf(results, b), -1)
+}
+
 func TestToMap(t *testing.T) {
 	assert := assert.New(t)
 

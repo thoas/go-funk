@@ -330,6 +330,30 @@ func Find(arr interface{}, predicate interface{}) interface{} {
 	return nil
 }
 
+// IndexOf gets the index at which the first occurrence of value is found in array or return -1
+// if the value cannot be found
+func IndexOf(in interface{}, elem interface{}) int {
+	inValue := reflect.ValueOf(in)
+
+	elemValue := reflect.ValueOf(elem)
+
+	inType := inValue.Type()
+
+	if inType.Kind() == reflect.String {
+		return strings.Index(inValue.String(), elemValue.String())
+	}
+
+	if inType.Kind() == reflect.Slice {
+		for i := 0; i < inValue.Len(); i++ {
+			if equal(inValue.Index(i).Interface(), elem) {
+				return i
+			}
+		}
+	}
+
+	return -1
+}
+
 // Contains returns true if an element is present in a iteratee.
 func Contains(in interface{}, elem interface{}) bool {
 	inValue := reflect.ValueOf(in)
@@ -357,7 +381,6 @@ func Contains(in interface{}, elem interface{}) bool {
 				return true
 			}
 		}
-
 	}
 
 	return false
