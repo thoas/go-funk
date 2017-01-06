@@ -273,4 +273,14 @@ funk.Get
     Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
     Get(foo, "Bar.Name") // Test
 
+
+Contributing
+------------
+
+* Ping me on twitter `@thoas <https://twitter.com/thoas>`_
+* Fork the `project <https://github.com/thoas/go-funk>`_
+* Fix `open issues <https://github.com/thoas/go-funk/issues>`_ or request new features
+
+Don't hesitate ;)
+
 .. _reflect: https://golang.org/pkg/reflect/
