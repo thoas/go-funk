@@ -287,6 +287,41 @@ funk.Get
     Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
     Get(foo, "Bar.Name") // Test
 
+funk.Keys
+.........
+
+``funk.Keys`` creates an array of the own enumerable map keys or struct field names.
+
+.. code-block:: go
+
+    Keys(map[string]int{"one": 1, "two": 2}) // []string{"one", "two"}
+
+    foo := &Foo{
+        ID:        1,
+        FirstName: "Drew",
+        LastName:  "Olson",
+        Age:       30,
+    }
+
+    Keys(foo) // []string{"ID", "FirstName", "LastName", "Age"}
+
+funk.Values
+...........
+
+``funk.Values`` creates an array of the own enumerable map values or struct field values.
+
+.. code-block:: go
+
+    Values(map[string]int{"one": 1, "two": 2}) // []string{1, 2}
+
+    foo := &Foo{
+        ID:        1,
+        FirstName: "Drew",
+        LastName:  "Olson",
+        Age:       30,
+    }
+
+    Values(foo) // []interface{}{1, "Drew", "Olson", 30}
 
 Contributing
 ------------
