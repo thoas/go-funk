@@ -19,6 +19,18 @@ As it relies a lot on reflect_, be careful this code runs exclusively on runtime
     :alt: Go report
     :target: https://goreportcard.com/report/github.com/thoas/go-funk
 
+Why this name?
+--------------
+
+Long story, short answer because ``func`` is a reserved word in Go, I wanted something similar.
+
+Initially this project was named ``fn`` I don't need to explain why that was a bad idea for french speakers :)
+
+Let's ``funk``!
+
+.. image:: https://media.giphy.com/media/l41Yn6Eygj3c8IsrC/giphy.gif
+
+<3
 
 Installation
 ------------
@@ -294,7 +306,7 @@ funk.Keys
 
 .. code-block:: go
 
-    Keys(map[string]int{"one": 1, "two": 2}) // []string{"one", "two"}
+    Keys(map[string]int{"one": 1, "two": 2}) // []string{"one", "two"} (iteration order is not guaranteed)
 
     foo := &Foo{
         ID:        1,
@@ -303,7 +315,7 @@ funk.Keys
         Age:       30,
     }
 
-    Keys(foo) // []string{"ID", "FirstName", "LastName", "Age"}
+    Keys(foo) // []string{"ID", "FirstName", "LastName", "Age"} (iteration order is not guaranteed)
 
 funk.Values
 ...........
@@ -312,7 +324,7 @@ funk.Values
 
 .. code-block:: go
 
-    Values(map[string]int{"one": 1, "two": 2}) // []string{1, 2}
+    Values(map[string]int{"one": 1, "two": 2}) // []string{1, 2} (iteration order is not guaranteed)
 
     foo := &Foo{
         ID:        1,
@@ -321,7 +333,7 @@ funk.Values
         Age:       30,
     }
 
-    Values(foo) // []interface{}{1, "Drew", "Olson", 30}
+    Values(foo) // []interface{}{1, "Drew", "Olson", 30} (iteration order is not guaranteed)
 
 Contributing
 ------------
