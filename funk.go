@@ -23,9 +23,12 @@ func sliceElem(rtype reflect.Type) reflect.Type {
 	return rtype
 }
 
+// FlattenDeep recursively flattens array.
 func FlattenDeep(out interface{}) interface{} {
-	value := reflect.ValueOf(out)
+	return flattenDeep(reflect.ValueOf(out)).Interface()
+}
 
+func flattenDeep(value reflect.Value) reflect.Value {
 	results := flatten(value)
 
 	resultType := reflect.SliceOf(sliceElem(value.Type()))
@@ -38,7 +41,7 @@ func FlattenDeep(out interface{}) interface{} {
 		resultSlice.Index(i).Set(results[i])
 	}
 
-	return resultSlice.Interface()
+	return resultSlice
 }
 
 func flatten(value reflect.Value) []reflect.Value {
@@ -62,8 +65,10 @@ func flatten(value reflect.Value) []reflect.Value {
 
 // Get retrieves the value at path of object.
 func Get(out interface{}, path string) interface{} {
-	value := reflect.ValueOf(out)
+	return get(reflect.ValueOf(out), path).Interface()
+}
 
+func get(value reflect.Value, path string) reflect.Value {
 	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
 		var resultSlice reflect.Value
 
@@ -85,10 +90,10 @@ func Get(out interface{}, path string) interface{} {
 		}
 
 		if resultSlice.Type().Elem().Kind() == reflect.Slice {
-			return FlattenDeep(resultSlice.Interface())
+			return flattenDeep(resultSlice)
 		}
 
-		return resultSlice.Interface()
+		return resultSlice
 	}
 
 	parts := strings.Split(path, ".")
@@ -110,14 +115,12 @@ func Get(out interface{}, path string) interface{} {
 		}
 
 		if kind == reflect.Slice || kind == reflect.Array {
-			result := Get(value.Interface(), part)
-			value = reflect.ValueOf(result)
-
+			value = get(value, part)
 			continue
 		}
 	}
 
-	return value.Interface()
+	return value
 }
 
 // Chunk creates an array of elements split into groups with the length of size.
