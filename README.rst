@@ -98,7 +98,7 @@ this can be replaced by ``funk.Contains``:
     // slice of string
     funk.Contains([]string{"foo", "bar"}, "bar") // true
 
-    // slice of *Foo
+    // slice of Foo ptr
     funk.Contains([]*Foo{f}, f) // true
     funk.Contains([]*Foo{f}, nil) // false
 

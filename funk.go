@@ -29,24 +29,14 @@ func FlattenDeep(out interface{}) interface{} {
 }
 
 func flattenDeep(value reflect.Value) reflect.Value {
-	results := flatten(value)
+	sliceType := sliceElem(value.Type())
 
-	resultType := reflect.SliceOf(sliceElem(value.Type()))
+	resultSlice := reflect.MakeSlice(reflect.SliceOf(sliceType), 0, 0)
 
-	length := len(results)
-
-	resultSlice := reflect.MakeSlice(resultType, length, length)
-
-	for i := 0; i < length; i++ {
-		resultSlice.Index(i).Set(results[i])
-	}
-
-	return resultSlice
+	return flatten(value, resultSlice)
 }
 
-func flatten(value reflect.Value) []reflect.Value {
-	results := []reflect.Value{}
-
+func flatten(value reflect.Value, result reflect.Value) reflect.Value {
 	length := value.Len()
 
 	for i := 0; i < length; i++ {
@@ -54,13 +44,13 @@ func flatten(value reflect.Value) []reflect.Value {
 		kind := item.Kind()
 
 		if kind == reflect.Slice || kind == reflect.Array {
-			results = append(results, flatten(item)...)
+			result = flatten(item, result)
 		} else {
-			results = append(results, item)
+			result = reflect.Append(result, item)
 		}
 	}
 
-	return results
+	return result
 }
 
 // Get retrieves the value at path of object.
@@ -89,6 +79,7 @@ func get(value reflect.Value, path string) reflect.Value {
 			resultSlice = reflect.Append(resultSlice, resultValue)
 		}
 
+		// if the result is a slice of a slice, we need to flatten it
 		if resultSlice.Type().Elem().Kind() == reflect.Slice {
 			return flattenDeep(resultSlice)
 		}
