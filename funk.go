@@ -422,6 +422,32 @@ func IndexOf(in interface{}, elem interface{}) int {
 	return -1
 }
 
+// LastIndexOf gets the index at which the last occurrence of value is found in array or return -1
+// if the value cannot be found
+func LastIndexOf(in interface{}, elem interface{}) int {
+	inValue := reflect.ValueOf(in)
+
+	elemValue := reflect.ValueOf(elem)
+
+	inType := inValue.Type()
+
+	if inType.Kind() == reflect.String {
+		return strings.LastIndex(inValue.String(), elemValue.String())
+	}
+
+	if inType.Kind() == reflect.Slice {
+		length := inValue.Len()
+
+		for i := length - 1; i >= 0; i-- {
+			if equal(inValue.Index(i).Interface(), elem) {
+				return i
+			}
+		}
+	}
+
+	return -1
+}
+
 // Contains returns true if an element is present in a iteratee.
 func Contains(in interface{}, elem interface{}) bool {
 	inValue := reflect.ValueOf(in)

@@ -175,6 +175,14 @@ func TestIndexOf(t *testing.T) {
 	assert.Equal(IndexOf(results, b), -1)
 }
 
+func TestLastIndexOf(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(LastIndexOf([]string{"foo", "bar", "bar"}, "bar"), 2)
+	assert.Equal(LastIndexOf([]int{1, 2, 2, 3}, 2), 2)
+	assert.Equal(LastIndexOf([]int{1, 2, 2, 3}, 4), -1)
+}
+
 func TestToMap(t *testing.T) {
 	assert := assert.New(t)
 

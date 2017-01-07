@@ -144,6 +144,18 @@ if the value cannot be found.
     funk.IndexOf([]string{"foo", "bar"}, "bar") // 1
     funk.IndexOf([]string{"foo", "bar"}, "gilles") // -1
 
+funk.LastIndexOf
+................
+
+``funk.LastIndexOf`` gets the index at which the last occurrence of value is found in array or return -1
+if the value cannot be found.
+
+.. code-block:: go
+
+    // slice of string
+    funk.LastIndexOf([]string{"foo", "bar", "bar"}, "bar") // 2
+    funk.LastIndexOf([]string{"foo", "bar"}, "gilles") // -1
+
 funk.ToMap
 ..........
 
