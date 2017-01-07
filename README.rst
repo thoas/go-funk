@@ -28,7 +28,7 @@ Initially this project was named ``fn`` I don't need to explain why that was a b
 
 Let's ``funk``!
 
-.. image:: https://media.giphy.com/media/l41Yn6Eygj3c8IsrC/giphy.gif
+.. image:: https://media.giphy.com/media/3oEjHQKtDXpeGN9rW0/giphy.gif
 
 <3
 
