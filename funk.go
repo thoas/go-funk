@@ -6,31 +6,6 @@ import (
 	"strings"
 )
 
-func equal(expected, actual interface{}) bool {
-	if expected == nil || actual == nil {
-		return expected == actual
-	}
-
-	return reflect.DeepEqual(expected, actual)
-
-}
-
-func sliceElem(rtype reflect.Type) reflect.Type {
-	if rtype.Kind() == reflect.Slice || rtype.Kind() == reflect.Array {
-		return sliceElem(rtype.Elem())
-	}
-
-	return rtype
-}
-
-func redirectValue(value reflect.Value) reflect.Value {
-	if value.Kind() == reflect.Ptr {
-		return redirectValue(value.Elem())
-	}
-
-	return value
-}
-
 // FlattenDeep recursively flattens array.
 func FlattenDeep(out interface{}) interface{} {
 	return flattenDeep(reflect.ValueOf(out)).Interface()
@@ -294,32 +269,6 @@ func ForEach(arr interface{}, predicate interface{}) {
 			funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
 		}
 	}
-}
-
-// IsFunction will return if the argument is a function.
-func IsFunction(in interface{}, num ...int) bool {
-	funcType := reflect.TypeOf(in)
-
-	result := funcType.Kind() == reflect.Func
-
-	if len(num) >= 1 {
-		result = result && funcType.NumIn() == num[0]
-	}
-
-	if len(num) == 2 {
-		result = result && funcType.NumOut() == num[1]
-	}
-
-	return result
-}
-
-// IsIteratee will return if the argument is an iteratee.
-func IsIteratee(in interface{}) bool {
-	arrType := reflect.TypeOf(in)
-
-	kind := arrType.Kind()
-
-	return kind == reflect.Array || kind == reflect.Slice || kind == reflect.Map
 }
 
 // Filter iterates over elements of collection, returning an array of
@@ -629,22 +578,4 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 	}
 
 	panic(fmt.Sprintf("Type %s is not supported by Map", arrType.String()))
-}
-
-// SliceOf will returns a slice which contains the element.
-func SliceOf(in interface{}) interface{} {
-	value := reflect.ValueOf(in)
-
-	sliceType := reflect.SliceOf(reflect.TypeOf(in))
-	slice := reflect.New(sliceType)
-	sliceValue := reflect.MakeSlice(sliceType, 0, 0)
-	sliceValue = reflect.Append(sliceValue, value)
-	slice.Elem().Set(sliceValue)
-
-	return slice.Elem().Interface()
-}
-
-// ZeroOf will returns a zero value of an element.
-func ZeroOf(in interface{}) interface{} {
-	return reflect.Zero(reflect.TypeOf(in)).Interface()
 }
