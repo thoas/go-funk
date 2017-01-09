@@ -1,6 +1,10 @@
 package funk
 
-import "reflect"
+import (
+	"math/rand"
+	"reflect"
+	"time"
+)
 
 // IsFunction will return if the argument is a function.
 func IsFunction(in interface{}, num ...int) bool {
@@ -44,4 +48,46 @@ func SliceOf(in interface{}) interface{} {
 // ZeroOf will returns a zero value of an element.
 func ZeroOf(in interface{}) interface{} {
 	return reflect.Zero(reflect.TypeOf(in)).Interface()
+}
+
+// RandomInt generator
+func RandomInt(min, max int) int {
+	rand.Seed(time.Now().UTC().UnixNano())
+	return min + rand.Intn(max-min)
+}
+
+// Shard will shard a string name
+func Shard(str string, width int, depth int, restOnly bool) []string {
+	var results []string
+
+	for i := 0; i < depth; i++ {
+		results = append(results, str[(width*i):(width*(i+1))])
+	}
+
+	if restOnly {
+		results = append(results, str[(width*depth):])
+	} else {
+		results = append(results, str)
+	}
+
+	return results
+}
+
+var defaultLetters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
+// RandomString returns a random string with a fixed length
+func RandomString(n int, allowedChars ...[]rune) string {
+	var letters []rune
+
+	if len(allowedChars) == 0 {
+		letters = defaultLetters
+	} else {
+		letters = allowedChars[0]
+	}
+
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
