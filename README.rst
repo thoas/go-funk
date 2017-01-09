@@ -375,6 +375,37 @@ funk.Values
 
     Values(foo) // []interface{}{1, "Dark", "Vador", 30} (iteration order is not guaranteed)
 
+funk.RandomInt
+..............
+
+``funk.RandomInt`` generates a random int, based on a min and max values
+
+.. code-block:: go
+
+    RandomInt(0, 100) // will be between 0 and 100
+
+funk.RandomString
+.................
+
+``funk.RandomString`` generates a random string with a fixed length
+
+.. code-block:: go
+
+    RandomString(4) // will be a string of 4 random characters
+
+funk.Shard
+..........
+
+``funk.Shard`` generates a sharded string with a fixed length and depth
+
+.. code-block:: go
+
+    Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 1, 2, false) // []string{"e", "8", "e89d66bdfdd4dd26b682cc77e23a86eb"}
+
+    Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, false) // []string{"e8", "9d", "e89d66bdfdd4dd26b682cc77e23a86eb"}
+
+    Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
+
 Contributing
 ------------
 

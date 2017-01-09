@@ -50,7 +50,7 @@ func ZeroOf(in interface{}) interface{} {
 	return reflect.Zero(reflect.TypeOf(in)).Interface()
 }
 
-// RandomInt generator
+// RandomInt generates a random int, based on a min and max values
 func RandomInt(min, max int) int {
 	rand.Seed(time.Now().UTC().UnixNano())
 	return min + rand.Intn(max-min)
