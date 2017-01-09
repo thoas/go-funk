@@ -7,7 +7,7 @@ As it relies a lot on reflect_, be careful this code runs exclusively on runtime
 
 This project has started as an experiment to learn reflect_. It may looks like lodash_ in some aspects but
 it will have its own ROADMAP, lodash_ is an awesome library with a lot of works behind it, all features included in
-``go-funk`` come from internals use cases.
+``go-funk`` come from internal use cases.
 
 .. image:: https://secure.travis-ci.org/thoas/go-funk.svg?branch=master
     :alt: Build Status
