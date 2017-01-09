@@ -12,8 +12,8 @@ func TestSliceOf(t *testing.T) {
 
 	f := &Foo{
 		ID:        1,
-		FirstName: "Drew",
-		LastName:  "Olson",
+		FirstName: "Dark",
+		LastName:  "Vador",
 		Age:       30,
 		Bar: &Bar{
 			Name: "Test",

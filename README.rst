@@ -299,8 +299,8 @@ funk.Get
 
     var foo *Foo = &Foo{
         ID:        1,
-        FirstName: "Drew",
-        LastName:  "Olson",
+        FirstName: "Dark",
+        LastName:  "Vador",
         Age:       30,
         Bar:       bar,
         Bars: []*Bar{
@@ -313,6 +313,32 @@ funk.Get
     Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
     Get(foo, "Bar.Name") // Test
 
+``funk.Get`` also handles ``nil`` values:
+
+.. code-block:: go
+
+    bar := &Bar{
+        Name: "Test",
+    }
+
+    foo1 := &Foo{
+        ID:        1,
+        FirstName: "Dark",
+        LastName:  "Vador",
+        Age:       30,
+        Bar:       bar,
+    }
+
+    foo2 := &Foo{
+        ID:        1,
+        FirstName: "Dark",
+        LastName:  "Vador",
+        Age:       30,
+    } // foo2.Bar is nil
+
+    Get([]*Foo{foo1, foo2}, "Bar.Name") // []string{"Test"}
+    Get(foo2, "Bar.Name") // nil
+
 funk.Keys
 .........
 
@@ -324,8 +350,8 @@ funk.Keys
 
     foo := &Foo{
         ID:        1,
-        FirstName: "Drew",
-        LastName:  "Olson",
+        FirstName: "Dark",
+        LastName:  "Vador",
         Age:       30,
     }
 
@@ -342,12 +368,12 @@ funk.Values
 
     foo := &Foo{
         ID:        1,
-        FirstName: "Drew",
-        LastName:  "Olson",
+        FirstName: "Dark",
+        LastName:  "Vador",
         Age:       30,
     }
 
-    Values(foo) // []interface{}{1, "Drew", "Olson", 30} (iteration order is not guaranteed)
+    Values(foo) // []interface{}{1, "Dark", "Vador", 30} (iteration order is not guaranteed)
 
 Contributing
 ------------

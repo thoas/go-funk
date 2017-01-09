@@ -48,8 +48,8 @@ var bar *Bar = &Bar{
 
 var foo *Foo = &Foo{
 	ID:        1,
-	FirstName: "Drew",
-	LastName:  "Olson",
+	FirstName: "Dark",
+	LastName:  "Vador",
 	Age:       30,
 	Bar:       bar,
 	EmptyValue: sql.NullInt64{
@@ -64,7 +64,7 @@ var foo *Foo = &Foo{
 
 var foo2 *Foo = &Foo{
 	ID:        1,
-	FirstName: "Drew",
-	LastName:  "Olson",
+	FirstName: "Dark",
+	LastName:  "Vador",
 	Age:       30,
 }
