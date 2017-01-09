@@ -106,3 +106,13 @@ func TestFlattenDeep(t *testing.T) {
 
 	assert.Equal(FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}), []int{1, 2, 3, 4})
 }
+
+func TestShuffle(t *testing.T) {
+	results := Shuffle([]int{0, 1, 2, 3, 4})
+
+	assert := assert.New(t)
+
+	assert.Len(results, 5)
+
+	fmt.Println(results)
+}
