@@ -80,15 +80,6 @@ You can import ``go-funk`` using a basic statement:
 
     import "github.com/thoas/go-funk"
 
-funk.SliceOf
-............
-
-``funk.SliceOf`` will return a slice based on an element.
-
-.. code-block:: go
-
-    result := funk.SliceOf(f) // will return a []*Foo{f}
-
 funk.Contains
 .............
 
@@ -242,36 +233,6 @@ funk.Map
         return fmt.Sprintf("%d", k), v
     }) // map[string]string{"1": "Florent", "2": "Gilles"}
 
-funk.ForEach
-............
-
-``funk.ForEach`` allows you to range over an iteratee (map, slice)
-
-.. code-block:: go
-
-    funk.ForEach([]int{1, 2, 3, 4}, func(x int) {
-        fmt.Println(x)
-    })
-
-funk.Chunk
-..........
-
-``funk.Chunk`` creates an array of elements split into groups with the length
-of the size. If array can't be split evenly, the final chunk will be the remaining element.
-
-.. code-block:: go
-
-    funk.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
-
-funk.FlattenDeep
-................
-
-``funk.FlattenDeep`` recursively flattens array.
-
-.. code-block:: go
-
-    funk.FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}) // []int{1, 2, 3, 4}
-
 funk.Get
 ........
 
@@ -375,6 +336,65 @@ funk.Values
 
     Values(foo) // []interface{}{1, "Dark", "Vador", 30} (iteration order is not guaranteed)
 
+funk.ForEach
+............
+
+``funk.ForEach`` allows you to range over an iteratee (map, slice)
+
+.. code-block:: go
+
+    funk.ForEach([]int{1, 2, 3, 4}, func(x int) {
+        fmt.Println(x)
+    })
+
+funk.Chunk
+..........
+
+``funk.Chunk`` creates an array of elements split into groups with the length
+of the size. If array can't be split evenly, the final chunk will be the remaining element.
+
+.. code-block:: go
+
+    funk.Chunk([]int{1, 2, 3, 4, 5}, 2) // [][]int{[]int{1, 2}, []int{3, 4}, []int{5}}
+
+funk.FlattenDeep
+................
+
+``funk.FlattenDeep`` recursively flattens array.
+
+.. code-block:: go
+
+    funk.FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}) // []int{1, 2, 3, 4}
+
+
+funk.Shuffle
+............
+
+``funk.Shuffle`` creates an array of shuffled values
+
+.. code-block:: go
+
+    Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
+
+funk.Reverse
+............
+
+``funk.Reverse`` transforms an array the first element will become the last,
+the second element will become the second to last, etc.
+
+.. code-block:: go
+
+    Reverse([]int{0, 1, 2, 3, 4}) // []int{4, 3, 2, 1, 0}
+
+funk.SliceOf
+............
+
+``funk.SliceOf`` will return a slice based on an element.
+
+.. code-block:: go
+
+    result := funk.SliceOf(f) // will return a []*Foo{f}
+
 funk.RandomInt
 ..............
 
@@ -406,24 +426,6 @@ funk.Shard
 
     Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
 
-funk.Shuffle
-............
-
-``funk.Shuffle`` creates an array of shuffled values
-
-.. code-block:: go
-
-    Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
-
-funk.Reverse
-............
-
-``funk.Reverse`` transforms an array the first element will become the last,
-the second element will become the second to last, etc.
-
-.. code-block:: go
-
-    Reverse([]int{0, 1, 2, 3, 4}) // []int{4, 3, 2, 1, 0}
 
 Contributing
 ------------
