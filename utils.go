@@ -26,3 +26,20 @@ func redirectValue(value reflect.Value) reflect.Value {
 
 	return value
 }
+
+func makeSlice(value reflect.Value, values ...int) reflect.Value {
+	sliceType := sliceElem(value.Type())
+
+	size := value.Len()
+	cap := size
+
+	if len(values) > 0 {
+		size = values[0]
+	}
+
+	if len(values) > 1 {
+		cap = values[1]
+	}
+
+	return reflect.MakeSlice(reflect.SliceOf(sliceType), size, cap)
+}

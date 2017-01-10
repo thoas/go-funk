@@ -124,3 +124,13 @@ func TestReverse(t *testing.T) {
 
 	assert.Equal(results, []int{4, 3, 2, 1, 0})
 }
+
+func TestUniq(t *testing.T) {
+	results := Uniq([]int{0, 1, 1, 2, 3, 0, 0, 12})
+
+	assert := assert.New(t)
+
+	assert.Len(results, 5)
+
+	assert.Equal(results, []int{0, 1, 2, 3, 12})
+}

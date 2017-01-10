@@ -239,11 +239,9 @@ func Shuffle(in interface{}) interface{} {
 	kind := value.Kind()
 
 	if kind == reflect.Array || kind == reflect.Slice {
-		sliceType := sliceElem(value.Type())
-
 		length := value.Len()
 
-		resultSlice := reflect.MakeSlice(reflect.SliceOf(sliceType), length, length)
+		resultSlice := makeSlice(value, length)
 
 		for i, v := range rand.Perm(length) {
 			resultSlice.Index(i).Set(value.Index(v))
@@ -264,11 +262,9 @@ func Reverse(in interface{}) interface{} {
 	kind := value.Kind()
 
 	if kind == reflect.Array || kind == reflect.Slice {
-		sliceType := sliceElem(value.Type())
-
 		length := value.Len()
 
-		resultSlice := reflect.MakeSlice(reflect.SliceOf(sliceType), length, length)
+		resultSlice := makeSlice(value, length)
 
 		j := 0
 		for i := length - 1; i >= 0; i-- {
@@ -280,4 +276,36 @@ func Reverse(in interface{}) interface{} {
 	}
 
 	panic(fmt.Sprintf("Type %s is not supported by Reverse", valueType.String()))
+}
+
+// Uniq creates an array with unique values.
+func Uniq(in interface{}) interface{} {
+	value := reflect.ValueOf(in)
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		length := value.Len()
+
+		seen := make(map[interface{}]bool, length)
+		j := 0
+
+		for i := 0; i < length; i++ {
+			val := value.Index(i)
+			v := val.Interface()
+
+			if _, ok := seen[v]; ok {
+				continue
+			}
+
+			seen[v] = true
+			value.Index(j).Set(val)
+			j++
+		}
+
+		return value.Slice(0, j).Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Uniq", valueType.String()))
 }

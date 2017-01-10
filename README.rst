@@ -366,6 +366,15 @@ funk.FlattenDeep
 
     funk.FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}) // []int{1, 2, 3, 4}
 
+funk.Uniq
+.........
+
+``funk.Uniq`` creates an array with unique values.
+
+.. code-block:: go
+
+    funk.Uniq([]int{0, 1, 1, 2, 3, 0, 0, 12}) // []int{0, 1, 2, 3, 12}
+
 funk.Shuffle
 ............
 
