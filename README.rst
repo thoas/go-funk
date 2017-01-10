@@ -406,6 +406,15 @@ funk.Shard
 
     Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
 
+funk.Shuffle
+............
+
+``funk.Shuffle`` creates an array of shuffled values
+
+.. code-block:: go
+
+    Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
+
 Contributing
 ------------
 
