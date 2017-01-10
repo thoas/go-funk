@@ -114,3 +114,13 @@ func TestShuffle(t *testing.T) {
 
 	assert.Len(results, 5)
 }
+
+func TestReverse(t *testing.T) {
+	results := Reverse([]int{0, 1, 2, 3, 4})
+
+	assert := assert.New(t)
+
+	assert.Len(results, 5)
+
+	assert.Equal(results, []int{4, 3, 2, 1, 0})
+}

@@ -415,6 +415,16 @@ funk.Shuffle
 
     Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
 
+funk.Reverse
+............
+
+``funk.Reverse`` transforms an array the first element will become the last,
+the second element will become the second to last, etc.
+
+.. code-block:: go
+
+    Reverse([]int{0, 1, 2, 3, 4}) // []int{4, 3, 2, 1, 0}
+
 Contributing
 ------------
 

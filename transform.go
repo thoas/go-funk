@@ -254,3 +254,30 @@ func Shuffle(in interface{}) interface{} {
 
 	panic(fmt.Sprintf("Type %s is not supported by Shuffle", valueType.String()))
 }
+
+// Reverse transforms an array the first element will become the last,
+// the second element will become the second to last, etc.
+func Reverse(in interface{}) interface{} {
+	value := reflect.ValueOf(in)
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		sliceType := sliceElem(value.Type())
+
+		length := value.Len()
+
+		resultSlice := reflect.MakeSlice(reflect.SliceOf(sliceType), length, length)
+
+		j := 0
+		for i := length - 1; i >= 0; i-- {
+			resultSlice.Index(j).Set(value.Index(i))
+			j++
+		}
+
+		return resultSlice.Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Reverse", valueType.String()))
+}
