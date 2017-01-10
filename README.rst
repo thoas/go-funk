@@ -1,14 +1,6 @@
 go-funk
 =======
 
-``go-funk`` is a modern Go library based on reflect_.
-
-As it relies a lot on reflect_, be careful this code runs exclusively on runtime so you must have a good test suite.
-
-This project has started as an experiment to learn reflect_. It may looks like lodash_ in some aspects but
-it will have its own ROADMAP, lodash_ is an awesome library with a lot of works behind it, all features included in
-``go-funk`` come from internal use cases.
-
 .. image:: https://secure.travis-ci.org/thoas/go-funk.svg?branch=master
     :alt: Build Status
     :target: http://travis-ci.org/thoas/go-funk
@@ -20,6 +12,14 @@ it will have its own ROADMAP, lodash_ is an awesome library with a lot of works 
 .. image:: https://goreportcard.com/badge/github.com/thoas/go-funk
     :alt: Go report
     :target: https://goreportcard.com/report/github.com/thoas/go-funk
+
+``go-funk`` is a modern Go library based on reflect_.
+
+As it relies a lot on reflect_, be careful this code runs exclusively on runtime so you must have a good test suite.
+
+This project has started as an experiment to learn reflect_. It may looks like lodash_ in some aspects but
+it will have its own ROADMAP, lodash_ is an awesome library with a lot of works behind it, all features included in
+``go-funk`` come from internal use cases.
 
 Why this name?
 --------------
