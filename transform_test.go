@@ -108,11 +108,17 @@ func TestFlattenDeep(t *testing.T) {
 }
 
 func TestShuffle(t *testing.T) {
-	results := Shuffle([]int{0, 1, 2, 3, 4})
+	initial := []int{0, 1, 2, 3, 4}
+
+	results := Shuffle(initial)
 
 	assert := assert.New(t)
 
 	assert.Len(results, 5)
+
+	for _, entry := range initial {
+		assert.True(Contains(results, entry))
+	}
 }
 
 func TestReverse(t *testing.T) {

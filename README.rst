@@ -347,6 +347,21 @@ funk.ForEach
         fmt.Println(x)
     })
 
+funk.ForEachRight
+............
+
+``funk.ForEachRight`` allows you to range over an iteratee (map, slice) from the right
+
+.. code-block:: go
+
+    results := []int{}
+
+    funk.ForEachRight([]int{1, 2, 3, 4}, func(x int) {
+        results = append(results, x)
+    })
+
+    fmt.Println(results) // []int{4, 3, 2, 1}
+
 funk.Chunk
 ..........
 
