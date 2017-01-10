@@ -270,9 +270,9 @@ funk.Get
         },
     }
 
-    Get([]*Foo{foo}, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
-    Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
-    Get(foo, "Bar.Name") // Test
+    funk.Get([]*Foo{foo}, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
+    funk.Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
+    funk.Get(foo, "Bar.Name") // Test
 
 ``funk.Get`` also handles ``nil`` values:
 
@@ -297,8 +297,8 @@ funk.Get
         Age:       30,
     } // foo2.Bar is nil
 
-    Get([]*Foo{foo1, foo2}, "Bar.Name") // []string{"Test"}
-    Get(foo2, "Bar.Name") // nil
+    funk.Get([]*Foo{foo1, foo2}, "Bar.Name") // []string{"Test"}
+    funk.Get(foo2, "Bar.Name") // nil
 
 funk.Keys
 .........
@@ -307,7 +307,7 @@ funk.Keys
 
 .. code-block:: go
 
-    Keys(map[string]int{"one": 1, "two": 2}) // []string{"one", "two"} (iteration order is not guaranteed)
+    funk.Keys(map[string]int{"one": 1, "two": 2}) // []string{"one", "two"} (iteration order is not guaranteed)
 
     foo := &Foo{
         ID:        1,
@@ -316,7 +316,7 @@ funk.Keys
         Age:       30,
     }
 
-    Keys(foo) // []string{"ID", "FirstName", "LastName", "Age"} (iteration order is not guaranteed)
+    funk.Keys(foo) // []string{"ID", "FirstName", "LastName", "Age"} (iteration order is not guaranteed)
 
 funk.Values
 ...........
@@ -325,7 +325,7 @@ funk.Values
 
 .. code-block:: go
 
-    Values(map[string]int{"one": 1, "two": 2}) // []string{1, 2} (iteration order is not guaranteed)
+    funk.Values(map[string]int{"one": 1, "two": 2}) // []string{1, 2} (iteration order is not guaranteed)
 
     foo := &Foo{
         ID:        1,
@@ -334,7 +334,7 @@ funk.Values
         Age:       30,
     }
 
-    Values(foo) // []interface{}{1, "Dark", "Vador", 30} (iteration order is not guaranteed)
+    funk.Values(foo) // []interface{}{1, "Dark", "Vador", 30} (iteration order is not guaranteed)
 
 funk.ForEach
 ............
@@ -366,7 +366,6 @@ funk.FlattenDeep
 
     funk.FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}) // []int{1, 2, 3, 4}
 
-
 funk.Shuffle
 ............
 
@@ -374,7 +373,7 @@ funk.Shuffle
 
 .. code-block:: go
 
-    Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
+    funk.Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
 
 funk.Reverse
 ............
@@ -384,7 +383,7 @@ the second element will become the second to last, etc.
 
 .. code-block:: go
 
-    Reverse([]int{0, 1, 2, 3, 4}) // []int{4, 3, 2, 1, 0}
+    funk.Reverse([]int{0, 1, 2, 3, 4}) // []int{4, 3, 2, 1, 0}
 
 funk.SliceOf
 ............
@@ -402,7 +401,7 @@ funk.RandomInt
 
 .. code-block:: go
 
-    RandomInt(0, 100) // will be between 0 and 100
+    funk.RandomInt(0, 100) // will be between 0 and 100
 
 funk.RandomString
 .................
@@ -411,7 +410,7 @@ funk.RandomString
 
 .. code-block:: go
 
-    RandomString(4) // will be a string of 4 random characters
+    funk.RandomString(4) // will be a string of 4 random characters
 
 funk.Shard
 ..........
@@ -420,11 +419,11 @@ funk.Shard
 
 .. code-block:: go
 
-    Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 1, 2, false) // []string{"e", "8", "e89d66bdfdd4dd26b682cc77e23a86eb"}
+    funk.Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 1, 2, false) // []string{"e", "8", "e89d66bdfdd4dd26b682cc77e23a86eb"}
 
-    Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, false) // []string{"e8", "9d", "e89d66bdfdd4dd26b682cc77e23a86eb"}
+    funk.Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, false) // []string{"e8", "9d", "e89d66bdfdd4dd26b682cc77e23a86eb"}
 
-    Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
+    funk.Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
 
 
 Contributing
