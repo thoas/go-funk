@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
-	"time"
 )
 
 // Chunk creates an array of elements split into groups with the length of size.
@@ -232,7 +231,7 @@ func flatten(value reflect.Value, result reflect.Value) reflect.Value {
 	return result
 }
 
-// Shuffle creates an array of shuffled values, using a version of the Fisher-Yates algorithm.
+// Shuffle creates an array of shuffled values
 func Shuffle(in interface{}) interface{} {
 	value := reflect.ValueOf(in)
 	valueType := value.Type()
@@ -245,17 +244,9 @@ func Shuffle(in interface{}) interface{} {
 		length := value.Len()
 
 		resultSlice := reflect.MakeSlice(reflect.SliceOf(sliceType), length, length)
-		for i := 0; i < length; i++ {
-			resultSlice.Index(i).Set(value.Index(i))
-		}
 
-		rand.Seed(time.Now().UnixNano())
-
-		for i := 0; i < length; i++ {
-			j := rand.Intn(i + 1)
-
-			resultSlice.Index(i).Set(resultSlice.Index(j))
-			resultSlice.Index(j).Set(resultSlice.Index(i))
+		for i, v := range rand.Perm(length) {
+			resultSlice.Index(i).Set(value.Index(v))
 		}
 
 		return resultSlice.Interface()

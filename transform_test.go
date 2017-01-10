@@ -113,6 +113,4 @@ func TestShuffle(t *testing.T) {
 	assert := assert.New(t)
 
 	assert.Len(results, 5)
-
-	fmt.Println(results)
 }
