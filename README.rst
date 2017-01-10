@@ -392,7 +392,7 @@ funk.SliceOf
 
 .. code-block:: go
 
-    result := funk.SliceOf(f) // will return a []*Foo{f}
+    funk.SliceOf(f) // will return a []*Foo{f}
 
 funk.RandomInt
 ..............
