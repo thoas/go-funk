@@ -18,10 +18,10 @@ go-funk
 Generic helpers rely on reflect_, be careful this code runs exclusively on runtime so you must have a good test suite.
 
 These helpers have started as an experiment to learn reflect_. It may looks like lodash_ in some aspects but
-it will have its own ROADMAP, lodash_ is an awesome library with a lot of works behind it, all features included in
+it will have its own roadmap, lodash_ is an awesome library with a lot of works behind it, all features included in
 ``go-funk`` come from internal use cases.
 
-You can also found typesafe implementation in the godoc_.
+You can also find typesafe implementation in the godoc_.
 
 Why this name?
 --------------
