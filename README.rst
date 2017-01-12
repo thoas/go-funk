@@ -209,7 +209,7 @@ funk.Map
 .. code-block:: go
 
     r := funk.Map([]int{1, 2, 3, 4}, func(x int) int {
-        return "Hello"
+        return x * 2
     }) // []int{2, 4, 6, 8}
 
     r := funk.Map([]int{1, 2, 3, 4}, func(x int) string {
