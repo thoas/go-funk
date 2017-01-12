@@ -469,7 +469,7 @@ Let's stop beating around the bush, a typesafe implementation in pur Go of ``fun
     }
 
 will always outperforms an implementation based on reflect_ in terms of speed and allocs because that the way of
-how it's implementated in the language.
+how it's implemented in the language.
 
 If you want a similarity gorm_ will always be slower than sqlx_ (which is very low level btw) and will uses more allocs.
 
