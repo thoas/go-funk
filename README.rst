@@ -449,6 +449,31 @@ funk.Shard
 
     funk.Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
 
+Performance
+-----------
+
+``go-funk`` has currently an open issue about performance_, don't hesitate to participate to the discussion
+to enhance helpers implementations.
+
+Let's stop beating around the bush, a typesafe implementation in pur Go of ``funk.Contains``, let's say for example:
+
+.. code-block:: go
+
+    func ContainsInt(s []int, e int) bool {
+        for _, a := range s {
+            if a == e {
+                return true
+            }
+        }
+        return false
+    }
+
+will always outperforms an implementation based on reflect_ in terms of speed and allocs because that the way of
+how it's implementated in the language.
+
+If you want a similarity gorm_ will always be slower than sqlx_ (which is very low level btw) and will uses more allocs.
+
+You must not think ``go-funk`` as a replacement when you are deadling with performance in your codebase.
 
 Contributing
 ------------
@@ -461,3 +486,6 @@ Don't hesitate ;)
 
 .. _reflect: https://golang.org/pkg/reflect/
 .. _lodash: https://lodash.com/
+.. _performance: https://github.com/thoas/go-funk/issues/19
+.. _gorm: https://github.com/jinzhu/gorm
+.. _sqlx: https://github.com/jmoiron/sqlx
