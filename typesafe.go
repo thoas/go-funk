@@ -1,5 +1,7 @@
 package funk
 
+import "math/rand"
+
 // ContainsInt return true if an int is present in a iteratee.
 func ContainsInt(s []int, v int) bool {
 	for _, vv := range s {
@@ -241,4 +243,54 @@ func UniqFloat64(a []float64) []float64 {
 	}
 
 	return a[0:j]
+}
+
+// ShuffleInt creates an array of int shuffled values using Fisher–Yates algorithm
+func ShuffleInt(a []int) []int {
+	for i := range a {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
+	}
+
+	return a
+}
+
+// ShuffleInt64 creates an array of int64 shuffled values using Fisher–Yates algorithm
+func ShuffleInt64(a []int64) []int64 {
+	for i := range a {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
+	}
+
+	return a
+}
+
+// ShuffleString creates an array of string shuffled values using Fisher–Yates algorithm
+func ShuffleString(a []string) []string {
+	for i := range a {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
+	}
+
+	return a
+}
+
+// ShuffleFloat32 creates an array of float32 shuffled values using Fisher–Yates algorithm
+func ShuffleFloat32(a []float32) []float32 {
+	for i := range a {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
+	}
+
+	return a
+}
+
+// ShuffleFloat64 creates an array of float64 shuffled values using Fisher–Yates algorithm
+func ShuffleFloat64(a []float64) []float64 {
+	for i := range a {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
+	}
+
+	return a
 }
