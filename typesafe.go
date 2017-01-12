@@ -81,3 +81,43 @@ func SumFloat32(s []float32) (sum float32) {
 	}
 	return
 }
+
+// ReverseString reverses an array of string
+func ReverseString(s []string) []string {
+	for i, j := 0, len(s)-1; i < len(s)/2; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
+// ReverseInt reverses an array of int
+func ReverseInt(s []int) []int {
+	for i, j := 0, len(s)-1; i < len(s)/2; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
+// ReverseInt64 reverses an array of int64
+func ReverseInt64(s []int64) []int64 {
+	for i, j := 0, len(s)-1; i < len(s)/2; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
+// ReverseFloat64 reverses an array of float64
+func ReverseFloat64(s []float64) []float64 {
+	for i, j := 0, len(s)-1; i < len(s)/2; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
+// ReverseFloat32 reverses an array of float32
+func ReverseFloat32(s []float32) []float32 {
+	for i, j := 0, len(s)-1; i < len(s)/2; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}

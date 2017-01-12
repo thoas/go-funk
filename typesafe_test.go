@@ -33,7 +33,7 @@ func TestContainsFloat(t *testing.T) {
 	assert.False(ContainsFloat32([]float32{0.1, 0.2}, 0.3))
 }
 
-func TestSum(t *testing.T) {
+func TestSumNumeral(t *testing.T) {
 	assert := assert.New(t)
 
 	assert.Equal(SumInt([]int{1, 2, 3}), 6)
@@ -41,4 +41,14 @@ func TestSum(t *testing.T) {
 
 	assert.Equal(SumFloat32([]float32{0.1, 0.2, 0.1}), float32(0.4))
 	assert.Equal(SumFloat64([]float64{0.1, 0.2, 0.1}), float64(0.4))
+}
+
+func TestTypesafeReverse(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(ReverseInt([]int{1, 2, 3, 4}), []int{4, 3, 2, 1})
+	assert.Equal(ReverseInt64([]int64{1, 2, 3, 4}), []int64{4, 3, 2, 1})
+	assert.Equal(ReverseString([]string{"flo", "gilles"}), []string{"gilles", "flo"})
+	assert.Equal(ReverseFloat64([]float64{0.1, 0.2, 0.3}), []float64{0.3, 0.2, 0.1})
+	assert.Equal(ReverseFloat32([]float32{0.1, 0.2, 0.3}), []float32{0.3, 0.2, 0.1})
 }
