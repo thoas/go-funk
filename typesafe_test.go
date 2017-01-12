@@ -69,6 +69,14 @@ func TestTypesafeIndexOf(t *testing.T) {
 	assert.Equal(IndexOfFloat64([]float64{0.1, 0.2, 0.3}, 0.4), -1)
 }
 
+func TestTypesafeLastIndexOf(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(LastIndexOfString([]string{"foo", "bar", "bar"}, "bar"), 2)
+	assert.Equal(LastIndexOfInt([]int{1, 2, 2, 3}, 2), 2)
+	assert.Equal(LastIndexOfInt64([]int64{1, 2, 2, 3}, 4), -1)
+}
+
 func TestTypesafeUniq(t *testing.T) {
 	assert := assert.New(t)
 

@@ -157,6 +157,39 @@ func IndexOfString(a []string, x string) int {
 	return indexOf(len(a), func(i int) bool { return a[i] == x })
 }
 
+func lastIndexOf(n int, f func(int) bool) int {
+	for i := n - 1; i > 0; i-- {
+		if f(i) {
+			return i
+		}
+	}
+	return -1
+}
+
+// LastIndexOfInt gets the index at which the first occurrence of an int value is found in array or return -1
+// if the value cannot be found
+func LastIndexOfInt(a []int, x int) int {
+	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
+// LastIndexOfInt64 gets the index at which the first occurrence of an int64 value is found in array or return -1
+// if the value cannot be found
+func LastIndexOfInt64(a []int64, x int64) int {
+	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
+// LastIndexOfFloat64 gets the index at which the first occurrence of an float64 value is found in array or return -1
+// if the value cannot be found
+func LastIndexOfFloat64(a []float64, x float64) int {
+	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
+// LastIndexOfString gets the index at which the first occurrence of a string value is found in array or return -1
+// if the value cannot be found
+func LastIndexOfString(a []string, x string) int {
+	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
 // UniqInt64 creates an array of int64 with unique values.
 func UniqInt64(a []int64) []int64 {
 	length := len(a)
@@ -228,6 +261,28 @@ func UniqFloat64(a []float64) []float64 {
 	length := len(a)
 
 	seen := make(map[float64]bool, length)
+	j := 0
+
+	for i := 0; i < length; i++ {
+		v := a[i]
+
+		if _, ok := seen[v]; ok {
+			continue
+		}
+
+		seen[v] = true
+		a[j] = v
+		j++
+	}
+
+	return a[0:j]
+}
+
+// UniqFloat32 creates an array of float32 with unique values.
+func UniqFloat32(a []float32) []float32 {
+	length := len(a)
+
+	seen := make(map[float32]bool, length)
 	j := 0
 
 	for i := 0; i < length; i++ {
