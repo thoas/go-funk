@@ -2,4 +2,4 @@ test:
 	go test -v
 
 bench:
-	go test -bench .
+	go test -benchmem -bench .
