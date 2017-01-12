@@ -154,3 +154,91 @@ func IndexOfFloat64(a []float64, x float64) int {
 func IndexOfString(a []string, x string) int {
 	return indexOf(len(a), func(i int) bool { return a[i] == x })
 }
+
+// UniqInt64 creates an array of int64 with unique values.
+func UniqInt64(a []int64) []int64 {
+	length := len(a)
+
+	seen := make(map[int64]bool, length)
+	j := 0
+
+	for i := 0; i < length; i++ {
+		v := a[i]
+
+		if _, ok := seen[v]; ok {
+			continue
+		}
+
+		seen[v] = true
+		a[j] = v
+		j++
+	}
+
+	return a[0:j]
+}
+
+// UniqInt creates an array of int with unique values.
+func UniqInt(a []int) []int {
+	length := len(a)
+
+	seen := make(map[int]bool, length)
+	j := 0
+
+	for i := 0; i < length; i++ {
+		v := a[i]
+
+		if _, ok := seen[v]; ok {
+			continue
+		}
+
+		seen[v] = true
+		a[j] = v
+		j++
+	}
+
+	return a[0:j]
+}
+
+// UniqString creates an array of string with unique values.
+func UniqString(a []string) []string {
+	length := len(a)
+
+	seen := make(map[string]bool, length)
+	j := 0
+
+	for i := 0; i < length; i++ {
+		v := a[i]
+
+		if _, ok := seen[v]; ok {
+			continue
+		}
+
+		seen[v] = true
+		a[j] = v
+		j++
+	}
+
+	return a[0:j]
+}
+
+// UniqFloat64 creates an array of float64 with unique values.
+func UniqFloat64(a []float64) []float64 {
+	length := len(a)
+
+	seen := make(map[float64]bool, length)
+	j := 0
+
+	for i := 0; i < length; i++ {
+		v := a[i]
+
+		if _, ok := seen[v]; ok {
+			continue
+		}
+
+		seen[v] = true
+		a[j] = v
+		j++
+	}
+
+	return a[0:j]
+}

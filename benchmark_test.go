@@ -40,3 +40,20 @@ func BenchmarkContains(b *testing.B) {
 		}
 	})
 }
+
+func BenchmarkUniq(b *testing.B) {
+	r := rand.New(rand.NewSource(seed))
+	testData := sliceGenerator(sliceSize, r)
+
+	b.Run("UniqInt64", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			UniqInt64(testData)
+		}
+	})
+
+	b.Run("Uniq", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			Uniq(testData)
+		}
+	})
+}

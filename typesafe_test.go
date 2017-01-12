@@ -68,3 +68,12 @@ func TestTypesafeIndexOf(t *testing.T) {
 	assert.Equal(IndexOfFloat64([]float64{0.1, 0.2, 0.3}, 0.2), 1)
 	assert.Equal(IndexOfFloat64([]float64{0.1, 0.2, 0.3}, 0.4), -1)
 }
+
+func TestTypesafeUnit(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(UniqInt64([]int64{0, 1, 1, 2, 3, 0, 0, 12}), []int64{0, 1, 2, 3, 12})
+	assert.Equal(UniqInt([]int{0, 1, 1, 2, 3, 0, 0, 12}), []int{0, 1, 2, 3, 12})
+	assert.Equal(UniqFloat64([]float64{0.0, 0.1, 0.1, 0.2, 0.3, 0.0, 0.0, 0.12}), []float64{0.0, 0.1, 0.2, 0.3, 0.12})
+	assert.Equal(UniqString([]string{"foo", "bar", "foo", "bar"}), []string{"foo", "bar"})
+}
