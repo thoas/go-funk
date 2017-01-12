@@ -52,3 +52,19 @@ func TestTypesafeReverse(t *testing.T) {
 	assert.Equal(ReverseFloat64([]float64{0.1, 0.2, 0.3}), []float64{0.3, 0.2, 0.1})
 	assert.Equal(ReverseFloat32([]float32{0.1, 0.2, 0.3}), []float32{0.3, 0.2, 0.1})
 }
+
+func TestTypesafeIndexOf(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(IndexOfString([]string{"foo", "bar"}, "bar"), 1)
+	assert.Equal(IndexOfString([]string{"foo", "bar"}, "flo"), -1)
+
+	assert.Equal(IndexOfInt([]int{0, 1, 2}, 1), 1)
+	assert.Equal(IndexOfInt([]int{0, 1, 2}, 3), -1)
+
+	assert.Equal(IndexOfInt64([]int64{0, 1, 2}, 1), 1)
+	assert.Equal(IndexOfInt64([]int64{0, 1, 2}, 3), -1)
+
+	assert.Equal(IndexOfFloat64([]float64{0.1, 0.2, 0.3}, 0.2), 1)
+	assert.Equal(IndexOfFloat64([]float64{0.1, 0.2, 0.3}, 0.4), -1)
+}

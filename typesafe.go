@@ -121,3 +121,36 @@ func ReverseFloat32(s []float32) []float32 {
 	}
 	return s
 }
+
+func indexOf(n int, f func(int) bool) int {
+	for i := 0; i < n; i++ {
+		if f(i) {
+			return i
+		}
+	}
+	return -1
+}
+
+// IndexOfInt gets the index at which the first occurrence of an int value is found in array or return -1
+// if the value cannot be found
+func IndexOfInt(a []int, x int) int {
+	return indexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
+// IndexOfInt64 gets the index at which the first occurrence of an int64 value is found in array or return -1
+// if the value cannot be found
+func IndexOfInt64(a []int64, x int64) int {
+	return indexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
+// IndexOfFloat64 gets the index at which the first occurrence of an float64 value is found in array or return -1
+// if the value cannot be found
+func IndexOfFloat64(a []float64, x float64) int {
+	return indexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
+// IndexOfString gets the index at which the first occurrence of a string value is found in array or return -1
+// if the value cannot be found
+func IndexOfString(a []string, x string) int {
+	return indexOf(len(a), func(i int) bool { return a[i] == x })
+}
