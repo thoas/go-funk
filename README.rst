@@ -15,11 +15,13 @@ go-funk
 
 ``go-funk`` is a modern Go library based on reflect_.
 
-As it relies a lot on reflect_, be careful this code runs exclusively on runtime so you must have a good test suite.
+Generic helpers rely on reflect_, be careful this code runs exclusively on runtime so you must have a good test suite.
 
-This project has started as an experiment to learn reflect_. It may looks like lodash_ in some aspects but
+These helpers have started as an experiment to learn reflect_. It may looks like lodash_ in some aspects but
 it will have its own ROADMAP, lodash_ is an awesome library with a lot of works behind it, all features included in
 ``go-funk`` come from internal use cases.
+
+You can also found typesafe implementation in the godoc_.
 
 Why this name?
 --------------
@@ -489,3 +491,4 @@ Don't hesitate ;)
 .. _performance: https://github.com/thoas/go-funk/issues/19
 .. _gorm: https://github.com/jinzhu/gorm
 .. _sqlx: https://github.com/jmoiron/sqlx
+.. _godoc: https://godoc.org/github.com/thoas/go-funk
