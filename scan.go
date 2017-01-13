@@ -117,7 +117,7 @@ func ForEachRight(arr interface{}, predicate interface{}) {
 
 // Head gets the first element of array.
 func Head(arr interface{}) interface{} {
-	value := reflect.ValueOf(arr)
+	value := redirectValue(reflect.ValueOf(arr))
 	valueType := value.Type()
 
 	kind := value.Kind()
@@ -135,7 +135,7 @@ func Head(arr interface{}) interface{} {
 
 // Last gets the last element of array.
 func Last(arr interface{}) interface{} {
-	value := reflect.ValueOf(arr)
+	value := redirectValue(reflect.ValueOf(arr))
 	valueType := value.Type()
 
 	kind := value.Kind()
