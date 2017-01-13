@@ -150,3 +150,43 @@ func Last(arr interface{}) interface{} {
 
 	panic(fmt.Sprintf("Type %s is not supported by Last", valueType.String()))
 }
+
+// Initial gets all but the last element of array.
+func Initial(arr interface{}) interface{} {
+	value := redirectValue(reflect.ValueOf(arr))
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		length := value.Len()
+
+		if length <= 1 {
+			return arr
+		}
+
+		return value.Slice(0, length-1).Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Initial", valueType.String()))
+}
+
+// Tail gets all but the last element of array.
+func Tail(arr interface{}) interface{} {
+	value := redirectValue(reflect.ValueOf(arr))
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		length := value.Len()
+
+		if length <= 1 {
+			return arr
+		}
+
+		return value.Slice(1, length).Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Initial", valueType.String()))
+}
