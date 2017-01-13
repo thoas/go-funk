@@ -7,7 +7,7 @@ import (
 )
 
 func TestForEach(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
 	results := []int{}
 
@@ -17,7 +17,7 @@ func TestForEach(t *testing.T) {
 		}
 	})
 
-	assert.Equal(results, []int{2, 4})
+	is.Equal(results, []int{2, 4})
 
 	mapping := map[int]string{
 		1: "Florent",
@@ -25,12 +25,12 @@ func TestForEach(t *testing.T) {
 	}
 
 	ForEach(mapping, func(k int, v string) {
-		assert.Equal(v, mapping[k])
+		is.Equal(v, mapping[k])
 	})
 }
 
 func TestForEachRight(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
 	results := []int{}
 
@@ -38,7 +38,7 @@ func TestForEachRight(t *testing.T) {
 		results = append(results, x*2)
 	})
 
-	assert.Equal(results, []int{8, 6, 4, 2})
+	is.Equal(results, []int{8, 6, 4, 2})
 
 	mapping := map[int]string{
 		1: "Florent",
@@ -48,22 +48,22 @@ func TestForEachRight(t *testing.T) {
 	mapKeys := []int{}
 
 	ForEachRight(mapping, func(k int, v string) {
-		assert.Equal(v, mapping[k])
+		is.Equal(v, mapping[k])
 
 		mapKeys = append(mapKeys, k)
 	})
 
-	assert.Equal(mapKeys, []int{2, 1})
+	is.Equal(mapKeys, []int{2, 1})
 }
 
 func TestHead(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
-	assert.Equal(Head([]int{1, 2, 3, 4}), 1)
+	is.Equal(Head([]int{1, 2, 3, 4}), 1)
 }
 
 func TestLast(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
-	assert.Equal(Last([]int{1, 2, 3, 4}), 4)
+	is.Equal(Last([]int{1, 2, 3, 4}), 4)
 }

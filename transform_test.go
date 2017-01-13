@@ -9,7 +9,7 @@ import (
 )
 
 func TestMap(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
 	r := Map([]int{1, 2, 3, 4}, func(x int) string {
 		return "Hello"
@@ -17,8 +17,8 @@ func TestMap(t *testing.T) {
 
 	result, ok := r.([]string)
 
-	assert.True(ok)
-	assert.Equal(len(result), 4)
+	is.True(ok)
+	is.Equal(len(result), 4)
 
 	r = Map([]int{1, 2, 3, 4}, func(x int) (int, int) {
 		return x, x
@@ -26,9 +26,9 @@ func TestMap(t *testing.T) {
 
 	resultType := reflect.TypeOf(r)
 
-	assert.True(resultType.Kind() == reflect.Map)
-	assert.True(resultType.Key().Kind() == reflect.Int)
-	assert.True(resultType.Elem().Kind() == reflect.Int)
+	is.True(resultType.Kind() == reflect.Map)
+	is.True(resultType.Key().Kind() == reflect.Int)
+	is.True(resultType.Elem().Kind() == reflect.Int)
 
 	mapping := map[int]string{
 		1: "Florent",
@@ -39,8 +39,8 @@ func TestMap(t *testing.T) {
 		return k
 	})
 
-	assert.True(reflect.TypeOf(r).Kind() == reflect.Slice)
-	assert.True(reflect.TypeOf(r).Elem().Kind() == reflect.Int)
+	is.True(reflect.TypeOf(r).Kind() == reflect.Slice)
+	is.True(reflect.TypeOf(r).Elem().Kind() == reflect.Int)
 
 	r = Map(mapping, func(k int, v string) (string, string) {
 		return fmt.Sprintf("%d", k), v
@@ -48,13 +48,13 @@ func TestMap(t *testing.T) {
 
 	resultType = reflect.TypeOf(r)
 
-	assert.True(resultType.Kind() == reflect.Map)
-	assert.True(resultType.Key().Kind() == reflect.String)
-	assert.True(resultType.Elem().Kind() == reflect.String)
+	is.True(resultType.Kind() == reflect.Map)
+	is.True(resultType.Key().Kind() == reflect.String)
+	is.True(resultType.Elem().Kind() == reflect.String)
 }
 
 func TestToMap(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
 	f := &Foo{
 		ID:        1,
@@ -70,41 +70,41 @@ func TestToMap(t *testing.T) {
 
 	instanceMap := ToMap(results, "ID")
 
-	assert.True(reflect.TypeOf(instanceMap).Kind() == reflect.Map)
+	is.True(reflect.TypeOf(instanceMap).Kind() == reflect.Map)
 
 	mapping, ok := instanceMap.(map[int]*Foo)
 
-	assert.True(ok)
+	is.True(ok)
 
 	for _, result := range results {
 		item, ok := mapping[result.ID]
 
-		assert.True(ok)
-		assert.True(reflect.TypeOf(item).Kind() == reflect.Ptr)
-		assert.True(reflect.TypeOf(item).Elem().Kind() == reflect.Struct)
+		is.True(ok)
+		is.True(reflect.TypeOf(item).Kind() == reflect.Ptr)
+		is.True(reflect.TypeOf(item).Elem().Kind() == reflect.Struct)
 
-		assert.Equal(item.ID, result.ID)
+		is.Equal(item.ID, result.ID)
 	}
 }
 
 func TestChunk(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
 	results := Chunk([]int{0, 1, 2, 3, 4}, 2).([][]int)
 
-	assert.Len(results, 3)
-	assert.Len(results[0], 2)
-	assert.Len(results[1], 2)
-	assert.Len(results[2], 1)
+	is.Len(results, 3)
+	is.Len(results[0], 2)
+	is.Len(results[1], 2)
+	is.Len(results[2], 1)
 
-	assert.Len(Chunk([]int{}, 2), 0)
-	assert.Len(Chunk([]int{1}, 2), 1)
+	is.Len(Chunk([]int{}, 2), 0)
+	is.Len(Chunk([]int{1}, 2), 1)
 }
 
 func TestFlattenDeep(t *testing.T) {
-	assert := assert.New(t)
+	is := assert.New(t)
 
-	assert.Equal(FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}), []int{1, 2, 3, 4})
+	is.Equal(FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}), []int{1, 2, 3, 4})
 }
 
 func TestShuffle(t *testing.T) {
@@ -112,31 +112,31 @@ func TestShuffle(t *testing.T) {
 
 	results := Shuffle(initial)
 
-	assert := assert.New(t)
+	is := assert.New(t)
 
-	assert.Len(results, 5)
+	is.Len(results, 5)
 
 	for _, entry := range initial {
-		assert.True(Contains(results, entry))
+		is.True(Contains(results, entry))
 	}
 }
 
 func TestReverse(t *testing.T) {
 	results := Reverse([]int{0, 1, 2, 3, 4})
 
-	assert := assert.New(t)
+	is := assert.New(t)
 
-	assert.Len(results, 5)
+	is.Len(results, 5)
 
-	assert.Equal(results, []int{4, 3, 2, 1, 0})
+	is.Equal(results, []int{4, 3, 2, 1, 0})
 }
 
 func TestUniq(t *testing.T) {
 	results := Uniq([]int{0, 1, 1, 2, 3, 0, 0, 12})
 
-	assert := assert.New(t)
+	is := assert.New(t)
 
-	assert.Len(results, 5)
+	is.Len(results, 5)
 
-	assert.Equal(results, []int{0, 1, 2, 3, 12})
+	is.Equal(results, []int{0, 1, 2, 3, 12})
 }
