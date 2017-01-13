@@ -114,3 +114,31 @@ func ForEachRight(arr interface{}, predicate interface{}) {
 		}
 	}
 }
+
+// Head gets the first element of array.
+func Head(arr interface{}) interface{} {
+	value := reflect.ValueOf(arr)
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		return value.Index(0).Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Head", valueType.String()))
+}
+
+// Last gets the last element of array.
+func Last(arr interface{}) interface{} {
+	value := reflect.ValueOf(arr)
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		return value.Index(value.Len() - 1).Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Last", valueType.String()))
+}

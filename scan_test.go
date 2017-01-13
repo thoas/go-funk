@@ -55,3 +55,15 @@ func TestForEachRight(t *testing.T) {
 
 	assert.Equal(mapKeys, []int{2, 1})
 }
+
+func TestHead(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Head([]int{1, 2, 3, 4}), 1)
+}
+
+func TestLast(t *testing.T) {
+	assert := assert.New(t)
+
+	assert.Equal(Last([]int{1, 2, 3, 4}), 4)
+}
