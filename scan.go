@@ -123,6 +123,10 @@ func Head(arr interface{}) interface{} {
 	kind := value.Kind()
 
 	if kind == reflect.Array || kind == reflect.Slice {
+		if value.Len() == 0 {
+			return nil
+		}
+
 		return value.Index(0).Interface()
 	}
 
@@ -137,6 +141,10 @@ func Last(arr interface{}) interface{} {
 	kind := value.Kind()
 
 	if kind == reflect.Array || kind == reflect.Slice {
+		if value.Len() == 0 {
+			return nil
+		}
+
 		return value.Index(value.Len() - 1).Interface()
 	}
 
