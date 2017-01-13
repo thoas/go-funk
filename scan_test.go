@@ -71,11 +71,15 @@ func TestLast(t *testing.T) {
 func TestTail(t *testing.T) {
 	is := assert.New(t)
 
+	is.Equal(Tail([]int{}), []int{})
+	is.Equal(Tail([]int{1}), []int{1})
 	is.Equal(Tail([]int{1, 2, 3, 4}), []int{2, 3, 4})
 }
 
 func TestInitial(t *testing.T) {
 	is := assert.New(t)
 
+	is.Equal(Initial([]int{}), []int{})
+	is.Equal(Initial([]int{1}), []int{1})
 	is.Equal(Initial([]int{1, 2, 3, 4}), []int{1, 2, 3})
 }
