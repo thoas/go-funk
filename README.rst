@@ -475,7 +475,7 @@ how it's implemented in the language.
 
 If you want a similarity gorm_ will always be slower than sqlx_ (which is very low level btw) and will uses more allocs.
 
-You must not think generic helpers of ``go-funk`` as a replacement when you are deadling with performance in your codebase,
+You must not think generic helpers of ``go-funk`` as a replacement when you are dealing with performance in your codebase,
 you should use typesafe implementations.
 
 Contributing
