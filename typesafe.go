@@ -2,7 +2,32 @@ package funk
 
 import "math/rand"
 
-// ContainsInt return true if an int is present in a iteratee.
+// InInts is an alias of ContainsInt, returns true if an int is present in a iteratee.
+func InInts(s []int, v int) bool {
+	return ContainsInt(s, v)
+}
+
+// InInt64s is an alias of ContainsInt64, returns true if an int64 is present in a iteratee.
+func InInt64s(s []int64, v int64) bool {
+	return ContainsInt64(s, v)
+}
+
+// InStrings is an alias of ContainsString, returns true if a string is present in a iteratee.
+func InStrings(s []string, v string) bool {
+	return ContainsString(s, v)
+}
+
+// InFloat32s is an alias of ContainsFloat32, returns true if a float32 is present in a iteratee.
+func InFloat32s(s []float32, v float32) bool {
+	return ContainsFloat32(s, v)
+}
+
+// InFloat64s is an alias of ContainsFloat64, returns true if a float64 is present in a iteratee.
+func InFloat64s(s []float64, v float64) bool {
+	return ContainsFloat64(s, v)
+}
+
+// ContainsInt returns true if an int is present in a iteratee.
 func ContainsInt(s []int, v int) bool {
 	for _, vv := range s {
 		if vv == v {
@@ -12,7 +37,7 @@ func ContainsInt(s []int, v int) bool {
 	return false
 }
 
-// ContainsInt64 return true if an int64 is present in a iteratee.
+// ContainsInt64 returns true if an int64 is present in a iteratee.
 func ContainsInt64(s []int64, v int64) bool {
 	for _, vv := range s {
 		if vv == v {
@@ -22,7 +47,7 @@ func ContainsInt64(s []int64, v int64) bool {
 	return false
 }
 
-// ContainsString return true if a string is present in a iteratee.
+// ContainsString returns true if a string is present in a iteratee.
 func ContainsString(s []string, v string) bool {
 	for _, vv := range s {
 		if vv == v {
@@ -32,7 +57,7 @@ func ContainsString(s []string, v string) bool {
 	return false
 }
 
-// ContainsFloat32 return true if a float32 is present in a iteratee.
+// ContainsFloat32 returns true if a float32 is present in a iteratee.
 func ContainsFloat32(s []float32, v float32) bool {
 	for _, vv := range s {
 		if vv == v {
@@ -42,7 +67,7 @@ func ContainsFloat32(s []float32, v float32) bool {
 	return false
 }
 
-// ContainsFloat64 return true if a float64 is present in a iteratee.
+// ContainsFloat64 returns true if a float64 is present in a iteratee.
 func ContainsFloat64(s []float64, v float64) bool {
 	for _, vv := range s {
 		if vv == v {

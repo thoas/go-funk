@@ -482,7 +482,7 @@ Generates a sharded string with a fixed length and depth.
 Performance
 -----------
 
-``go-funk`` has currently an open issue about performance_, don't hesitate to participate to the discussion
+``go-funk`` has currently an open issue about performance_, don't hesitate to participate in the discussion
 to enhance the generic helpers implementations.
 
 Let's stop beating around the bush, a typesafe implementation in pur Go of ``funk.Contains``, let's say for example:
@@ -504,7 +504,7 @@ how it's implemented in the language.
 If you want a similarity gorm_ will always be slower than sqlx_ (which is very low level btw) and will uses more allocs.
 
 You must not think generic helpers of ``go-funk`` as a replacement when you are dealing with performance in your codebase,
-you should use typesafe implementations.
+you should use typesafe implementations instead.
 
 Contributing
 ------------
