@@ -398,6 +398,7 @@ funk.Initial
 ``funk.Initial`` gets all but the last element of array.
 
 .. code-block:: go
+
     funk.Initial([]int{0, 1, 2, 3, 4}) // []int{0, 1, 2, 3}
 
 funk.Tail
