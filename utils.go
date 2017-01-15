@@ -20,11 +20,13 @@ func sliceElem(rtype reflect.Type) reflect.Type {
 }
 
 func redirectValue(value reflect.Value) reflect.Value {
-	if value.Kind() == reflect.Ptr {
-		return redirectValue(value.Elem())
-	}
+	for {
+		if !value.IsValid() || value.Kind() != reflect.Ptr {
+			return value
+		}
 
-	return value
+		value = value.Elem()
+	}
 }
 
 func makeSlice(value reflect.Value, values ...int) reflect.Value {
