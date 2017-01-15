@@ -401,6 +401,16 @@ funk.Shuffle
 
     funk.Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
 
+funk.Sum
+........
+
+``funk.Sum`` computes the sum of the values in array.
+
+.. code-block:: go
+
+    funk.Sum([]int{0, 1, 2, 3, 4}) // 10.0
+    funk.Sum([]interface{}{0.5, 1, 2, 3, 4}) // 10.5
+
 funk.Reverse
 ............
 
