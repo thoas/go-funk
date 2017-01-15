@@ -12,11 +12,13 @@ func equal(expected, actual interface{}) bool {
 }
 
 func sliceElem(rtype reflect.Type) reflect.Type {
-	if rtype.Kind() == reflect.Slice || rtype.Kind() == reflect.Array {
-		return sliceElem(rtype.Elem())
-	}
+	for {
+		if rtype.Kind() != reflect.Slice && rtype.Kind() != reflect.Array {
+			return rtype
+		}
 
-	return rtype
+		rtype = rtype.Elem()
+	}
 }
 
 func redirectValue(value reflect.Value) reflect.Value {
@@ -25,7 +27,14 @@ func redirectValue(value reflect.Value) reflect.Value {
 			return value
 		}
 
-		value = value.Elem()
+		res := reflect.Indirect(value)
+
+		// Test for a circular type.
+		if res.Kind() == reflect.Ptr && value.Pointer() == res.Pointer() {
+			return value
+		}
+
+		value = res
 	}
 }
 
