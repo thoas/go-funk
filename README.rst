@@ -85,7 +85,7 @@ You can import ``go-funk`` using a basic statement:
 funk.Contains
 .............
 
-``funk.Contains`` returns true if an element is present in a iteratee (slice, map, string).
+Returns true if an element is present in a iteratee (slice, map, string).
 
 One frustrating thing in Go is to implement ``contains`` methods for each types, for example:
 
