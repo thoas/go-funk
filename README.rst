@@ -130,7 +130,7 @@ this can be replaced by ``funk.Contains``:
 funk.IndexOf
 ............
 
-``funk.IndexOf`` gets the index at which the first occurrence of value is found in array or return -1
+Gets the index at which the first occurrence of value is found in array or return -1
 if the value cannot be found.
 
 .. code-block:: go
@@ -142,7 +142,7 @@ if the value cannot be found.
 funk.LastIndexOf
 ................
 
-``funk.LastIndexOf`` gets the index at which the last occurrence of value is found in array or return -1
+Gets the index at which the last occurrence of value is found in array or return -1
 if the value cannot be found.
 
 .. code-block:: go
@@ -154,7 +154,7 @@ if the value cannot be found.
 funk.ToMap
 ..........
 
-``funk.ToMap`` transforms a slice of structs to a map based on a ``pivot`` field.
+Transforms a slice of structs to a map based on a ``pivot`` field.
 
 .. code-block:: go
 
@@ -179,7 +179,7 @@ funk.ToMap
 funk.Filter
 ...........
 
-``funk.Filter`` filters a slice based on a predicate.
+Filters a slice based on a predicate.
 
 .. code-block:: go
 
@@ -190,7 +190,7 @@ funk.Filter
 funk.Find
 .........
 
-``funk.Find`` finds an element in a slice based on a predicate.
+Finds an element in a slice based on a predicate.
 
 .. code-block:: go
 
@@ -201,7 +201,7 @@ funk.Find
 funk.Map
 ........
 
-``funk.Map`` allows you to manipulate an iteratee (map, slice) and to transform it to another type:
+Manipulates an iteratee (map, slice) and transforms it to another type:
 
 * map -> slice
 * map -> map
@@ -238,7 +238,7 @@ funk.Map
 funk.Get
 ........
 
-``funk.Get`` retrieves the value at path of struct(s).
+Retrieves the value at path of struct(s).
 
 .. code-block:: go
 
@@ -305,7 +305,7 @@ funk.Get
 funk.Keys
 .........
 
-``funk.Keys`` creates an array of the own enumerable map keys or struct field names.
+Creates an array of the own enumerable map keys or struct field names.
 
 .. code-block:: go
 
@@ -323,7 +323,7 @@ funk.Keys
 funk.Values
 ...........
 
-``funk.Values`` creates an array of the own enumerable map values or struct field values.
+Creates an array of the own enumerable map values or struct field values.
 
 .. code-block:: go
 
@@ -341,7 +341,7 @@ funk.Values
 funk.ForEach
 ............
 
-``funk.ForEach`` allows you to range over an iteratee (map, slice)
+Range over an iteratee (map, slice).
 
 .. code-block:: go
 
@@ -352,7 +352,7 @@ funk.ForEach
 funk.ForEachRight
 ............
 
-``funk.ForEachRight`` allows you to range over an iteratee (map, slice) from the right
+Range over an iteratee (map, slice) from the right.
 
 .. code-block:: go
 
@@ -367,8 +367,8 @@ funk.ForEachRight
 funk.Chunk
 ..........
 
-``funk.Chunk`` creates an array of elements split into groups with the length
-of the size. If array can't be split evenly, the final chunk will be the remaining element.
+Creates an array of elements split into groups with the length of the size.
+If array can't be split evenly, the final chunk will be the remaining element.
 
 .. code-block:: go
 
@@ -377,7 +377,7 @@ of the size. If array can't be split evenly, the final chunk will be the remaini
 funk.FlattenDeep
 ................
 
-``funk.FlattenDeep`` recursively flattens array.
+Recursively flattens array.
 
 .. code-block:: go
 
@@ -386,7 +386,7 @@ funk.FlattenDeep
 funk.Uniq
 .........
 
-``funk.Uniq`` creates an array with unique values.
+Creates an array with unique values.
 
 .. code-block:: go
 
@@ -395,7 +395,7 @@ funk.Uniq
 funk.Initial
 ............
 
-``funk.Initial`` gets all but the last element of array.
+Gets all but the last element of array.
 
 .. code-block:: go
 
@@ -404,7 +404,7 @@ funk.Initial
 funk.Tail
 .........
 
-``funk.Tail`` gets all but the first element of array.
+Gets all but the first element of array.
 
 .. code-block:: go
 
@@ -413,7 +413,7 @@ funk.Tail
 funk.Shuffle
 ............
 
-``funk.Shuffle`` creates an array of shuffled values
+Creates an array of shuffled values.
 
 .. code-block:: go
 
@@ -422,7 +422,7 @@ funk.Shuffle
 funk.Sum
 ........
 
-``funk.Sum`` computes the sum of the values in array.
+Computes the sum of the values in array.
 
 .. code-block:: go
 
@@ -432,8 +432,8 @@ funk.Sum
 funk.Reverse
 ............
 
-``funk.Reverse`` transforms an array the first element will become the last,
-the second element will become the second to last, etc.
+Transforms an array the first element will become the last, the second element
+will become the second to last, etc.
 
 .. code-block:: go
 
@@ -442,7 +442,7 @@ the second element will become the second to last, etc.
 funk.SliceOf
 ............
 
-``funk.SliceOf`` will return a slice based on an element.
+Returns a slice based on an element.
 
 .. code-block:: go
 
@@ -451,7 +451,7 @@ funk.SliceOf
 funk.RandomInt
 ..............
 
-``funk.RandomInt`` generates a random int, based on a min and max values
+Generates a random int, based on a min and max values.
 
 .. code-block:: go
 
@@ -460,7 +460,7 @@ funk.RandomInt
 funk.RandomString
 .................
 
-``funk.RandomString`` generates a random string with a fixed length
+Generates a random string with a fixed length.
 
 .. code-block:: go
 
@@ -469,7 +469,7 @@ funk.RandomString
 funk.Shard
 ..........
 
-``funk.Shard`` generates a sharded string with a fixed length and depth
+Generates a sharded string with a fixed length and depth.
 
 .. code-block:: go
 
