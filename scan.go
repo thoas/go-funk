@@ -171,7 +171,7 @@ func Initial(arr interface{}) interface{} {
 	panic(fmt.Sprintf("Type %s is not supported by Initial", valueType.String()))
 }
 
-// Tail gets all but the last element of array.
+// Tail gets all but the first element of array.
 func Tail(arr interface{}) interface{} {
 	value := redirectValue(reflect.ValueOf(arr))
 	valueType := value.Type()

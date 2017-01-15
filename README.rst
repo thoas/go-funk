@@ -392,6 +392,23 @@ funk.Uniq
 
     funk.Uniq([]int{0, 1, 1, 2, 3, 0, 0, 12}) // []int{0, 1, 2, 3, 12}
 
+funk.Initial
+............
+
+``funk.Initial`` gets all but the last element of array.
+
+.. code-block:: go
+    funk.Initial([]int{0, 1, 2, 3, 4}) // []int{0, 1, 2, 3}
+
+funk.Tail
+.........
+
+``funk.Tail`` gets all but the first element of array.
+
+.. code-block:: go
+
+    funk.Tail([]int{0, 1, 2, 3, 4}) // []int{1, 2, 3, 4}
+
 funk.Shuffle
 ............
 
