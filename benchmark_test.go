@@ -57,3 +57,20 @@ func BenchmarkUniq(b *testing.B) {
 		}
 	})
 }
+
+func BenchmarkSum(b *testing.B) {
+	r := rand.New(rand.NewSource(seed))
+	testData := sliceGenerator(sliceSize, r)
+
+	b.Run("SumInt64", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			SumInt64(testData)
+		}
+	})
+
+	b.Run("Sum", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			Sum(testData)
+		}
+	})
+}
