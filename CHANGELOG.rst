@@ -9,6 +9,7 @@ Changes can be seen `here <https://github.com/thoas/go-funk/compare/73b8ae1f6443
 * Better test suite
 * Better documentation
 * Add typesafe implementations:
+
   * ``Contains``
   * ``Sum``
   * ``Reverse``
@@ -16,6 +17,7 @@ Changes can be seen `here <https://github.com/thoas/go-funk/compare/73b8ae1f6443
   * ``Uniq``
   * ``Shuffle``
 * Add benchmarks
+
   * ``Contains``
   * ``Uniq``
   * ``Sum``
