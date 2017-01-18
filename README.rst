@@ -485,7 +485,7 @@ Performance
 ``go-funk`` has currently an open issue about performance_, don't hesitate to participate in the discussion
 to enhance the generic helpers implementations.
 
-Let's stop beating around the bush, a typesafe implementation in pur Go of ``funk.Contains``, let's say for example:
+Let's stop beating around the bush, a typesafe implementation in pure Go of ``funk.Contains``, let's say for example:
 
 .. code-block:: go
 
@@ -498,7 +498,7 @@ Let's stop beating around the bush, a typesafe implementation in pur Go of ``fun
         return false
     }
 
-will always outperforms an implementation based on reflect_ in terms of speed and allocs because that the way of
+will always outperform an implementation based on reflect_ in terms of speed and allocs because of
 how it's implemented in the language.
 
 If you want a similarity gorm_ will always be slower than sqlx_ (which is very low level btw) and will uses more allocs.
