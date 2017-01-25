@@ -31,13 +31,13 @@ func (f Foo) TableName() string {
 var bar *Bar = &Bar{
 	Name: "Test",
 	Bars: []*Bar{
-		&Bar{
+		{
 			Name: "Level1-1",
 			Bar: &Bar{
 				Name: "Level2-1",
 			},
 		},
-		&Bar{
+		{
 			Name: "Level1-2",
 			Bar: &Bar{
 				Name: "Level2-2",

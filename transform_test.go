@@ -104,7 +104,7 @@ func TestChunk(t *testing.T) {
 func TestFlattenDeep(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(FlattenDeep([][]int{[]int{1, 2}, []int{3, 4}}), []int{1, 2, 3, 4})
+	is.Equal(FlattenDeep([][]int{{1, 2}, {3, 4}}), []int{1, 2, 3, 4})
 }
 
 func TestShuffle(t *testing.T) {
