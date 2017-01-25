@@ -93,6 +93,102 @@ func ToMap(in interface{}, pivot string) interface{} {
 	return collection.Interface()
 }
 
+func mapSlice(arrValue reflect.Value, funcValue reflect.Value) interface{} {
+	funcType := funcValue.Type()
+
+	if funcType.NumIn() != 1 || funcType.NumOut() == 0 {
+		panic("Map function with an array must have one parameter and must return at least one parameter")
+	}
+
+	arrElemType := arrValue.Type().Elem()
+
+	// Checking whether element type is convertible to function's first argument's type.
+	if !arrElemType.ConvertibleTo(funcType.In(0)) {
+		panic("Map function's argument is not compatible with type of array.")
+	}
+
+	if funcType.NumOut() == 1 {
+		// Get slice type corresponding to function's return value's type.
+		resultSliceType := reflect.SliceOf(funcType.Out(0))
+
+		// MakeSlice takes a slice kind type, and makes a slice.
+		resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
+
+		for i := 0; i < arrValue.Len(); i++ {
+			result := funcValue.Call([]reflect.Value{arrValue.Index(i)})[0]
+
+			resultSlice = reflect.Append(resultSlice, result)
+		}
+
+		return resultSlice.Interface()
+	}
+
+	if funcType.NumOut() == 2 {
+		// value of the map will be the input type
+		collectionType := reflect.MapOf(funcType.Out(0), funcType.Out(1))
+
+		// create a map from scratch
+		collection := reflect.MakeMap(collectionType)
+
+		for i := 0; i < arrValue.Len(); i++ {
+			results := funcValue.Call([]reflect.Value{arrValue.Index(i)})
+
+			collection.SetMapIndex(results[0], results[1])
+		}
+
+		return collection.Interface()
+	}
+
+	return nil
+}
+
+func mapMap(arrValue reflect.Value, funcValue reflect.Value) interface{} {
+	funcType := funcValue.Type()
+
+	if funcType.NumIn() != 2 {
+		panic("Map function with an array must have one parameter")
+	}
+
+	// Only one returned parameter, should be a slice
+	if funcType.NumOut() == 1 {
+		// Get slice type corresponding to function's return value's type.
+		resultSliceType := reflect.SliceOf(funcType.Out(0))
+
+		// MakeSlice takes a slice kind type, and makes a slice.
+		resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
+
+		for _, key := range arrValue.MapKeys() {
+			results := funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
+
+			result := results[0]
+
+			resultSlice = reflect.Append(resultSlice, result)
+		}
+
+		return resultSlice.Interface()
+	}
+
+	// two parameters, should be a map
+	if funcType.NumOut() == 2 {
+		// value of the map will be the input type
+		collectionType := reflect.MapOf(funcType.Out(0), funcType.Out(1))
+
+		// create a map from scratch
+		collection := reflect.MakeMap(collectionType)
+
+		for _, key := range arrValue.MapKeys() {
+			results := funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
+
+			collection.SetMapIndex(results[0], results[1])
+
+		}
+
+		return collection.Interface()
+	}
+
+	return nil
+}
+
 // Map manipulates an iteratee and transforms it to another type.
 func Map(arr interface{}, mapFunc interface{}) interface{} {
 	if !IsIteratee(arr) {
@@ -105,97 +201,18 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 
 	var (
 		funcValue = reflect.ValueOf(mapFunc)
-		funcType  = funcValue.Type()
 		arrValue  = reflect.ValueOf(arr)
 		arrType   = arrValue.Type()
 	)
 
-	if arrType.Kind() == reflect.Slice || arrType.Kind() == reflect.Array {
-		if funcType.NumIn() != 1 || funcType.NumOut() == 0 {
-			panic("Map function with an array must have one parameter and must return at least one parameter")
-		}
+	kind := arrType.Kind()
 
-		arrElemType := arrType.Elem()
-
-		// Checking whether element type is convertible to function's first argument's type.
-		if !arrElemType.ConvertibleTo(funcType.In(0)) {
-			panic("Map function's argument is not compatible with type of array.")
-		}
-
-		if funcType.NumOut() == 1 {
-			// Get slice type corresponding to function's return value's type.
-			resultSliceType := reflect.SliceOf(funcType.Out(0))
-
-			// MakeSlice takes a slice kind type, and makes a slice.
-			resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
-
-			for i := 0; i < arrValue.Len(); i++ {
-				result := funcValue.Call([]reflect.Value{arrValue.Index(i)})[0]
-
-				resultSlice = reflect.Append(resultSlice, result)
-			}
-
-			return resultSlice.Interface()
-		}
-
-		if funcType.NumOut() == 2 {
-			// value of the map will be the input type
-			collectionType := reflect.MapOf(funcType.Out(0), funcType.Out(1))
-
-			// create a map from scratch
-			collection := reflect.MakeMap(collectionType)
-
-			for i := 0; i < arrValue.Len(); i++ {
-				results := funcValue.Call([]reflect.Value{arrValue.Index(i)})
-
-				collection.SetMapIndex(results[0], results[1])
-			}
-
-			return collection.Interface()
-		}
+	if kind == reflect.Slice || kind == reflect.Array {
+		return mapSlice(arrValue, funcValue)
 	}
 
-	if arrType.Kind() == reflect.Map {
-		if funcType.NumIn() != 2 {
-			panic("Map function with an array must have one parameter")
-		}
-
-		// Only one returned parameter, should be a slice
-		if funcType.NumOut() == 1 {
-			// Get slice type corresponding to function's return value's type.
-			resultSliceType := reflect.SliceOf(funcType.Out(0))
-
-			// MakeSlice takes a slice kind type, and makes a slice.
-			resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
-
-			for _, key := range arrValue.MapKeys() {
-				results := funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
-
-				result := results[0]
-
-				resultSlice = reflect.Append(resultSlice, result)
-			}
-
-			return resultSlice.Interface()
-		}
-
-		// two parameters, should be a map
-		if funcType.NumOut() == 2 {
-			// value of the map will be the input type
-			collectionType := reflect.MapOf(funcType.Out(0), funcType.Out(1))
-
-			// create a map from scratch
-			collection := reflect.MakeMap(collectionType)
-
-			for _, key := range arrValue.MapKeys() {
-				results := funcValue.Call([]reflect.Value{key, arrValue.MapIndex(key)})
-
-				collection.SetMapIndex(results[0], results[1])
-
-			}
-
-			return collection.Interface()
-		}
+	if kind == reflect.Map {
+		return mapMap(arrValue, funcValue)
 	}
 
 	panic(fmt.Sprintf("Type %s is not supported by Map", arrType.String()))
