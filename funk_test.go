@@ -28,7 +28,7 @@ func (f Foo) TableName() string {
 	return "foo"
 }
 
-var bar *Bar = &Bar{
+var bar = &Bar{
 	Name: "Test",
 	Bars: []*Bar{
 		{
@@ -46,7 +46,7 @@ var bar *Bar = &Bar{
 	},
 }
 
-var foo *Foo = &Foo{
+var foo = &Foo{
 	ID:        1,
 	FirstName: "Dark",
 	LastName:  "Vador",
@@ -62,7 +62,7 @@ var foo *Foo = &Foo{
 	},
 }
 
-var foo2 *Foo = &Foo{
+var foo2 = &Foo{
 	ID:        1,
 	FirstName: "Dark",
 	LastName:  "Vador",
