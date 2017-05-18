@@ -518,8 +518,8 @@ Don't hesitate ;)
 Authors
 -------
 
-Florent Messa
-Gilles Fabio
+* Florent Messa
+* Gilles Fabio
 
 .. _reflect: https://golang.org/pkg/reflect/
 .. _lodash: https://lodash.com/
