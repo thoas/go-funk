@@ -7,6 +7,48 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestPtrOf(t *testing.T) {
+	is := assert.New(t)
+
+	type embedType struct {
+		value int
+	}
+
+	type anyType struct {
+		value    int
+		embed    embedType
+		embedPtr *embedType
+	}
+
+	any := anyType{value: 1}
+	anyPtr := &anyType{value: 1}
+
+	results := []interface{}{
+		PtrOf(any),
+		PtrOf(anyPtr),
+	}
+
+	for _, r := range results {
+		is.Equal(1, r.(*anyType).value)
+		is.Equal(reflect.ValueOf(r).Kind(), reflect.Ptr)
+		is.Equal(reflect.ValueOf(r).Type().Elem(), reflect.TypeOf(anyType{}))
+	}
+
+	anyWithEmbed := anyType{value: 1, embed: embedType{value: 2}}
+	anyWithEmbedPtr := anyType{value: 1, embedPtr: &embedType{value: 2}}
+
+	results = []interface{}{
+		PtrOf(anyWithEmbed.embed),
+		PtrOf(anyWithEmbedPtr.embedPtr),
+	}
+
+	for _, r := range results {
+		is.Equal(2, r.(*embedType).value)
+		is.Equal(reflect.ValueOf(r).Kind(), reflect.Ptr)
+		is.Equal(reflect.ValueOf(r).Type().Elem(), reflect.TypeOf(embedType{}))
+	}
+}
+
 func TestSliceOf(t *testing.T) {
 	is := assert.New(t)
 

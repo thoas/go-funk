@@ -6,6 +6,21 @@ import (
 	"time"
 )
 
+// PtrOf makes a copy of the given interface and returns a pointer.
+func PtrOf(itf interface{}) interface{} {
+	t := reflect.TypeOf(itf)
+
+	cp := reflect.New(t)
+	cp.Elem().Set(reflect.ValueOf(itf))
+
+	// Avoid double pointers if itf is a pointer
+	if t.Kind() == reflect.Ptr {
+		return cp.Elem().Interface()
+	}
+
+	return cp.Interface()
+}
+
 // IsFunction will return if the argument is a function.
 func IsFunction(in interface{}, num ...int) bool {
 	funcType := reflect.TypeOf(in)
