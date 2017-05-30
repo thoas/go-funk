@@ -101,7 +101,9 @@ func IsEmpty(obj interface{}) bool {
 			return true
 		}
 
-		return reflect.DeepEqual(redirectValue(objValue).Interface(), ZeroOf(obj))
+		obj = redirectValue(objValue).Interface()
+
+		return reflect.DeepEqual(obj, ZeroOf(obj))
 	}
 	return false
 }

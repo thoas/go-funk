@@ -124,7 +124,10 @@ func TestIsEmpty(t *testing.T) {
 	var tiNP time.Time
 	var s *string
 	var f *os.File
+	ptrs := new(string)
+	*ptrs = ""
 
+	is.True(IsEmpty(ptrs), "Nil string pointer is empty")
 	is.True(IsEmpty(""), "Empty string is empty")
 	is.True(IsEmpty(nil), "Nil is empty")
 	is.True(IsEmpty([]string{}), "Empty string array is empty")
