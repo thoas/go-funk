@@ -93,7 +93,7 @@ func IsEmpty(obj interface{}) bool {
 	case reflect.Map:
 		fallthrough
 	case reflect.Slice, reflect.Chan:
-		return (objValue.Len() == 0)
+		return objValue.Len() == 0
 	case reflect.Struct:
 		return reflect.DeepEqual(obj, ZeroOf(obj))
 	case reflect.Ptr:
