@@ -6,6 +6,21 @@ import (
 	"time"
 )
 
+var numericZeros = []interface{}{
+	int(0),
+	int8(0),
+	int16(0),
+	int32(0),
+	int64(0),
+	uint(0),
+	uint8(0),
+	uint16(0),
+	uint32(0),
+	uint64(0),
+	float32(0),
+	float64(0),
+}
+
 // PtrOf makes a copy of the given interface and returns a pointer.
 func PtrOf(itf interface{}) interface{} {
 	t := reflect.TypeOf(itf)
@@ -47,7 +62,7 @@ func IsIteratee(in interface{}) bool {
 	return kind == reflect.Array || kind == reflect.Slice || kind == reflect.Map
 }
 
-// SliceOf will returns a slice which contains the element.
+// SliceOf will return a slice which contains the element.
 func SliceOf(in interface{}) interface{} {
 	value := reflect.ValueOf(in)
 
@@ -60,7 +75,38 @@ func SliceOf(in interface{}) interface{} {
 	return slice.Elem().Interface()
 }
 
-// ZeroOf will returns a zero value of an element.
+// IsEmtpty will return if the object is considered as empty or not.
+func IsEmpty(obj interface{}) bool {
+	if obj == nil || obj == "" || obj == false {
+		return true
+	}
+
+	for _, v := range numericZeros {
+		if obj == v {
+			return true
+		}
+	}
+
+	objValue := reflect.ValueOf(obj)
+
+	switch objValue.Kind() {
+	case reflect.Map:
+		fallthrough
+	case reflect.Slice, reflect.Chan:
+		return (objValue.Len() == 0)
+	case reflect.Struct:
+		return reflect.DeepEqual(obj, ZeroOf(obj))
+	case reflect.Ptr:
+		if objValue.IsNil() {
+			return true
+		}
+
+		return reflect.DeepEqual(redirectValue(objValue).Interface(), ZeroOf(obj))
+	}
+	return false
+}
+
+// ZeroOf returns a zero value of an element.
 func ZeroOf(in interface{}) interface{} {
 	return reflect.Zero(reflect.TypeOf(in)).Interface()
 }
