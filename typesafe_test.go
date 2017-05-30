@@ -46,9 +46,10 @@ func TestSumNumeral(t *testing.T) {
 func TestTypesafeReverse(t *testing.T) {
 	is := assert.New(t)
 
+	is.Equal(ReverseString("abcdefg"), "gfedcba")
 	is.Equal(ReverseInt([]int{1, 2, 3, 4}), []int{4, 3, 2, 1})
 	is.Equal(ReverseInt64([]int64{1, 2, 3, 4}), []int64{4, 3, 2, 1})
-	is.Equal(ReverseString([]string{"flo", "gilles"}), []string{"gilles", "flo"})
+	is.Equal(ReverseStrings([]string{"flo", "gilles"}), []string{"gilles", "flo"})
 	is.Equal(ReverseFloat64([]float64{0.1, 0.2, 0.3}), []float64{0.3, 0.2, 0.1})
 	is.Equal(ReverseFloat32([]float32{0.1, 0.2, 0.3}), []float32{0.3, 0.2, 0.1})
 }
