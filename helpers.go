@@ -75,7 +75,7 @@ func SliceOf(in interface{}) interface{} {
 	return slice.Elem().Interface()
 }
 
-// IsEmtpty will return if the object is considered as empty or not.
+// IsEmpty returns if the object is considered as empty or not.
 func IsEmpty(obj interface{}) bool {
 	if obj == nil || obj == "" || obj == false {
 		return true
