@@ -278,6 +278,10 @@ func Reverse(in interface{}) interface{} {
 
 	kind := value.Kind()
 
+	if kind == reflect.String {
+		return ReverseString(in.(string))
+	}
+
 	if kind == reflect.Array || kind == reflect.Slice {
 		length := value.Len()
 

@@ -126,6 +126,7 @@ func TestReverse(t *testing.T) {
 
 	is := assert.New(t)
 
+	is.Equal(Reverse("abcdefg"), "gfedcba")
 	is.Len(results, 5)
 
 	is.Equal(results, []int{4, 3, 2, 1, 0})
