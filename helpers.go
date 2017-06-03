@@ -72,7 +72,7 @@ func PtrOf(itf interface{}) interface{} {
 	return cp.Interface()
 }
 
-// IsFunction will return if the argument is a function.
+// IsFunction returns if the argument is a function.
 func IsFunction(in interface{}, num ...int) bool {
 	funcType := reflect.TypeOf(in)
 
@@ -127,7 +127,7 @@ func NotEqual(expected interface{}, actual interface{}) bool {
 	return !IsEqual(expected, actual)
 }
 
-// IsIteratee will return if the argument is an iteratee.
+// IsIteratee returns if the argument is an iteratee.
 func IsIteratee(in interface{}) bool {
 	arrType := reflect.TypeOf(in)
 
@@ -136,7 +136,7 @@ func IsIteratee(in interface{}) bool {
 	return kind == reflect.Array || kind == reflect.Slice || kind == reflect.Map
 }
 
-// SliceOf will return a slice which contains the element.
+// SliceOf returns a slice which contains the element.
 func SliceOf(in interface{}) interface{} {
 	value := reflect.ValueOf(in)
 
