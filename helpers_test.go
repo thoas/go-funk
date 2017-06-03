@@ -10,6 +10,73 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	i     interface{}
+	zeros = []interface{}{
+		false,
+		byte(0),
+		complex64(0),
+		complex128(0),
+		float32(0),
+		float64(0),
+		int(0),
+		int8(0),
+		int16(0),
+		int32(0),
+		int64(0),
+		rune(0),
+		uint(0),
+		uint8(0),
+		uint16(0),
+		uint32(0),
+		uint64(0),
+		uintptr(0),
+		"",
+		[0]interface{}{},
+		[]interface{}(nil),
+		struct{ x int }{},
+		(*interface{})(nil),
+		(func())(nil),
+		nil,
+		interface{}(nil),
+		map[interface{}]interface{}(nil),
+		(chan interface{})(nil),
+		(<-chan interface{})(nil),
+		(chan<- interface{})(nil),
+	}
+	nonZeros = []interface{}{
+		true,
+		byte(1),
+		complex64(1),
+		complex128(1),
+		float32(1),
+		float64(1),
+		int(1),
+		int8(1),
+		int16(1),
+		int32(1),
+		int64(1),
+		rune(1),
+		uint(1),
+		uint8(1),
+		uint16(1),
+		uint32(1),
+		uint64(1),
+		uintptr(1),
+		"s",
+		[1]interface{}{1},
+		[]interface{}{},
+		struct{ x int }{1},
+		(*interface{})(&i),
+		(func())(func() {}),
+		interface{}(1),
+		map[interface{}]interface{}{},
+		(chan interface{})(make(chan interface{})),
+		(<-chan interface{})(make(chan interface{})),
+		(chan<- interface{})(make(chan interface{})),
+	}
+)
+
 func TestPtrOf(t *testing.T) {
 	is := assert.New(t)
 
@@ -164,4 +231,16 @@ func TestIsEmpty(t *testing.T) {
 	is.True(NotEmpty(1), "Non-zero int value is not empty")
 	is.True(NotEmpty(true), "True value is not empty")
 	is.True(NotEmpty(chWithValue), "Channel with values is not empty")
+}
+
+func TestIsZero(t *testing.T) {
+	is := assert.New(t)
+
+	for _, test := range zeros {
+		is.True(IsZero(test))
+	}
+
+	for _, test := range nonZeros {
+		is.False(IsZero(test))
+	}
 }

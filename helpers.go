@@ -158,6 +158,10 @@ func NotEmpty(obj interface{}) bool {
 
 // ZeroOf returns a zero value of an element.
 func ZeroOf(in interface{}) interface{} {
+	if in == nil {
+		return nil
+	}
+
 	return reflect.Zero(reflect.TypeOf(in)).Interface()
 }
 
