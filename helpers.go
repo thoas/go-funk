@@ -1,6 +1,7 @@
 package funk
 
 import (
+	"bytes"
 	"math/rand"
 	"reflect"
 	"time"
@@ -51,6 +52,43 @@ func IsFunction(in interface{}, num ...int) bool {
 	}
 
 	return result
+}
+
+// IsEqual returns if the two objects are equal
+func IsEqual(expected interface{}, actual interface{}) bool {
+	if expected == nil || actual == nil {
+		return expected == actual
+	}
+
+	if exp, ok := expected.([]byte); ok {
+		act, ok := actual.([]byte)
+		if !ok {
+			return false
+		}
+
+		if exp == nil || act == nil {
+			return true
+		}
+
+		return bytes.Equal(exp, act)
+	}
+	return reflect.DeepEqual(expected, actual)
+
+}
+
+// IsType returns if the two objects are in the same type
+func IsType(expected interface{}, actual interface{}) bool {
+	return IsEqual(reflect.TypeOf(expected), reflect.TypeOf(actual))
+}
+
+// Equal returns if the two objects are equal
+func Equal(expected interface{}, actual interface{}) bool {
+	return IsEqual(expected, actual)
+}
+
+// NotEqual returns if the two objects are not equal
+func NotEqual(expected interface{}, actual interface{}) bool {
+	return !IsEqual(expected, actual)
 }
 
 // IsIteratee will return if the argument is an iteratee.
@@ -106,6 +144,16 @@ func IsEmpty(obj interface{}) bool {
 		return reflect.DeepEqual(obj, ZeroOf(obj))
 	}
 	return false
+}
+
+// IsZero returns if the object is considered as zero value
+func IsZero(obj interface{}) bool {
+	return reflect.DeepEqual(obj, ZeroOf(obj))
+}
+
+// NotEmpty returns if the object is considered as non-empty or not.
+func NotEmpty(obj interface{}) bool {
+	return !IsEmpty(obj)
 }
 
 // ZeroOf returns a zero value of an element.
