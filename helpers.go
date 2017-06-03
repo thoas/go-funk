@@ -22,6 +22,41 @@ var numericZeros = []interface{}{
 	float64(0),
 }
 
+// ToFloat64 converts any numeric value to float64.
+func ToFloat64(x interface{}) (float64, bool) {
+	var xf float64
+	xok := true
+
+	switch xn := x.(type) {
+	case uint8:
+		xf = float64(xn)
+	case uint16:
+		xf = float64(xn)
+	case uint32:
+		xf = float64(xn)
+	case uint64:
+		xf = float64(xn)
+	case int:
+		xf = float64(xn)
+	case int8:
+		xf = float64(xn)
+	case int16:
+		xf = float64(xn)
+	case int32:
+		xf = float64(xn)
+	case int64:
+		xf = float64(xn)
+	case float32:
+		xf = float64(xn)
+	case float64:
+		xf = float64(xn)
+	default:
+		xok = false
+	}
+
+	return xf, xok
+}
+
 // PtrOf makes a copy of the given interface and returns a pointer.
 func PtrOf(itf interface{}) interface{} {
 	t := reflect.TypeOf(itf)
@@ -72,6 +107,7 @@ func IsEqual(expected interface{}, actual interface{}) bool {
 
 		return bytes.Equal(exp, act)
 	}
+
 	return reflect.DeepEqual(expected, actual)
 
 }
