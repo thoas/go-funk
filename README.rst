@@ -467,6 +467,15 @@ Creates an array of shuffled values.
 
     funk.Shuffle([]int{0, 1, 2, 3, 4}) // []int{2, 1, 3, 4, 0}
 
+
+see also, typesafe implementations: ShuffleInt_, ShuffleInt64_, ShuffleFloat32_, ShuffleFloat64_, ShuffleString_
+
+.. _ShuffleFloat32: https://godoc.org/github.com/thoas/go-funk#ShuffleFloat32
+.. _ShuffleFloat64: https://godoc.org/github.com/thoas/go-funk#ShuffleFloat64
+.. _ShuffleInt: https://godoc.org/github.com/thoas/go-funk#ShuffleInt
+.. _ShuffleInt64: https://godoc.org/github.com/thoas/go-funk#ShuffleInt64
+.. _ShuffleString: https://godoc.org/github.com/thoas/go-funk#ShuffleString
+
 funk.Sum
 ........
 
