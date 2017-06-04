@@ -73,7 +73,7 @@ func Find(arr interface{}, predicate interface{}) interface{} {
 
 		result := funcValue.Call([]reflect.Value{elem})[0].Interface().(bool)
 
-		if result == true {
+		if result {
 			return elem.Interface()
 		}
 	}

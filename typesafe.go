@@ -27,6 +27,76 @@ func InFloat64s(s []float64, v float64) bool {
 	return ContainsFloat64(s, v)
 }
 
+// FindFloat64 iterates over a collection of float64, returning an array of
+// all float64 elements predicate returns truthy for.
+func FindFloat64(s []float64, cb func(s float64) bool) (float64, bool) {
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			return i, true
+		}
+	}
+
+	return 0.0, false
+}
+
+// FindFloat32 iterates over a collection of float32, returning the first
+// float32 element predicate returns truthy for.
+func FindFloat32(s []float32, cb func(s float32) bool) (float32, bool) {
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			return i, true
+		}
+	}
+
+	return 0.0, false
+}
+
+// FindInt iterates over a collection of int, returning the first
+// int element predicate returns truthy for.
+func FindInt(s []int, cb func(s int) bool) (int, bool) {
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			return i, true
+		}
+	}
+
+	return 0, false
+}
+
+// FindInt64 iterates over a collection of int64, returning the first
+// int64 element predicate returns truthy for.
+func FindInt64(s []int64, cb func(s int64) bool) (int64, bool) {
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			return i, true
+		}
+	}
+
+	return 0, false
+}
+
+// FindString iterates over a collection of string, returning the first
+// string element predicate returns truthy for.
+func FindString(s []string, cb func(s string) bool) (string, bool) {
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			return i, true
+		}
+	}
+
+	return "", false
+}
+
 // FilterFloat64 iterates over a collection of float64, returning an array of
 // all float64 elements predicate returns truthy for.
 func FilterFloat64(s []float64, cb func(s float64) bool) []float64 {
