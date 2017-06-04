@@ -23,6 +23,56 @@ func TestContainsString(t *testing.T) {
 	is.False(ContainsString([]string{"flo", "gilles"}, "alex"))
 }
 
+func TestFilterString(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterString([]string{"a", "b", "c", "d"}, func(x string) bool {
+		return x >= "c"
+	})
+
+	is.Equal(r, []string{"c", "d"})
+}
+
+func TestFilterInt(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterInt([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, []int{2, 4})
+}
+
+func TestFilterInt64(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterInt64([]int64{1, 2, 3, 4}, func(x int64) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, []int64{2, 4})
+}
+
+func TestFilterFloat64(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterFloat64([]float64{1.0, 2.0, 3.0, 4.0}, func(x float64) bool {
+		return int(x)%2 == 0
+	})
+
+	is.Equal(r, []float64{2.0, 4.0})
+}
+
+func TestFilterFloat32(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterFloat32([]float32{1.0, 2.0, 3.0, 4.0}, func(x float32) bool {
+		return int(x)%2 == 0
+	})
+
+	is.Equal(r, []float32{2.0, 4.0})
+}
+
 func TestContainsFloat(t *testing.T) {
 	is := assert.New(t)
 

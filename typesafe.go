@@ -27,6 +27,86 @@ func InFloat64s(s []float64, v float64) bool {
 	return ContainsFloat64(s, v)
 }
 
+// FilterFloat64 iterates over a collection of float64, returning an array of
+// all float64 elements predicate returns truthy for.
+func FilterFloat64(s []float64, cb func(s float64) bool) []float64 {
+	results := []float64{}
+
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			results = append(results, i)
+		}
+	}
+
+	return results
+}
+
+// FilterFloat32 iterates over a collection of float32, returning an array of
+// all float32 elements predicate returns truthy for.
+func FilterFloat32(s []float32, cb func(s float32) bool) []float32 {
+	results := []float32{}
+
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			results = append(results, i)
+		}
+	}
+
+	return results
+}
+
+// FilterInt iterates over a collection of int, returning an array of
+// all int elements predicate returns truthy for.
+func FilterInt(s []int, cb func(s int) bool) []int {
+	results := []int{}
+
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			results = append(results, i)
+		}
+	}
+
+	return results
+}
+
+// FilterInt64 iterates over a collection of int64, returning an array of
+// all int64 elements predicate returns truthy for.
+func FilterInt64(s []int64, cb func(s int64) bool) []int64 {
+	results := []int64{}
+
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			results = append(results, i)
+		}
+	}
+
+	return results
+}
+
+// FilterString iterates over a collection of string, returning an array of
+// all string elements predicate returns truthy for.
+func FilterString(s []string, cb func(s string) bool) []string {
+	results := []string{}
+
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			results = append(results, i)
+		}
+	}
+
+	return results
+}
+
 // ContainsInt returns true if an int is present in a iteratee.
 func ContainsInt(s []int, v int) bool {
 	for _, vv := range s {

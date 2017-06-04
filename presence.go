@@ -39,7 +39,7 @@ func Filter(arr interface{}, predicate interface{}) interface{} {
 
 		result := funcValue.Call([]reflect.Value{elem})[0].Interface().(bool)
 
-		if result == true {
+		if result {
 			resultSlice = reflect.Append(resultSlice, elem)
 		}
 	}
