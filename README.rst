@@ -127,6 +127,14 @@ this can be replaced by ``funk.Contains``:
     // even map
     funk.Contains(map[int]string{1: "Florent"}, 1) // true
 
+see also, typesafe implementations: ContainsInt_, ContainsInt64_, ContainsFloat32_, ContainsFloat64_, ContainsString_
+
+.. _ContainsFloat32: https://godoc.org/github.com/thoas/go-funk#ContainsFloat32
+.. _ContainsFloat64: https://godoc.org/github.com/thoas/go-funk#ContainsFloat64
+.. _ContainsInt: https://godoc.org/github.com/thoas/go-funk#ContainsInt
+.. _ContainsInt64: https://godoc.org/github.com/thoas/go-funk#ContainsInt64
+.. _ContainsString: https://godoc.org/github.com/thoas/go-funk#ContainsString
+
 funk.IndexOf
 ............
 
@@ -138,6 +146,14 @@ if the value cannot be found.
     // slice of string
     funk.IndexOf([]string{"foo", "bar"}, "bar") // 1
     funk.IndexOf([]string{"foo", "bar"}, "gilles") // -1
+
+see also, typesafe implementations: IndexOfInt_, IndexOfInt64_, IndexOfFloat32_, IndexOfFloat64_, IndexOfString_
+
+.. _IndexOfFloat32: https://godoc.org/github.com/thoas/go-funk#IndexOfFloat32
+.. _IndexOfFloat64: https://godoc.org/github.com/thoas/go-funk#IndexOfFloat64
+.. _IndexOfInt: https://godoc.org/github.com/thoas/go-funk#IndexOfInt
+.. _IndexOfInt64: https://godoc.org/github.com/thoas/go-funk#IndexOfInt64
+.. _IndexOfString: https://godoc.org/github.com/thoas/go-funk#IndexOfString
 
 funk.LastIndexOf
 ................
@@ -187,6 +203,14 @@ Filters a slice based on a predicate.
         return x%2 == 0
     }) // []int{2, 4}
 
+see also, typesafe implementations: FilterInt_, FilterInt64_, FilterFloat32_, FilterFloat64_, FilterString_
+
+.. _FilterFloat32: https://godoc.org/github.com/thoas/go-funk#FilterFloat32
+.. _FilterFloat64: https://godoc.org/github.com/thoas/go-funk#FilterFloat64
+.. _FilterInt: https://godoc.org/github.com/thoas/go-funk#FilterInt
+.. _FilterInt64: https://godoc.org/github.com/thoas/go-funk#FilterInt64
+.. _FilterString: https://godoc.org/github.com/thoas/go-funk#FilterString
+
 funk.Find
 .........
 
@@ -197,6 +221,14 @@ Finds an element in a slice based on a predicate.
     r := funk.Find([]int{1, 2, 3, 4}, func(x int) bool {
         return x%2 == 0
     }) // 2
+
+see also, typesafe implementations: FindInt_, FindInt64_, FindFloat32_, FindFloat64_, FindString_
+
+.. _FindFloat32: https://godoc.org/github.com/thoas/go-funk#FindFloat32
+.. _FindFloat64: https://godoc.org/github.com/thoas/go-funk#FindFloat64
+.. _FindInt: https://godoc.org/github.com/thoas/go-funk#FindInt
+.. _FindInt64: https://godoc.org/github.com/thoas/go-funk#FindInt64
+.. _FindString: https://godoc.org/github.com/thoas/go-funk#FindString
 
 funk.Map
 ........
@@ -392,6 +424,14 @@ Creates an array with unique values.
 
     funk.Uniq([]int{0, 1, 1, 2, 3, 0, 0, 12}) // []int{0, 1, 2, 3, 12}
 
+see also, typesafe implementations: UniqInt_, UniqInt64_, UniqFloat32_, UniqFloat64_, UniqString_
+
+.. _UniqFloat32: https://godoc.org/github.com/thoas/go-funk#UniqFloat32
+.. _UniqFloat64: https://godoc.org/github.com/thoas/go-funk#UniqFloat64
+.. _UniqInt: https://godoc.org/github.com/thoas/go-funk#UniqInt
+.. _UniqInt64: https://godoc.org/github.com/thoas/go-funk#UniqInt64
+.. _UniqString: https://godoc.org/github.com/thoas/go-funk#UniqString
+
 funk.Initial
 ............
 
@@ -429,6 +469,13 @@ Computes the sum of the values in array.
     funk.Sum([]int{0, 1, 2, 3, 4}) // 10.0
     funk.Sum([]interface{}{0.5, 1, 2, 3, 4}) // 10.5
 
+see also, typesafe implementations: SumInt_, SumInt64_, SumFloat32_, SumFloat64_
+
+.. _SumFloat32: https://godoc.org/github.com/thoas/go-funk#SumFloat32
+.. _SumFloat64: https://godoc.org/github.com/thoas/go-funk#SumFloat64
+.. _SumInt: https://godoc.org/github.com/thoas/go-funk#SumInt
+.. _SumInt64: https://godoc.org/github.com/thoas/go-funk#SumInt64
+
 funk.Reverse
 ............
 
@@ -438,6 +485,15 @@ will become the second to last, etc.
 .. code-block:: go
 
     funk.Reverse([]int{0, 1, 2, 3, 4}) // []int{4, 3, 2, 1, 0}
+
+see also, typesafe implementations: ReverseInt_, ReverseInt64_, ReverseFloat32_, ReverseFloat64_, ReverseString_, ReverseStrings_
+
+.. _ReverseFloat32: https://godoc.org/github.com/thoas/go-funk#ReverseFloat32
+.. _ReverseFloat64: https://godoc.org/github.com/thoas/go-funk#ReverseFloat64
+.. _ReverseInt: https://godoc.org/github.com/thoas/go-funk#ReverseInt
+.. _ReverseInt64: https://godoc.org/github.com/thoas/go-funk#ReverseInt64
+.. _ReverseString: https://godoc.org/github.com/thoas/go-funk#ReverseString
+.. _ReverseStrings: https://godoc.org/github.com/thoas/go-funk#ReverseStrings
 
 funk.SliceOf
 ............
