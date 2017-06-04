@@ -185,6 +185,16 @@ func IsEmpty(obj interface{}) bool {
 
 // IsZero returns if the object is considered as zero value
 func IsZero(obj interface{}) bool {
+	if obj == nil || obj == "" || obj == false {
+		return true
+	}
+
+	for _, v := range numericZeros {
+		if obj == v {
+			return true
+		}
+	}
+
 	return reflect.DeepEqual(obj, ZeroOf(obj))
 }
 
