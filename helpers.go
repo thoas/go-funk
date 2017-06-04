@@ -179,6 +179,7 @@ func IsEmpty(obj interface{}) bool {
 
 		return reflect.DeepEqual(obj, ZeroOf(obj))
 	}
+
 	return false
 }
 
@@ -204,6 +205,7 @@ func ZeroOf(in interface{}) interface{} {
 // RandomInt generates a random int, based on a min and max values
 func RandomInt(min, max int) int {
 	rand.Seed(time.Now().UTC().UnixNano())
+
 	return min + rand.Intn(max-min)
 }
 
@@ -240,5 +242,6 @@ func RandomString(n int, allowedChars ...[]rune) string {
 	for i := range b {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
+
 	return string(b)
 }

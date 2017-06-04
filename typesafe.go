@@ -368,6 +368,12 @@ func LastIndexOfFloat64(a []float64, x float64) int {
 	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
 }
 
+// LastIndexOfFloat32 gets the index at which the first occurrence of an float32 value is found in array or return -1
+// if the value cannot be found
+func LastIndexOfFloat32(a []float32, x float32) int {
+	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
 // LastIndexOfString gets the index at which the first occurrence of a string value is found in array or return -1
 // if the value cannot be found
 func LastIndexOfString(a []string, x string) int {

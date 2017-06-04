@@ -167,6 +167,14 @@ if the value cannot be found.
     funk.LastIndexOf([]string{"foo", "bar", "bar"}, "bar") // 2
     funk.LastIndexOf([]string{"foo", "bar"}, "gilles") // -1
 
+see also, typesafe implementations: LastIndexOfInt_, LastIndexOfInt64_, LastIndexOfFloat32_, LastIndexOfFloat64_, LastIndexOfString_
+
+.. _LastIndexOfFloat32: https://godoc.org/github.com/thoas/go-funk#LastIndexOfFloat32
+.. _LastIndexOfFloat64: https://godoc.org/github.com/thoas/go-funk#LastIndexOfFloat64
+.. _LastIndexOfInt: https://godoc.org/github.com/thoas/go-funk#LastIndexOfInt
+.. _LastIndexOfInt64: https://godoc.org/github.com/thoas/go-funk#LastIndexOfInt64
+.. _LastIndexOfString: https://godoc.org/github.com/thoas/go-funk#LastIndexOfString
+
 funk.ToMap
 ..........
 
