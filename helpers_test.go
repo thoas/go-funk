@@ -244,3 +244,22 @@ func TestIsZero(t *testing.T) {
 		is.False(IsZero(test))
 	}
 }
+
+func TestAny(t *testing.T) {
+	is := assert.New(t)
+
+	is.True(Any(true, false))
+	is.True(Any(true, true))
+	is.False(Any(false, false))
+	is.False(Any("", nil, false))
+}
+
+func TestAll(t *testing.T) {
+	is := assert.New(t)
+
+	is.False(All(true, false))
+	is.True(All(true, true))
+	is.False(All(false, false))
+	is.False(All("", nil, false))
+	is.True(All("foo", true, 3))
+}
