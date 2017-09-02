@@ -134,25 +134,19 @@ func LastIndexOf(in interface{}, elem interface{}) int {
 // Contains returns true if an element is present in a iteratee.
 func Contains(in interface{}, elem interface{}) bool {
 	inValue := reflect.ValueOf(in)
-
 	elemValue := reflect.ValueOf(elem)
-
 	inType := inValue.Type()
 
-	if inType.Kind() == reflect.String {
+	switch inType.Kind() {
+	case reflect.String:
 		return strings.Contains(inValue.String(), elemValue.String())
-	}
-
-	if inType.Kind() == reflect.Map {
-		keys := inValue.MapKeys()
-		for i := 0; i < len(keys); i++ {
-			if equal(keys[i].Interface(), elem) {
+	case reflect.Map:
+		for _, key := range inValue.MapKeys() {
+			if equal(key.Interface(), elem) {
 				return true
 			}
 		}
-	}
-
-	if inType.Kind() == reflect.Slice {
+	case reflect.Slice:
 		for i := 0; i < inValue.Len(); i++ {
 			if equal(inValue.Index(i).Interface(), elem) {
 				return true
