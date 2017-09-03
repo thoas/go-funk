@@ -22,11 +22,9 @@ func Fill(in interface{}, fillValue interface{}) (interface{}, error) {
 	}
 
 	length := inValue.Len()
-	if inKind == reflect.Array {
-		slice := reflect.SliceOf(reflect.TypeOf(fillValue))
-		in = reflect.MakeSlice(slice, length, length).Interface()
-		inValue = reflect.ValueOf(in)
-	}
+	newSlice := reflect.SliceOf(reflect.TypeOf(fillValue))
+	in = reflect.MakeSlice(newSlice, length, length).Interface()
+	inValue = reflect.ValueOf(in)
 
 	for i := 0; i < length; i++ {
 		inValue.Index(i).Set(value)

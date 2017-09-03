@@ -27,12 +27,22 @@ func TestFillUnfillableTypes(t *testing.T) {
 	}
 }
 
-func TestFill(t *testing.T) {
-	result, err := Fill([]int{1,2,3}, 1)
+func TestFillSlice(t *testing.T) {
+	input := []int{1, 2, 3}
+	result, err := Fill(input, 1)
 	assert.NoError(t, err)
-	assert.Equal(t, []int{1,1,1}, result)
+	assert.Equal(t, []int{1, 1, 1}, result)
 
-	result, err = Fill([...]int{1,2,3}, 2)
+	// Assert that input does not change
+	assert.Equal(t, []int{1, 2, 3}, input)
+}
+
+func TestFillArray(t *testing.T) {
+	input := [...]int{1, 2, 3}
+	result, err := Fill(input, 2)
 	assert.NoError(t, err)
-	assert.Equal(t, []int{2,2,2}, result)
+	assert.Equal(t, []int{2, 2, 2}, result)
+
+	// Assert that input does not change
+	assert.Equal(t, [...]int{1, 2, 3}, input)
 }
