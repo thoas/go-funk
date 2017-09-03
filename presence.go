@@ -162,3 +162,12 @@ func Contains(in interface{}, elem interface{}) bool {
 
 	return false
 }
+
+func Every(in interface{}, elements ...interface{}) bool {
+	for _, elem := range elements {
+		if !Contains(in, elem) {
+			return false
+		}
+	}
+	return true
+}
