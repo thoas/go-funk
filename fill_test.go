@@ -31,4 +31,8 @@ func TestFill(t *testing.T) {
 	result, err := Fill([]int{1,2,3}, 1)
 	assert.NoError(t, err)
 	assert.Equal(t, []int{1,1,1}, result)
+
+	result, err = Fill([...]int{1,2,3}, 2)
+	assert.NoError(t, err)
+	assert.Equal(t, []int{2,2,2}, result)
 }
