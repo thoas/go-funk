@@ -6,29 +6,35 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var f = &Foo{
+	ID:        1,
+	FirstName: "Dark",
+	LastName:  "Vador",
+	Age:       30,
+	Bar: &Bar{
+		Name: "Test",
+	},
+}
+
+var b = &Foo{
+	ID:        2,
+	FirstName: "Florent",
+	LastName:  "Messa",
+	Age:       28,
+}
+var c = &Foo{
+	ID:        3,
+	FirstName: "Harald",
+	LastName:  "Nordgren",
+	Age:       27,
+}
+
+var results = []*Foo{f, c}
+
 func TestContains(t *testing.T) {
 	is := assert.New(t)
 
 	is.True(Contains([]string{"foo", "bar"}, "bar"))
-
-	f := &Foo{
-		ID:        1,
-		FirstName: "Dark",
-		LastName:  "Vador",
-		Age:       30,
-		Bar: &Bar{
-			Name: "Test",
-		},
-	}
-
-	b := &Foo{
-		ID:        2,
-		FirstName: "Florent",
-		LastName:  "Messa",
-		Age:       28,
-	}
-
-	results := []*Foo{f}
 
 	is.True(Contains(results, f))
 	is.False(Contains(results, nil))
@@ -43,29 +49,28 @@ func TestContains(t *testing.T) {
 	is.False(Contains(mapping, 2))
 }
 
+func TestEvery(t *testing.T) {
+	is := assert.New(t)
+
+	is.True(Every([]string{"foo", "bar", "baz"}, "bar", "foo"))
+
+	is.True(Every(results, f, c))
+	is.False(Every(results, nil))
+	is.False(Every(results, f, b))
+
+	is.True(Every("florent", "rent", "flo"))
+	is.False(Every("florent", "rent", "gilles"))
+
+	mapping := ToMap(results, "ID")
+
+	is.True(Every(mapping, 1, 3))
+	is.False(Every(mapping, 2, 3))
+}
+
 func TestIndexOf(t *testing.T) {
 	is := assert.New(t)
 
 	is.Equal(IndexOf([]string{"foo", "bar"}, "bar"), 1)
-
-	f := &Foo{
-		ID:        1,
-		FirstName: "Dark",
-		LastName:  "Vador",
-		Age:       30,
-		Bar: &Bar{
-			Name: "Test",
-		},
-	}
-
-	b := &Foo{
-		ID:        2,
-		FirstName: "Florent",
-		LastName:  "Messa",
-		Age:       28,
-	}
-
-	results := []*Foo{f}
 
 	is.Equal(IndexOf(results, f), 0)
 	is.Equal(IndexOf(results, b), -1)
