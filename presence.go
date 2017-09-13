@@ -156,3 +156,13 @@ func Contains(in interface{}, elem interface{}) bool {
 
 	return false
 }
+
+// Every returns true if every element is present in a iteratee.
+func Every(in interface{}, elements ...interface{}) bool {
+	for _, elem := range elements {
+		if !Contains(in, elem) {
+			return false
+		}
+	}
+	return true
+}
