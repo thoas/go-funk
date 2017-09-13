@@ -96,8 +96,8 @@ func ToMap(in interface{}, pivot string) interface{} {
 func mapSlice(arrValue reflect.Value, funcValue reflect.Value) interface{} {
 	funcType := funcValue.Type()
 
-	if funcType.NumIn() != 1 || funcType.NumOut() == 0 {
-		panic("Map function with an array must have one parameter and must return at least one parameter")
+	if funcType.NumIn() != 1 || funcType.NumOut() == 0 || funcType.NumOut() > 2 {
+		panic("Map function with an array must have one parameter and must return one or two parameters")
 	}
 
 	arrElemType := arrValue.Type().Elem()
@@ -145,8 +145,8 @@ func mapSlice(arrValue reflect.Value, funcValue reflect.Value) interface{} {
 func mapMap(arrValue reflect.Value, funcValue reflect.Value) interface{} {
 	funcType := funcValue.Type()
 
-	if funcType.NumIn() != 2 {
-		panic("Map function with an array must have one parameter")
+	if funcType.NumIn() != 2 || funcType.NumOut() == 0 || funcType.NumOut() > 2 {
+		panic("Map function with an map must have one parameter and must return one or two parameters")
 	}
 
 	// Only one returned parameter, should be a slice
