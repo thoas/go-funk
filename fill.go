@@ -1,11 +1,12 @@
 package funk
 
 import (
-	"reflect"
 	"errors"
 	"fmt"
+	"reflect"
 )
 
+// Fill fills elements of array with value
 func Fill(in interface{}, fillValue interface{}) (interface{}, error) {
 	inValue := reflect.ValueOf(in)
 	inKind := inValue.Type().Kind()
@@ -16,9 +17,9 @@ func Fill(in interface{}, fillValue interface{}) (interface{}, error) {
 	inType := reflect.TypeOf(in).Elem()
 	value := reflect.ValueOf(fillValue)
 	if inType != value.Type() {
-		return nil, errors.New(fmt.Sprintf(
+		return nil, fmt.Errorf(
 			"Cannot fill '%s' with '%s'", reflect.TypeOf(in), value.Type(),
-		))
+		)
 	}
 
 	length := inValue.Len()
