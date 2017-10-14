@@ -49,11 +49,12 @@ func TestForEachRight(t *testing.T) {
 
 	ForEachRight(mapping, func(k int, v string) {
 		is.Equal(v, mapping[k])
-
 		mapKeys = append(mapKeys, k)
 	})
 
-	is.Equal(mapKeys, []int{2, 1})
+	is.Equal(len(mapKeys), 2)
+	is.Contains(mapKeys, 1)
+	is.Contains(mapKeys, 2)
 }
 
 func TestHead(t *testing.T) {
