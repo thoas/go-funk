@@ -330,3 +330,36 @@ func Uniq(in interface{}) interface{} {
 
 	panic(fmt.Sprintf("Type %s is not supported by Uniq", valueType.String()))
 }
+
+// ConvertSlice converts a slice type to another,
+// a perfect example would be to convert a slice of struct to a slice of interface.
+func ConvertSlice(in interface{}, out interface{}) {
+	srcValue := reflect.ValueOf(in)
+
+	dstValue := reflect.ValueOf(out)
+
+	if dstValue.Kind() != reflect.Ptr {
+		panic("Second argument must be a pointer")
+	}
+
+	dstValue = dstValue.Elem()
+
+	if srcValue.Kind() != reflect.Slice && srcValue.Kind() != reflect.Array {
+		panic("First argument must be an array or slice")
+	}
+
+	if dstValue.Kind() != reflect.Slice && dstValue.Kind() != reflect.Array {
+		panic("Second argument must be an array or slice")
+	}
+
+	// returns value that points to dstValue
+	direct := reflect.Indirect(dstValue)
+
+	length := srcValue.Len()
+
+	for i := 0; i < length; i++ {
+		dstValue = reflect.Append(dstValue, srcValue.Index(i))
+	}
+
+	direct.Set(dstValue)
+}

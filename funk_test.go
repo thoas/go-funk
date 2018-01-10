@@ -2,6 +2,10 @@ package funk
 
 import "database/sql"
 
+type Model interface {
+	TableName() string
+}
+
 // Bar is
 type Bar struct {
 	Name string

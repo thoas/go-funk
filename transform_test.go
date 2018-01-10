@@ -141,3 +141,15 @@ func TestUniq(t *testing.T) {
 
 	is.Equal(results, []int{0, 1, 2, 3, 12})
 }
+
+func TestConvertSlice(t *testing.T) {
+	instances := []*Foo{foo, foo2}
+
+	var raw []Model
+
+	ConvertSlice(instances, &raw)
+
+	is := assert.New(t)
+
+	is.Len(raw, len(instances))
+}
