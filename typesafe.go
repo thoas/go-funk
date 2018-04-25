@@ -384,7 +384,7 @@ func LastIndexOfString(a []string, x string) int {
 func UniqInt64(a []int64) []int64 {
 	length := len(a)
 
-	seen := make(map[int64]bool, length)
+	seen := make(map[int64]struct{}, length)
 	j := 0
 
 	for i := 0; i < length; i++ {
@@ -394,7 +394,7 @@ func UniqInt64(a []int64) []int64 {
 			continue
 		}
 
-		seen[v] = true
+		seen[v] = struct{}{}
 		a[j] = v
 		j++
 	}
@@ -406,7 +406,7 @@ func UniqInt64(a []int64) []int64 {
 func UniqInt(a []int) []int {
 	length := len(a)
 
-	seen := make(map[int]bool, length)
+	seen := make(map[int]struct{}, length)
 	j := 0
 
 	for i := 0; i < length; i++ {
@@ -416,7 +416,7 @@ func UniqInt(a []int) []int {
 			continue
 		}
 
-		seen[v] = true
+		seen[v] = struct{}{}
 		a[j] = v
 		j++
 	}
@@ -428,7 +428,7 @@ func UniqInt(a []int) []int {
 func UniqString(a []string) []string {
 	length := len(a)
 
-	seen := make(map[string]bool, length)
+	seen := make(map[string]struct{}, length)
 	j := 0
 
 	for i := 0; i < length; i++ {
@@ -438,7 +438,7 @@ func UniqString(a []string) []string {
 			continue
 		}
 
-		seen[v] = true
+		seen[v] = struct{}{}
 		a[j] = v
 		j++
 	}
@@ -450,7 +450,7 @@ func UniqString(a []string) []string {
 func UniqFloat64(a []float64) []float64 {
 	length := len(a)
 
-	seen := make(map[float64]bool, length)
+	seen := make(map[float64]struct{}, length)
 	j := 0
 
 	for i := 0; i < length; i++ {
@@ -460,7 +460,7 @@ func UniqFloat64(a []float64) []float64 {
 			continue
 		}
 
-		seen[v] = true
+		seen[v] = struct{}{}
 		a[j] = v
 		j++
 	}
@@ -472,7 +472,7 @@ func UniqFloat64(a []float64) []float64 {
 func UniqFloat32(a []float32) []float32 {
 	length := len(a)
 
-	seen := make(map[float32]bool, length)
+	seen := make(map[float32]struct{}, length)
 	j := 0
 
 	for i := 0; i < length; i++ {
@@ -482,7 +482,7 @@ func UniqFloat32(a []float32) []float32 {
 			continue
 		}
 
-		seen[v] = true
+		seen[v] = struct{}{}
 		a[j] = v
 		j++
 	}
