@@ -12,6 +12,9 @@ func TestContainsInt(t *testing.T) {
 	is.True(ContainsInt([]int{1, 2, 3, 4}, 4))
 	is.False(ContainsInt([]int{1, 2, 3, 4}, 5))
 
+	is.True(ContainsInt32([]int32{1, 2, 3, 4}, 4))
+	is.False(ContainsInt32([]int32{1, 2, 3, 4}, 5))
+
 	is.True(ContainsInt64([]int64{1, 2, 3, 4}, 4))
 	is.False(ContainsInt64([]int64{1, 2, 3, 4}, 5))
 }
@@ -41,6 +44,16 @@ func TestFilterInt(t *testing.T) {
 	})
 
 	is.Equal(r, []int{2, 4})
+}
+
+func TestFilterInt32(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterInt32([]int32{1, 2, 3, 4}, func(x int32) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, []int32{2, 4})
 }
 
 func TestFilterInt64(t *testing.T) {
