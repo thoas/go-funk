@@ -37,11 +37,15 @@ func Reduce(arr, reduceFunc, acc interface{}) float64 {
 
 	// Generate reduce function if was passed as rune
 	if isRune {
+		reduceSign := reduceFunc.(int32)
+
+		if ok := map[rune]bool{'+': true, '*': true}[reduceSign]; !ok {
+			panic("Invalid reduce sign, allowed: '+' and '*'")
+		}
+
 		in := []reflect.Type{accType, sliceElemType}
 		out := []reflect.Type{accType}
-
 		funcType := reflect.FuncOf(in, out, false)
-		reduceSign := reduceFunc.(int32)
 
 		reduceFunc = reflect.MakeFunc(funcType, func(args []reflect.Value) []reflect.Value {
 			acc := args[0].Interface()
@@ -78,6 +82,5 @@ func Reduce(arr, reduceFunc, acc interface{}) float64 {
 	}
 
 	resultInterface := accValue.Convert(returnType).Interface()
-	result, _ := resultInterface.(float64)
-	return result
+	return resultInterface.(float64)
 }

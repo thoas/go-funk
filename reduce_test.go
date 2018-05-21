@@ -12,7 +12,7 @@ func TestReduce(t *testing.T) {
 		Arr    interface{}
 		Func   interface{}
 		Acc    interface{}
-		Result interface{}
+		Result float64
 	}{
 		{
 			[]int{1, 2, 3, 4},
