@@ -593,6 +593,7 @@ Authors
 
 * Florent Messa
 * Gilles Fabio
+* Alexey Pokhozhaev
 
 .. _reflect: https://golang.org/pkg/reflect/
 .. _lodash: https://lodash.com/
