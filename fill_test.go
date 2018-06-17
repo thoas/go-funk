@@ -1,8 +1,8 @@
 package funk
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestFillMismatchedTypes(t *testing.T) {
