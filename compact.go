@@ -4,11 +4,12 @@ import (
 	"reflect"
 )
 
+// Compact creates a slice with all empty/zero values removed.
 func Compact(value interface{}) interface{} {
 	arr := redirectValue(reflect.ValueOf(value))
 
-	if arr.Kind() != reflect.Slice {
-		panic("First parameter must be slice")
+	if arr.Kind() != reflect.Slice && arr.Kind() != reflect.Array {
+		panic("First parameter must be array or slice")
 	}
 
 	sliceElemType := sliceElem(arr.Type())
