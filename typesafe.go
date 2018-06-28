@@ -647,32 +647,32 @@ func ShuffleFloat64(a []float64) []float64 {
 	return a
 }
 
-// DropString creates a slice with `n` string dropped from the beginning.
+// DropString creates a slice with `n` strings dropped from the beginning.
 func DropString(s []string, n int) []string {
 	return s[n:]
 }
 
-// DropInt creates a slice with `n` int dropped from the beginning.
+// DropInt creates a slice with `n` ints dropped from the beginning.
 func DropInt(s []int, n int) []int {
 	return s[n:]
 }
 
-// DropInt32 creates a slice with `n` int32 dropped from the beginning.
+// DropInt32 creates a slice with `n` int32s dropped from the beginning.
 func DropInt32(s []int32, n int) []int32 {
 	return s[n:]
 }
 
-// DropInt64 creates a slice with `n` int64 dropped from the beginning.
+// DropInt64 creates a slice with `n` int64s dropped from the beginning.
 func DropInt64(s []int64, n int) []int64 {
 	return s[n:]
 }
 
-// DropFloat32 creates a slice with `n` float32 dropped from the beginning.
+// DropFloat32 creates a slice with `n` float32s dropped from the beginning.
 func DropFloat32(s []float32, n int) []float32 {
 	return s[n:]
 }
 
-// DropFloat64 creates a slice with `n` float64 dropped from the beginning.
+// DropFloat64 creates a slice with `n` float64s dropped from the beginning.
 func DropFloat64(s []float64, n int) []float64 {
 	return s[n:]
 }
