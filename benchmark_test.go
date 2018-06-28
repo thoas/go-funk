@@ -74,3 +74,20 @@ func BenchmarkSum(b *testing.B) {
 		}
 	})
 }
+
+func BenchmarkDrop(b *testing.B) {
+	r := rand.New(rand.NewSource(seed))
+	testData := sliceGenerator(sliceSize, r)
+
+	b.Run("DropInt64", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			DropInt64(testData, 1)
+		}
+	})
+
+	b.Run("Drop", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			Drop(testData, 1)
+		}
+	})
+}

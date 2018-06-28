@@ -440,6 +440,24 @@ see also, typesafe implementations: UniqInt_, UniqInt64_, UniqFloat32_, UniqFloa
 .. _UniqInt64: https://godoc.org/github.com/thoas/go-funk#UniqInt64
 .. _UniqString: https://godoc.org/github.com/thoas/go-funk#UniqString
 
+funk.Drop
+.........
+
+Creates an array/slice with `n` elements dropped from the beginning.
+
+.. code-block:: go
+
+    funk.Drop([]int{0, 0, 0, 0}, 3) // []int{0}
+
+see also, typesafe implementations: DropInt_, DropInt32_, DropInt64_, DropFloat32_, DropFloat64_, DropString_
+
+.. _DropInt: https://godoc.org/github.com/thoas/go-funk#DropInt
+.. _DropInt32: https://godoc.org/github.com/thoas/go-funk#DropInt64
+.. _DropInt64: https://godoc.org/github.com/thoas/go-funk#DropInt64
+.. _DropFloat32: https://godoc.org/github.com/thoas/go-funk#DropFloat32
+.. _DropFloat64: https://godoc.org/github.com/thoas/go-funk#DropFloat64
+.. _DropString: https://godoc.org/github.com/thoas/go-funk#DropString
+
 funk.Initial
 ............
 
