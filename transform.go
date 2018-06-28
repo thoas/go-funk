@@ -363,3 +363,28 @@ func ConvertSlice(in interface{}, out interface{}) {
 
 	direct.Set(dstValue)
 }
+
+// Drop creates an array/slice with `n` elements dropped from the beginning.
+func Drop(in interface{}, n int) interface{} {
+	value := reflect.ValueOf(in)
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		length := value.Len()
+
+		resultSlice := makeSlice(value, length-n)
+
+		j := 0
+		for i := n; i < length; i++ {
+			resultSlice.Index(j).Set(value.Index(i))
+			j++
+		}
+
+		return resultSlice.Interface()
+
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Drop", valueType.String()))
+}
