@@ -163,3 +163,63 @@ func TestTypesafeShuffle(t *testing.T) {
 		is.True(ContainsInt(results, entry))
 	}
 }
+
+func TestDropString(t *testing.T) {
+	results := DropString([]string{"the", "quick", "brown", "fox", "jumps", "..."}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 3)
+
+	is.Equal([]string{"fox", "jumps", "..."}, results)
+}
+
+func TestDropInt(t *testing.T) {
+	results := DropInt([]int{0, 0, 0, 0}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]int{0}, results)
+}
+
+func TestDropInt32(t *testing.T) {
+	results := DropInt32([]int32{1, 2, 3, 4}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]int32{4}, results)
+}
+
+func TestDropInt64(t *testing.T) {
+	results := DropInt64([]int64{1, 2, 3, 4}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]int64{4}, results)
+}
+
+func TestDropFloat32(t *testing.T) {
+	results := DropFloat32([]float32{1.1, 2.2, 3.3, 4.4}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]float32{4.4}, results)
+}
+
+func TestDropFloat64(t *testing.T) {
+	results := DropFloat64([]float64{1.1, 2.2, 3.3, 4.4}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]float64{4.4}, results)
+}
