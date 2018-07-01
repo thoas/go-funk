@@ -1,6 +1,8 @@
 package funk
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 // InInts is an alias of ContainsInt, returns true if an int is present in a iteratee.
 func InInts(s []int, v int) bool {
@@ -643,4 +645,34 @@ func ShuffleFloat64(a []float64) []float64 {
 	}
 
 	return a
+}
+
+// DropString creates a slice with `n` strings dropped from the beginning.
+func DropString(s []string, n int) []string {
+	return s[n:]
+}
+
+// DropInt creates a slice with `n` ints dropped from the beginning.
+func DropInt(s []int, n int) []int {
+	return s[n:]
+}
+
+// DropInt32 creates a slice with `n` int32s dropped from the beginning.
+func DropInt32(s []int32, n int) []int32 {
+	return s[n:]
+}
+
+// DropInt64 creates a slice with `n` int64s dropped from the beginning.
+func DropInt64(s []int64, n int) []int64 {
+	return s[n:]
+}
+
+// DropFloat32 creates a slice with `n` float32s dropped from the beginning.
+func DropFloat32(s []float32, n int) []float32 {
+	return s[n:]
+}
+
+// DropFloat64 creates a slice with `n` float64s dropped from the beginning.
+func DropFloat64(s []float64, n int) []float64 {
+	return s[n:]
 }

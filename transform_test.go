@@ -153,3 +153,13 @@ func TestConvertSlice(t *testing.T) {
 
 	is.Len(raw, len(instances))
 }
+
+func TestDrop(t *testing.T) {
+	results := Drop([]int{0, 1, 1, 2, 3, 0, 0, 12}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 5)
+
+	is.Equal([]int{2, 3, 0, 0, 12}, results)
+}
