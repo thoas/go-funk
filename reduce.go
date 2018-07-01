@@ -4,6 +4,8 @@ import (
 	"reflect"
 )
 
+// Reduce takes a collection and reduces it to a single value using a reduction
+// function (or a valid symbol) and an accumulator value.
 func Reduce(arr, reduceFunc, acc interface{}) float64 {
 	arrValue := redirectValue(reflect.ValueOf(arr))
 
@@ -17,7 +19,7 @@ func Reduce(arr, reduceFunc, acc interface{}) float64 {
 	isRune := reflect.TypeOf(reduceFunc).Kind() == reflect.Int32
 
 	if !(isFunc || isRune) {
-		panic("Second argument must be a function or rune")
+		panic("Second argument must be a valid function or rune")
 	}
 
 	accValue := reflect.ValueOf(acc)
