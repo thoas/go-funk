@@ -135,6 +135,15 @@ func IsIteratee(in interface{}) bool {
 	return kind == reflect.Array || kind == reflect.Slice || kind == reflect.Map
 }
 
+// IsCollection returns if the argument is a collection.
+func IsCollection(in interface{}) bool {
+	arrType := reflect.TypeOf(in)
+
+	kind := arrType.Kind()
+
+	return kind == reflect.Array || kind == reflect.Slice
+}
+
 // SliceOf returns a slice which contains the element.
 func SliceOf(in interface{}) interface{} {
 	value := reflect.ValueOf(in)
