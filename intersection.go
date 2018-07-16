@@ -13,7 +13,7 @@ func Intersect(x interface{}, y interface{}) interface{} {
 		panic("Second parameter must be a collection")
 	}
 
-	hash := map[interface{}]bool{}
+	hash := map[interface{}]struct{}{}
 
 	xValue := reflect.ValueOf(x)
 	xType := xValue.Type()
@@ -30,7 +30,7 @@ func Intersect(x interface{}, y interface{}) interface{} {
 
 	for i := 0; i < xValue.Len(); i++ {
 		v := xValue.Index(i).Interface()
-		hash[v] = true
+		hash[v] = struct{}{}
 	}
 
 	for i := 0; i < yValue.Len(); i++ {
@@ -51,10 +51,10 @@ func IntersectString(x []string, y []string) []string {
 	}
 
 	set := []string{}
-	hash := map[string]bool{}
+	hash := map[string]struct{}{}
 
 	for _, v := range x {
-		hash[v] = true
+		hash[v] = struct{}{}
 	}
 
 	for _, v := range y {
