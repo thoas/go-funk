@@ -6,22 +6,22 @@ type chainBuilder struct {
 	collection interface{}
 }
 
-func (b *chainBuilder) Chunk(size int) FunkBuilder {
+func (b *chainBuilder) Chunk(size int) Builder {
 	return &chainBuilder{Chunk(b.collection, size)}
 }
-func (b *chainBuilder) Compact() FunkBuilder {
+func (b *chainBuilder) Compact() Builder {
 	return &chainBuilder{Compact(b.collection)}
 }
-func (b *chainBuilder) Drop(in interface{}, n int) FunkBuilder {
+func (b *chainBuilder) Drop(in interface{}, n int) Builder {
 	return &chainBuilder{Drop(b.collection, n)}
 }
-func (b *chainBuilder) Filter(predicate interface{}) FunkBuilder {
+func (b *chainBuilder) Filter(predicate interface{}) Builder {
 	return &chainBuilder{Filter(b.collection, predicate)}
 }
-func (b *chainBuilder) FlattenDeep() FunkBuilder {
+func (b *chainBuilder) FlattenDeep() Builder {
 	return &chainBuilder{FlattenDeep(b.collection)}
 }
-func (b *chainBuilder) ForEach(predicate interface{}) FunkBuilder {
+func (b *chainBuilder) ForEach(predicate interface{}) Builder {
 	v := reflect.ValueOf(b.collection)
 	c := make([]interface{}, v.Len())
 
@@ -31,7 +31,7 @@ func (b *chainBuilder) ForEach(predicate interface{}) FunkBuilder {
 	ForEach(c, predicate)
 	return &chainBuilder{c}
 }
-func (b *chainBuilder) ForEachRight(predicate interface{}) FunkBuilder {
+func (b *chainBuilder) ForEachRight(predicate interface{}) Builder {
 	v := reflect.ValueOf(b.collection)
 	c := make([]interface{}, v.Len())
 
@@ -41,22 +41,22 @@ func (b *chainBuilder) ForEachRight(predicate interface{}) FunkBuilder {
 	ForEachRight(c, predicate)
 	return &chainBuilder{c}
 }
-func (b *chainBuilder) Initial() FunkBuilder {
+func (b *chainBuilder) Initial() Builder {
 	return &chainBuilder{Initial(b.collection)}
 }
-func (b *chainBuilder) Intersect(y interface{}) FunkBuilder {
+func (b *chainBuilder) Intersect(y interface{}) Builder {
 	return &chainBuilder{Intersect(b.collection, y)}
 }
-func (b *chainBuilder) Map(mapFunc interface{}) FunkBuilder {
+func (b *chainBuilder) Map(mapFunc interface{}) Builder {
 	return &chainBuilder{Map(b.collection, mapFunc)}
 }
-func (b *chainBuilder) Reverse() FunkBuilder {
+func (b *chainBuilder) Reverse() Builder {
 	return &chainBuilder{Reverse(b.collection)}
 }
-func (b *chainBuilder) Shuffle() FunkBuilder {
+func (b *chainBuilder) Shuffle() Builder {
 	return &chainBuilder{Shuffle(b.collection)}
 }
-func (b *chainBuilder) Uniq() FunkBuilder {
+func (b *chainBuilder) Uniq() Builder {
 	return &chainBuilder{Uniq(b.collection)}
 }
 

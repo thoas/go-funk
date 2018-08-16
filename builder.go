@@ -4,20 +4,21 @@ import (
 	"reflect"
 )
 
-type FunkBuilder interface {
-	Chunk(size int) FunkBuilder
-	Compact() FunkBuilder
-	Drop(in interface{}, n int) FunkBuilder
-	Filter(predicate interface{}) FunkBuilder
-	FlattenDeep() FunkBuilder
-	ForEach(predicate interface{}) FunkBuilder
-	ForEachRight(predicate interface{}) FunkBuilder
-	Initial() FunkBuilder
-	Intersect(y interface{}) FunkBuilder
-	Map(mapFunc interface{}) FunkBuilder
-	Reverse() FunkBuilder
-	Shuffle() FunkBuilder
-	Uniq() FunkBuilder
+// Builder ...
+type Builder interface {
+	Chunk(size int) Builder
+	Compact() Builder
+	Drop(in interface{}, n int) Builder
+	Filter(predicate interface{}) Builder
+	FlattenDeep() Builder
+	ForEach(predicate interface{}) Builder
+	ForEachRight(predicate interface{}) Builder
+	Initial() Builder
+	Intersect(y interface{}) Builder
+	Map(mapFunc interface{}) Builder
+	Reverse() Builder
+	Shuffle() Builder
+	Uniq() Builder
 
 	All() bool
 	Any() bool

@@ -1,4 +1,131 @@
 package funk
 
+import "reflect"
+
 type lazyBuilder struct {
+	exec func() interface{}
+}
+
+func (b *lazyBuilder) Chunk(size int) Builder {
+	return &lazyBuilder{func() interface{} { return Chunk(b.exec(), size) }}
+}
+func (b *lazyBuilder) Compact() Builder {
+	return &lazyBuilder{func() interface{} { return Compact(b.exec()) }}
+}
+func (b *lazyBuilder) Drop(in interface{}, n int) Builder {
+	return &lazyBuilder{func() interface{} { return Drop(b.exec(), n) }}
+}
+func (b *lazyBuilder) Filter(predicate interface{}) Builder {
+	return &lazyBuilder{func() interface{} { return Filter(b.exec(), predicate) }}
+}
+func (b *lazyBuilder) FlattenDeep() Builder {
+	return &lazyBuilder{func() interface{} { return FlattenDeep(b.exec()) }}
+}
+func (b *lazyBuilder) ForEach(predicate interface{}) Builder {
+	return &lazyBuilder{func() interface{} {
+		c := b.exec()
+		ForEach(c, predicate)
+		return c
+	}}
+}
+func (b *lazyBuilder) ForEachRight(predicate interface{}) Builder {
+	return &lazyBuilder{func() interface{} {
+		c := b.exec()
+		ForEachRight(c, predicate)
+		return c
+	}}
+}
+func (b *lazyBuilder) Initial() Builder {
+	return &lazyBuilder{func() interface{} { return Initial(b.exec()) }}
+}
+func (b *lazyBuilder) Intersect(y interface{}) Builder {
+	return &lazyBuilder{func() interface{} { return Intersect(b.exec(), y) }}
+}
+func (b *lazyBuilder) Map(mapFunc interface{}) Builder {
+	return &lazyBuilder{func() interface{} { return Map(b.exec(), mapFunc) }}
+}
+func (b *lazyBuilder) Reverse() Builder {
+	return &lazyBuilder{func() interface{} { return Reverse(b.exec()) }}
+}
+func (b *lazyBuilder) Shuffle() Builder {
+	return &lazyBuilder{func() interface{} { return Shuffle(b.exec()) }}
+}
+func (b *lazyBuilder) Uniq() Builder {
+	return &lazyBuilder{func() interface{} { return Uniq(b.exec()) }}
+}
+
+func (b *lazyBuilder) All() bool {
+	v := reflect.ValueOf(b.exec())
+	c := make([]interface{}, v.Len())
+
+	for i := 0; i < v.Len(); i++ {
+		c[i] = v.Index(i).Interface()
+	}
+	return All(c...)
+}
+func (b *lazyBuilder) Any() bool {
+	v := reflect.ValueOf(b.exec())
+	c := make([]interface{}, v.Len())
+
+	for i := 0; i < v.Len(); i++ {
+		c[i] = v.Index(i).Interface()
+	}
+	return Any(c...)
+}
+func (b *lazyBuilder) Contains(elem interface{}) bool {
+	return Contains(b.exec(), elem)
+}
+func (b *lazyBuilder) Every(elements ...interface{}) bool {
+	return Every(b.exec(), elements...)
+}
+func (b *lazyBuilder) Find(predicate interface{}) interface{} {
+	return Find(b.exec(), predicate)
+}
+func (b *lazyBuilder) Get(path string) interface{} {
+	return Get(b.exec(), path)
+}
+func (b *lazyBuilder) Head() interface{} {
+	return Head(b.exec())
+}
+func (b *lazyBuilder) Keys() interface{} {
+	return Keys(b.exec())
+}
+func (b *lazyBuilder) In(v interface{}) bool {
+	return b.Contains(v)
+}
+func (b *lazyBuilder) IndexOf(elem interface{}) int {
+	return IndexOf(b.exec(), elem)
+}
+func (b *lazyBuilder) IsEmpty() bool {
+	return IsEmpty(b.exec())
+}
+func (b *lazyBuilder) IsType(actual interface{}) bool {
+	return IsType(b.exec(), actual)
+}
+func (b *lazyBuilder) Last() interface{} {
+	return Last(b.exec())
+}
+func (b *lazyBuilder) NotEmpty() bool {
+	return NotEmpty(b.exec())
+}
+func (b *lazyBuilder) Product() float64 {
+	return Product(b.exec())
+}
+func (b *lazyBuilder) Reduce(reduceFunc, acc interface{}) float64 {
+	return Reduce(b.exec(), reduceFunc, acc)
+}
+func (b *lazyBuilder) Sum() float64 {
+	return Sum(b.exec())
+}
+func (b *lazyBuilder) Tail() interface{} {
+	return Tail(b.exec())
+}
+func (b *lazyBuilder) Type() reflect.Type {
+	return reflect.TypeOf(b.exec())
+}
+func (b *lazyBuilder) Value() interface{} {
+	return b.exec()
+}
+func (b *lazyBuilder) Values() interface{} {
+	return Values(b.exec())
 }
