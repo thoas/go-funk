@@ -1,6 +1,7 @@
 package funk
 
 import (
+	"fmt"
 	"reflect"
 )
 
@@ -41,4 +42,36 @@ type Builder interface {
 	Type() reflect.Type
 	Value() interface{}
 	Values() interface{}
+}
+
+// Chain ...
+func Chain(v interface{}) Builder {
+	valueType := reflect.TypeOf(v)
+	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array || valueType.Kind() == reflect.Map {
+		return &chainBuilder{v}
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Chain", valueType.String()))
+}
+
+// LazyChain ...
+func LazyChain(v interface{}) Builder {
+	valueType := reflect.TypeOf(v)
+	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array || valueType.Kind() == reflect.Map {
+		return &lazyBuilder{func() interface{} { return v }}
+	}
+	panic(fmt.Sprintf("Type %s is not supported by LazyChain", valueType.String()))
+
+}
+
+// LazyChainWith ...
+func LazyChainWith(generator func() interface{}) Builder {
+	return &lazyBuilder{func() interface{} {
+		v := generator()
+		valueType := reflect.TypeOf(v)
+		if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array || valueType.Kind() == reflect.Map {
+			return v
+		}
+		panic(fmt.Sprintf("Type %s is not supported by LazyChainWith generator", valueType.String()))
+	}}
 }
