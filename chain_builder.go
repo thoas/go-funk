@@ -22,12 +22,22 @@ func (b *chainBuilder) FlattenDeep() FunkBuilder {
 	return &chainBuilder{FlattenDeep(b.collection)}
 }
 func (b *chainBuilder) ForEach(predicate interface{}) FunkBuilder {
-	c := deepClone(b.collection)
+	v := reflect.ValueOf(b.collection)
+	c := make([]interface{}, v.Len())
+
+	for i := 0; i < v.Len(); i++ {
+		c[i] = v.Index(i).Interface()
+	}
 	ForEach(c, predicate)
 	return &chainBuilder{c}
 }
 func (b *chainBuilder) ForEachRight(predicate interface{}) FunkBuilder {
-	c := deepClone(b.collection)
+	v := reflect.ValueOf(b.collection)
+	c := make([]interface{}, v.Len())
+
+	for i := 0; i < v.Len(); i++ {
+		c[i] = v.Index(i).Interface()
+	}
 	ForEachRight(c, predicate)
 	return &chainBuilder{c}
 }
