@@ -2,6 +2,7 @@ package funk
 
 import (
 	"fmt"
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,24 +11,10 @@ import (
 /*
 	Test à faire:
 
-	ForEach(predicate interface{}) Builder
-	ForEachRight(predicate interface{}) Builder
-	Initial() Builder
-
-	All() bool
-	Any() bool
-	Get(path string) interface{}
-	Head() interface{}
 	Keys() interface{}
-	In(v interface{}) bool
-	IsEmpty() bool
 	IsType(actual interface{}) bool
-	Last() interface{}
-	NotEmpty() bool
 	Product() float64
-	Reduce(reduceFunc, acc interface{}) float64
 	Sum() float64
-	Tail() interface{}
 	Type() reflect.Type
 	Value() interface{}
 	Values() interface{}
@@ -152,6 +139,29 @@ func TestChainDrop(t *testing.T) {
 	}
 }
 
+func TestChainFilter(t *testing.T) {
+	testCases := []struct {
+		In        interface{}
+		Predicate interface{}
+	}{
+		{
+			In:        []int{1, 2, 3, 4},
+			Predicate: func(x int) bool { return x%2 == 0 },
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Filter(tc.In, tc.Predicate)
+			actual := Chain(tc.In).Filter(tc.Predicate).Value()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
 func TestChainFlattenDeep(t *testing.T) {
 	testCases := []struct {
 		In interface{}
@@ -176,14 +186,18 @@ func TestChainFlattenDeep(t *testing.T) {
 	}
 }
 
-func TestChainFilter(t *testing.T) {
+func TestChainInitial(t *testing.T) {
 	testCases := []struct {
-		In        interface{}
-		Predicate interface{}
+		In interface{}
 	}{
 		{
-			In:        []int{1, 2, 3, 4},
-			Predicate: func(x int) bool { return x%2 == 0 },
+			In: []int{},
+		},
+		{
+			In: []int{0},
+		},
+		{
+			In: []int{0, 1, 2, 3},
 		},
 	}
 
@@ -191,8 +205,8 @@ func TestChainFilter(t *testing.T) {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
 			is := assert.New(t)
 
-			expected := Filter(tc.In, tc.Predicate)
-			actual := Chain(tc.In).Filter(tc.Predicate).Value()
+			expected := Initial(tc.In)
+			actual := Chain(tc.In).Initial().Value()
 
 			is.Equal(expected, actual)
 		})
@@ -256,7 +270,11 @@ func TestChainMap(t *testing.T) {
 			expected := Map(tc.In, tc.MapFnc)
 			actual := Chain(tc.In).Map(tc.MapFnc).Value()
 
-			is.ElementsMatch(expected, actual)
+			if reflect.TypeOf(expected).Kind() == reflect.Map {
+				is.Equal(expected, actual)
+			} else {
+				is.ElementsMatch(expected, actual)
+			}
 		})
 	}
 }
@@ -307,6 +325,33 @@ func TestChainShuffle(t *testing.T) {
 	}
 }
 
+func TestChainTail(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{
+			In: []int{},
+		},
+		{
+			In: []int{0},
+		},
+		{
+			In: []int{0, 1, 2, 3},
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Tail(tc.In)
+			actual := Chain(tc.In).Tail().Value()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
 func TestChainUniq(t *testing.T) {
 	testCases := []struct {
 		In interface{}
@@ -322,6 +367,60 @@ func TestChainUniq(t *testing.T) {
 
 			expected := Uniq(tc.In)
 			actual := Chain(tc.In).Uniq().Value()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainAll(t *testing.T) {
+	testCases := []struct {
+		In []interface{}
+	}{
+		{In: []interface{}{"foo", "bar"}},
+		{In: []interface{}{"foo", ""}},
+		{In: []interface{}{"", ""}},
+		{In: []interface{}{}},
+		{In: []interface{}{true, "foo", 6}},
+		{In: []interface{}{true, "", 6}},
+		{In: []interface{}{true, "foo", 0}},
+		{In: []interface{}{false, "foo", 6}},
+		{In: []interface{}{false, "", 0}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := All(tc.In...)
+			actual := Chain(tc.In).All()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainAny(t *testing.T) {
+	testCases := []struct {
+		In []interface{}
+	}{
+		{In: []interface{}{"foo", "bar"}},
+		{In: []interface{}{"foo", ""}},
+		{In: []interface{}{"", ""}},
+		{In: []interface{}{}},
+		{In: []interface{}{true, "foo", 6}},
+		{In: []interface{}{true, "", 6}},
+		{In: []interface{}{true, "foo", 0}},
+		{In: []interface{}{false, "foo", 6}},
+		{In: []interface{}{false, "", 0}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Any(tc.In...)
+			actual := Chain(tc.In).Any()
 
 			is.Equal(expected, actual)
 		})
@@ -430,6 +529,134 @@ func TestChainEvery(t *testing.T) {
 	}
 }
 
+func TestChainFind(t *testing.T) {
+	testCases := []struct {
+		In        interface{}
+		Predicate interface{}
+	}{
+		{
+			In:        []int{1, 2, 3, 4},
+			Predicate: func(x int) bool { return x%2 == 0 },
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Find(tc.In, tc.Predicate)
+			actual := Chain(tc.In).Find(tc.Predicate)
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainForEach(t *testing.T) {
+	var expectedAcc, actualAcc []interface{}
+
+	testCases := []struct {
+		In            interface{}
+		FunkIterator  interface{}
+		ChainIterator interface{}
+	}{
+		{
+			In: []int{1, 2, 3, 4},
+			FunkIterator: func(x int) {
+				if x%2 == 0 {
+					expectedAcc = append(expectedAcc, x)
+				}
+			},
+			ChainIterator: func(x int) {
+				if x%2 == 0 {
+					actualAcc = append(actualAcc, x)
+				}
+			},
+		},
+		{
+			In:            map[int]string{1: "Florent", 2: "Gilles"},
+			FunkIterator:  func(k int, v string) { expectedAcc = append(expectedAcc, fmt.Sprintf("%d:%s", k, v)) },
+			ChainIterator: func(k int, v string) { actualAcc = append(actualAcc, fmt.Sprintf("%d:%s", k, v)) },
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+			expectedAcc = []interface{}{}
+			actualAcc = []interface{}{}
+
+			ForEach(tc.In, tc.FunkIterator)
+			Chain(tc.In).ForEach(tc.ChainIterator)
+
+			is.ElementsMatch(expectedAcc, actualAcc)
+		})
+	}
+}
+
+func TestChainForEachRight(t *testing.T) {
+	var expectedAcc, actualAcc []interface{}
+
+	testCases := []struct {
+		In            interface{}
+		FunkIterator  interface{}
+		ChainIterator interface{}
+	}{
+		{
+			In: []int{1, 2, 3, 4},
+			FunkIterator: func(x int) {
+				if x%2 == 0 {
+					expectedAcc = append(expectedAcc, x)
+				}
+			},
+			ChainIterator: func(x int) {
+				if x%2 == 0 {
+					actualAcc = append(actualAcc, x)
+				}
+			},
+		},
+		{
+			In:            map[int]string{1: "Florent", 2: "Gilles"},
+			FunkIterator:  func(k int, v string) { expectedAcc = append(expectedAcc, fmt.Sprintf("%d:%s", k, v)) },
+			ChainIterator: func(k int, v string) { actualAcc = append(actualAcc, fmt.Sprintf("%d:%s", k, v)) },
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+			expectedAcc = []interface{}{}
+			actualAcc = []interface{}{}
+
+			ForEachRight(tc.In, tc.FunkIterator)
+			Chain(tc.In).ForEachRight(tc.ChainIterator)
+
+			is.ElementsMatch(expectedAcc, actualAcc)
+		})
+	}
+}
+
+func TestChainHead(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{
+			In: []int{1, 2, 3, 4},
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Head(tc.In)
+			actual := Chain(tc.In).Head()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
 func TestChainIndexOf(t *testing.T) {
 	testCases := []struct {
 		In   interface{}
@@ -455,6 +682,53 @@ func TestChainIndexOf(t *testing.T) {
 
 			expected := IndexOf(tc.In, tc.Item)
 			actual := Chain(tc.In).IndexOf(tc.Item)
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainIsEmpty(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{In: ""},
+		{In: [0]interface{}{}},
+		{In: []interface{}(nil)},
+		{In: map[interface{}]interface{}(nil)},
+		{In: "s"},
+		{In: [1]interface{}{1}},
+		{In: []interface{}{}},
+		{In: map[interface{}]interface{}{}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := IsEmpty(tc.In)
+			actual := Chain(tc.In).IsEmpty()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainLast(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{
+			In: []int{1, 2, 3, 4},
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Last(tc.In)
+			actual := Chain(tc.In).Last()
 
 			is.Equal(expected, actual)
 		})
@@ -492,14 +766,62 @@ func TestChainLastIndexOf(t *testing.T) {
 	}
 }
 
-func TestChainFind(t *testing.T) {
+func TestChainNotEmpty(t *testing.T) {
 	testCases := []struct {
-		In        interface{}
-		Predicate interface{}
+		In interface{}
+	}{
+		{In: ""},
+		{In: [0]interface{}{}},
+		{In: []interface{}(nil)},
+		{In: map[interface{}]interface{}(nil)},
+		{In: "s"},
+		{In: [1]interface{}{1}},
+		{In: []interface{}{}},
+		{In: map[interface{}]interface{}{}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := NotEmpty(tc.In)
+			actual := Chain(tc.In).NotEmpty()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainReduce(t *testing.T) {
+	testCases := []struct {
+		In         interface{}
+		ReduceFunc interface{}
+		Acc        interface{}
 	}{
 		{
-			In:        []int{1, 2, 3, 4},
-			Predicate: func(x int) bool { return x%2 == 0 },
+			In:         []int{1, 2, 3, 4},
+			ReduceFunc: func(acc, elem int) int { return acc + elem },
+			Acc:        0,
+		},
+		{
+			In:         &[]int16{1, 2, 3, 4},
+			ReduceFunc: '+',
+			Acc:        5,
+		},
+		{
+			In:         []float64{1.1, 2.2, 3.3},
+			ReduceFunc: '+',
+			Acc:        0,
+		},
+		{
+			In:         &[]int{1, 2, 3, 5},
+			ReduceFunc: func(acc int8, elem int16) int32 { return int32(acc) * int32(elem) },
+			Acc:        1,
+		},
+		{
+			In:         []interface{}{1, 2, 3.3, 4},
+			ReduceFunc: '*',
+			Acc:        1,
 		},
 	}
 
@@ -507,10 +829,42 @@ func TestChainFind(t *testing.T) {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
 			is := assert.New(t)
 
-			expected := Find(tc.In, tc.Predicate)
-			actual := Chain(tc.In).Find(tc.Predicate)
+			expected := Reduce(tc.In, tc.ReduceFunc, tc.Acc)
+			actual := Chain(tc.In).Reduce(tc.ReduceFunc, tc.Acc)
 
 			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainType(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			actual := Chain(tc.In).Type()
+
+			is.Equal(reflect.TypeOf(tc.In), actual)
+		})
+	}
+}
+
+func TestChainValue(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			actual := Chain(tc.In).Value()
+
+			is.Equal(tc.In, actual)
 		})
 	}
 }

@@ -1,6 +1,9 @@
 package funk
 
-import "reflect"
+import (
+	"fmt"
+	"reflect"
+)
 
 type chainBuilder struct {
 	collection interface{}
@@ -15,31 +18,13 @@ func (b *chainBuilder) Compact() Builder {
 func (b *chainBuilder) Drop(n int) Builder {
 	return &chainBuilder{Drop(b.collection, n)}
 }
+
+// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) Filter(predicate interface{}) Builder {
 	return &chainBuilder{Filter(b.collection, predicate)}
 }
 func (b *chainBuilder) FlattenDeep() Builder {
 	return &chainBuilder{FlattenDeep(b.collection)}
-}
-func (b *chainBuilder) ForEach(predicate interface{}) Builder {
-	v := reflect.ValueOf(b.collection)
-	c := make([]interface{}, v.Len())
-
-	for i := 0; i < v.Len(); i++ {
-		c[i] = v.Index(i).Interface()
-	}
-	ForEach(c, predicate)
-	return &chainBuilder{c}
-}
-func (b *chainBuilder) ForEachRight(predicate interface{}) Builder {
-	v := reflect.ValueOf(b.collection)
-	c := make([]interface{}, v.Len())
-
-	for i := 0; i < v.Len(); i++ {
-		c[i] = v.Index(i).Interface()
-	}
-	ForEachRight(c, predicate)
-	return &chainBuilder{c}
 }
 func (b *chainBuilder) Initial() Builder {
 	return &chainBuilder{Initial(b.collection)}
@@ -47,6 +32,8 @@ func (b *chainBuilder) Initial() Builder {
 func (b *chainBuilder) Intersect(y interface{}) Builder {
 	return &chainBuilder{Intersect(b.collection, y)}
 }
+
+// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) Map(mapFunc interface{}) Builder {
 	return &chainBuilder{Map(b.collection, mapFunc)}
 }
@@ -56,14 +43,21 @@ func (b *chainBuilder) Reverse() Builder {
 func (b *chainBuilder) Shuffle() Builder {
 	return &chainBuilder{Shuffle(b.collection)}
 }
+func (b *chainBuilder) Tail() Builder {
+	return &chainBuilder{Tail(b.collection)}
+}
 func (b *chainBuilder) Uniq() Builder {
 	return &chainBuilder{Uniq(b.collection)}
 }
-
 func (b *chainBuilder) All() bool {
 	v := reflect.ValueOf(b.collection)
-	c := make([]interface{}, v.Len())
+	t := v.Type()
 
+	if t.Kind() != reflect.Array && t.Kind() != reflect.Slice {
+		panic(fmt.Sprintf("Type %s is not supported by Chain.All", t.String()))
+	}
+
+	c := make([]interface{}, v.Len())
 	for i := 0; i < v.Len(); i++ {
 		c[i] = v.Index(i).Interface()
 	}
@@ -71,8 +65,13 @@ func (b *chainBuilder) All() bool {
 }
 func (b *chainBuilder) Any() bool {
 	v := reflect.ValueOf(b.collection)
-	c := make([]interface{}, v.Len())
+	t := v.Type()
 
+	if t.Kind() != reflect.Array && t.Kind() != reflect.Slice {
+		panic(fmt.Sprintf("Type %s is not supported by Chain.Any", t.String()))
+	}
+
+	c := make([]interface{}, v.Len())
 	for i := 0; i < v.Len(); i++ {
 		c[i] = v.Index(i).Interface()
 	}
@@ -84,20 +83,26 @@ func (b *chainBuilder) Contains(elem interface{}) bool {
 func (b *chainBuilder) Every(elements ...interface{}) bool {
 	return Every(b.collection, elements...)
 }
+
+// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) Find(predicate interface{}) interface{} {
 	return Find(b.collection, predicate)
 }
-func (b *chainBuilder) Get(path string) interface{} {
-	return Get(b.collection, path)
+
+// TODO: Possible side-effect (b.collection can be modified)
+func (b *chainBuilder) ForEach(predicate interface{}) {
+	ForEach(b.collection, predicate)
+}
+
+// TODO: Possible side-effect (b.collection can be modified)
+func (b *chainBuilder) ForEachRight(predicate interface{}) {
+	ForEachRight(b.collection, predicate)
 }
 func (b *chainBuilder) Head() interface{} {
 	return Head(b.collection)
 }
 func (b *chainBuilder) Keys() interface{} {
 	return Keys(b.collection)
-}
-func (b *chainBuilder) In(v interface{}) bool {
-	return b.Contains(v)
 }
 func (b *chainBuilder) IndexOf(elem interface{}) int {
 	return IndexOf(b.collection, elem)
@@ -125,9 +130,6 @@ func (b *chainBuilder) Reduce(reduceFunc, acc interface{}) float64 {
 }
 func (b *chainBuilder) Sum() float64 {
 	return Sum(b.collection)
-}
-func (b *chainBuilder) Tail() interface{} {
-	return Tail(b.collection)
 }
 func (b *chainBuilder) Type() reflect.Type {
 	return reflect.TypeOf(b.collection)

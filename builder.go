@@ -12,13 +12,12 @@ type Builder interface {
 	Drop(n int) Builder
 	Filter(predicate interface{}) Builder
 	FlattenDeep() Builder
-	ForEach(predicate interface{}) Builder
-	ForEachRight(predicate interface{}) Builder
 	Initial() Builder
 	Intersect(y interface{}) Builder
 	Map(mapFunc interface{}) Builder
 	Reverse() Builder
 	Shuffle() Builder
+	Tail() Builder
 	Uniq() Builder
 
 	All() bool
@@ -26,10 +25,10 @@ type Builder interface {
 	Contains(elem interface{}) bool
 	Every(elements ...interface{}) bool
 	Find(predicate interface{}) interface{}
-	Get(path string) interface{}
+	ForEach(predicate interface{})
+	ForEachRight(predicate interface{})
 	Head() interface{}
 	Keys() interface{}
-	In(v interface{}) bool
 	IndexOf(elem interface{}) int
 	IsEmpty() bool
 	IsType(actual interface{}) bool
@@ -39,7 +38,6 @@ type Builder interface {
 	Product() float64
 	Reduce(reduceFunc, acc interface{}) float64
 	Sum() float64
-	Tail() interface{}
 	Type() reflect.Type
 	Value() interface{}
 	Values() interface{}
@@ -47,10 +45,11 @@ type Builder interface {
 
 // Chain ...
 func Chain(v interface{}) Builder {
+	isNotNil(v, "Chain")
+
 	valueType := reflect.TypeOf(v)
-	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array ||
-		valueType.Kind() == reflect.Map ||
-		valueType.Kind() == reflect.String {
+	if isValidBuilderEntry(valueType) ||
+		(valueType.Kind() == reflect.Ptr && isValidBuilderEntry(valueType.Elem())) {
 		return &chainBuilder{v}
 	}
 
@@ -59,10 +58,11 @@ func Chain(v interface{}) Builder {
 
 // LazyChain ...
 func LazyChain(v interface{}) Builder {
+	isNotNil(v, "LazyChain")
+
 	valueType := reflect.TypeOf(v)
-	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array ||
-		valueType.Kind() == reflect.Map ||
-		valueType.Kind() == reflect.String {
+	if isValidBuilderEntry(valueType) ||
+		(valueType.Kind() == reflect.Ptr && isValidBuilderEntry(valueType.Elem())) {
 		return &lazyBuilder{func() interface{} { return v }}
 	}
 
@@ -72,15 +72,29 @@ func LazyChain(v interface{}) Builder {
 
 // LazyChainWith ...
 func LazyChainWith(generator func() interface{}) Builder {
+	isNotNil(generator, "LazyChainWith")
 	return &lazyBuilder{func() interface{} {
+		isNotNil(generator, "LazyChainWith")
+
 		v := generator()
 		valueType := reflect.TypeOf(v)
-		if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array ||
-			valueType.Kind() == reflect.Map ||
-			valueType.Kind() == reflect.String {
+		if isValidBuilderEntry(valueType) ||
+			(valueType.Kind() == reflect.Ptr && isValidBuilderEntry(valueType.Elem())) {
 			return v
 		}
 
 		panic(fmt.Sprintf("Type %s is not supported by LazyChainWith generator", valueType.String()))
 	}}
+}
+
+func isNotNil(v interface{}, from string) {
+	if v == nil {
+		panic(fmt.Sprintf("nil value is not supported by %s", from))
+	}
+}
+
+func isValidBuilderEntry(valueType reflect.Type) bool {
+	return valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array ||
+		valueType.Kind() == reflect.Map ||
+		valueType.Kind() == reflect.String
 }

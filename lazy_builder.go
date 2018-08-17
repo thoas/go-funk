@@ -21,20 +21,6 @@ func (b *lazyBuilder) Filter(predicate interface{}) Builder {
 func (b *lazyBuilder) FlattenDeep() Builder {
 	return &lazyBuilder{func() interface{} { return FlattenDeep(b.exec()) }}
 }
-func (b *lazyBuilder) ForEach(predicate interface{}) Builder {
-	return &lazyBuilder{func() interface{} {
-		c := b.exec()
-		ForEach(c, predicate)
-		return c
-	}}
-}
-func (b *lazyBuilder) ForEachRight(predicate interface{}) Builder {
-	return &lazyBuilder{func() interface{} {
-		c := b.exec()
-		ForEachRight(c, predicate)
-		return c
-	}}
-}
 func (b *lazyBuilder) Initial() Builder {
 	return &lazyBuilder{func() interface{} { return Initial(b.exec()) }}
 }
@@ -49,6 +35,9 @@ func (b *lazyBuilder) Reverse() Builder {
 }
 func (b *lazyBuilder) Shuffle() Builder {
 	return &lazyBuilder{func() interface{} { return Shuffle(b.exec()) }}
+}
+func (b *lazyBuilder) Tail() Builder {
+	return &lazyBuilder{func() interface{} { return Tail(b.exec()) }}
 }
 func (b *lazyBuilder) Uniq() Builder {
 	return &lazyBuilder{func() interface{} { return Uniq(b.exec()) }}
@@ -69,17 +58,17 @@ func (b *lazyBuilder) Every(elements ...interface{}) bool {
 func (b *lazyBuilder) Find(predicate interface{}) interface{} {
 	return Find(b.exec(), predicate)
 }
-func (b *lazyBuilder) Get(path string) interface{} {
-	return Get(b.exec(), path)
+func (b *lazyBuilder) ForEach(predicate interface{}) {
+	ForEach(b.exec(), predicate)
+}
+func (b *lazyBuilder) ForEachRight(predicate interface{}) {
+	ForEachRight(b.exec(), predicate)
 }
 func (b *lazyBuilder) Head() interface{} {
 	return Head(b.exec())
 }
 func (b *lazyBuilder) Keys() interface{} {
 	return Keys(b.exec())
-}
-func (b *lazyBuilder) In(v interface{}) bool {
-	return b.Contains(v)
 }
 func (b *lazyBuilder) IndexOf(elem interface{}) int {
 	return IndexOf(b.exec(), elem)
@@ -107,9 +96,6 @@ func (b *lazyBuilder) Reduce(reduceFunc, acc interface{}) float64 {
 }
 func (b *lazyBuilder) Sum() float64 {
 	return Sum(b.exec())
-}
-func (b *lazyBuilder) Tail() interface{} {
-	return Tail(b.exec())
 }
 func (b *lazyBuilder) Type() reflect.Type {
 	return reflect.TypeOf(b.exec())
