@@ -256,7 +256,7 @@ func TestChainMap(t *testing.T) {
 			expected := Map(tc.In, tc.MapFnc)
 			actual := Chain(tc.In).Map(tc.MapFnc).Value()
 
-			is.Equal(expected, actual)
+			is.ElementsMatch(expected, actual)
 		})
 	}
 }
@@ -302,8 +302,7 @@ func TestChainShuffle(t *testing.T) {
 			actual := Chain(tc.In).Shuffle().Value()
 
 			is.NotEqual(expected, actual)
-			is.Len(actual, len(expected.([]int)))
-			is.Contains(actual, expected.([]int)[0])
+			is.ElementsMatch(expected, actual)
 		})
 	}
 }
