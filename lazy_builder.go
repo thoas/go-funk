@@ -12,7 +12,7 @@ func (b *lazyBuilder) Chunk(size int) Builder {
 func (b *lazyBuilder) Compact() Builder {
 	return &lazyBuilder{func() interface{} { return Compact(b.exec()) }}
 }
-func (b *lazyBuilder) Drop(in interface{}, n int) Builder {
+func (b *lazyBuilder) Drop(n int) Builder {
 	return &lazyBuilder{func() interface{} { return Drop(b.exec(), n) }}
 }
 func (b *lazyBuilder) Filter(predicate interface{}) Builder {
@@ -55,22 +55,10 @@ func (b *lazyBuilder) Uniq() Builder {
 }
 
 func (b *lazyBuilder) All() bool {
-	v := reflect.ValueOf(b.exec())
-	c := make([]interface{}, v.Len())
-
-	for i := 0; i < v.Len(); i++ {
-		c[i] = v.Index(i).Interface()
-	}
-	return All(c...)
+	return (&chainBuilder{b.exec()}).All()
 }
 func (b *lazyBuilder) Any() bool {
-	v := reflect.ValueOf(b.exec())
-	c := make([]interface{}, v.Len())
-
-	for i := 0; i < v.Len(); i++ {
-		c[i] = v.Index(i).Interface()
-	}
-	return Any(c...)
+	return (&chainBuilder{b.exec()}).Any()
 }
 func (b *lazyBuilder) Contains(elem interface{}) bool {
 	return Contains(b.exec(), elem)
@@ -104,6 +92,9 @@ func (b *lazyBuilder) IsType(actual interface{}) bool {
 }
 func (b *lazyBuilder) Last() interface{} {
 	return Last(b.exec())
+}
+func (b *lazyBuilder) LastIndexOf(elem interface{}) int {
+	return LastIndexOf(b.exec(), elem)
 }
 func (b *lazyBuilder) NotEmpty() bool {
 	return NotEmpty(b.exec())

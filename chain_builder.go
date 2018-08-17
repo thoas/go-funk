@@ -12,7 +12,7 @@ func (b *chainBuilder) Chunk(size int) Builder {
 func (b *chainBuilder) Compact() Builder {
 	return &chainBuilder{Compact(b.collection)}
 }
-func (b *chainBuilder) Drop(in interface{}, n int) Builder {
+func (b *chainBuilder) Drop(n int) Builder {
 	return &chainBuilder{Drop(b.collection, n)}
 }
 func (b *chainBuilder) Filter(predicate interface{}) Builder {
@@ -110,6 +110,9 @@ func (b *chainBuilder) IsType(actual interface{}) bool {
 }
 func (b *chainBuilder) Last() interface{} {
 	return Last(b.collection)
+}
+func (b *chainBuilder) LastIndexOf(elem interface{}) int {
+	return LastIndexOf(b.collection, elem)
 }
 func (b *chainBuilder) NotEmpty() bool {
 	return NotEmpty(b.collection)

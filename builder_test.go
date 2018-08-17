@@ -25,7 +25,6 @@ func TestChain(t *testing.T) {
 		// Check with invalid types
 		{false, "Type bool is not supported by Chain"},
 		{0, "Type int is not supported by Chain"},
-		{"nope", "Type string is not supported by Chain"},
 	}
 
 	for idx, tc := range testCases {
@@ -65,7 +64,6 @@ func TestLazyChain(t *testing.T) {
 		// Check with invalid types
 		{false, "Type bool is not supported by LazyChain"},
 		{0, "Type int is not supported by LazyChain"},
-		{"nope", "Type string is not supported by LazyChain"},
 	}
 
 	for idx, tc := range testCases {
@@ -105,13 +103,12 @@ func TestLazyChainWith(t *testing.T) {
 		// Check with invalid types
 		{
 			In:    func() interface{} { return false },
-			Panic: "Type bool is not supported by LazyChainWith generator"},
+			Panic: "Type bool is not supported by LazyChainWith generator",
+		},
 		{
 			In:    func() interface{} { return 0 },
-			Panic: "Type int is not supported by LazyChainWith generator"},
-		{
-			In:    func() interface{} { return "nope" },
-			Panic: "Type string is not supported by LazyChainWith generator"},
+			Panic: "Type int is not supported by LazyChainWith generator",
+		},
 	}
 
 	for idx, tc := range testCases {
@@ -177,7 +174,7 @@ func (us *updatingStruct) Values() interface{} {
 	return us.x
 }
 
-func ExampleLazyChainUtility() {
+func ExampleLazyChain() {
 	us := updatingStruct{}
 	chain := Chain(us.x).
 		Map(func(x int) float64 { return float64(x) * 2.5 })

@@ -9,7 +9,7 @@ import (
 type Builder interface {
 	Chunk(size int) Builder
 	Compact() Builder
-	Drop(in interface{}, n int) Builder
+	Drop(n int) Builder
 	Filter(predicate interface{}) Builder
 	FlattenDeep() Builder
 	ForEach(predicate interface{}) Builder
@@ -34,6 +34,7 @@ type Builder interface {
 	IsEmpty() bool
 	IsType(actual interface{}) bool
 	Last() interface{}
+	LastIndexOf(elem interface{}) int
 	NotEmpty() bool
 	Product() float64
 	Reduce(reduceFunc, acc interface{}) float64
@@ -47,7 +48,9 @@ type Builder interface {
 // Chain ...
 func Chain(v interface{}) Builder {
 	valueType := reflect.TypeOf(v)
-	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array || valueType.Kind() == reflect.Map {
+	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array ||
+		valueType.Kind() == reflect.Map ||
+		valueType.Kind() == reflect.String {
 		return &chainBuilder{v}
 	}
 
@@ -57,9 +60,12 @@ func Chain(v interface{}) Builder {
 // LazyChain ...
 func LazyChain(v interface{}) Builder {
 	valueType := reflect.TypeOf(v)
-	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array || valueType.Kind() == reflect.Map {
+	if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array ||
+		valueType.Kind() == reflect.Map ||
+		valueType.Kind() == reflect.String {
 		return &lazyBuilder{func() interface{} { return v }}
 	}
+
 	panic(fmt.Sprintf("Type %s is not supported by LazyChain", valueType.String()))
 
 }
@@ -69,9 +75,12 @@ func LazyChainWith(generator func() interface{}) Builder {
 	return &lazyBuilder{func() interface{} {
 		v := generator()
 		valueType := reflect.TypeOf(v)
-		if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array || valueType.Kind() == reflect.Map {
+		if valueType.Kind() == reflect.Slice || valueType.Kind() == reflect.Array ||
+			valueType.Kind() == reflect.Map ||
+			valueType.Kind() == reflect.String {
 			return v
 		}
+
 		panic(fmt.Sprintf("Type %s is not supported by LazyChainWith generator", valueType.String()))
 	}}
 }
