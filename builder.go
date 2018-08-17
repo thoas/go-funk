@@ -31,7 +31,6 @@ type Builder interface {
 	Keys() interface{}
 	IndexOf(elem interface{}) int
 	IsEmpty() bool
-	IsType(actual interface{}) bool
 	Last() interface{}
 	LastIndexOf(elem interface{}) int
 	NotEmpty() bool

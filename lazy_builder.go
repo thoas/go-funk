@@ -76,9 +76,6 @@ func (b *lazyBuilder) IndexOf(elem interface{}) int {
 func (b *lazyBuilder) IsEmpty() bool {
 	return IsEmpty(b.exec())
 }
-func (b *lazyBuilder) IsType(actual interface{}) bool {
-	return IsType(b.exec(), actual)
-}
 func (b *lazyBuilder) Last() interface{} {
 	return Last(b.exec())
 }

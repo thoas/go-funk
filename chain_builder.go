@@ -110,9 +110,6 @@ func (b *chainBuilder) IndexOf(elem interface{}) int {
 func (b *chainBuilder) IsEmpty() bool {
 	return IsEmpty(b.collection)
 }
-func (b *chainBuilder) IsType(actual interface{}) bool {
-	return IsType(b.collection, actual)
-}
 func (b *chainBuilder) Last() interface{} {
 	return Last(b.collection)
 }

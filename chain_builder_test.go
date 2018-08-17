@@ -11,13 +11,13 @@ import (
 /*
 	Test à faire:
 
-	Keys() interface{}
-	IsType(actual interface{}) bool
-	Product() float64
-	Sum() float64
-	Type() reflect.Type
-	Value() interface{}
-	Values() interface{}
+	ChainFilter_SideEffect
+	ChainMap_SideEffect
+	ChainFind_SideEffect
+	ChainForEach_SideEffect
+	ChainForEachRight_SideEffect
+
+	ChainComplexChaining
 */
 
 func TestChainChunk(t *testing.T) {
@@ -657,6 +657,27 @@ func TestChainHead(t *testing.T) {
 	}
 }
 
+func TestChainKeys(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{In: map[string]int{"one": 1, "two": 2}},
+		{In: &map[string]int{"one": 1, "two": 2}},
+		{In: map[int]complex128{5: 1 + 8i, 3: 2}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Keys(tc.In)
+			actual := Chain(tc.In).Keys()
+
+			is.ElementsMatch(expected, actual)
+		})
+	}
+}
+
 func TestChainIndexOf(t *testing.T) {
 	testCases := []struct {
 		In   interface{}
@@ -792,6 +813,27 @@ func TestChainNotEmpty(t *testing.T) {
 	}
 }
 
+func TestChainProduct(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{In: []int{0, 1, 2, 3}},
+		{In: &[]int{0, 1, 2, 3}},
+		{In: []interface{}{1, 2, 3, 0.5}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Product(tc.In)
+			actual := Chain(tc.In).Product()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
 func TestChainReduce(t *testing.T) {
 	testCases := []struct {
 		In         interface{}
@@ -837,10 +879,48 @@ func TestChainReduce(t *testing.T) {
 	}
 }
 
-func TestChainType(t *testing.T) {
+func TestChainSum(t *testing.T) {
 	testCases := []struct {
 		In interface{}
-	}{}
+	}{
+		{In: []int{0, 1, 2, 3}},
+		{In: &[]int{0, 1, 2, 3}},
+		{In: []interface{}{1, 2, 3, 0.5}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Sum(tc.In)
+			actual := Chain(tc.In).Sum()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
+func TestChainType(t *testing.T) {
+	type key string
+	var x key
+
+	testCases := []struct {
+		In interface{}
+	}{
+		{In: []string{}},
+		{In: []int{}},
+		{In: []bool{}},
+		{In: []interface{}{}},
+		{In: &[]interface{}{}},
+		{In: map[int]string{}},
+		{In: map[complex128]int{}},
+		{In: map[string]string{}},
+		{In: map[int]interface{}{}},
+		{In: map[key]interface{}{}},
+		{In: &map[key]interface{}{}},
+		{In: ""},
+		{In: &x},
+	}
 
 	for idx, tc := range testCases {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
@@ -856,7 +936,15 @@ func TestChainType(t *testing.T) {
 func TestChainValue(t *testing.T) {
 	testCases := []struct {
 		In interface{}
-	}{}
+	}{
+		{In: []int{0, 1, 2, 3}},
+		{In: []string{"foo", "bar"}},
+		{In: &[]string{"foo", "bar"}},
+		{In: map[int]string{1: "foo", 2: "bar"}},
+		{In: map[string]string{"foo": "foo", "bar": "bar"}},
+		{In: &map[string]string{"foo": "foo", "bar": "bar"}},
+		{In: "foo"},
+	}
 
 	for idx, tc := range testCases {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
@@ -865,6 +953,27 @@ func TestChainValue(t *testing.T) {
 			actual := Chain(tc.In).Value()
 
 			is.Equal(tc.In, actual)
+		})
+	}
+}
+
+func TestChainValues(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{In: map[string]int{"one": 1, "two": 2}},
+		{In: &map[string]int{"one": 1, "two": 2}},
+		{In: map[int]complex128{5: 1 + 8i, 3: 2}},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Values(tc.In)
+			actual := Chain(tc.In).Values()
+
+			is.ElementsMatch(expected, actual)
 		})
 	}
 }
