@@ -8,35 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-/*
-	Test à faire:
-
-	ChainFilter_SideEffect
-	ChainMap_SideEffect
-	ChainFind_SideEffect
-	ChainForEach_SideEffect
-	ChainForEachRight_SideEffect
-
-	ChainComplexChaining
-*/
-
 func TestChainChunk(t *testing.T) {
 	testCases := []struct {
 		In   interface{}
 		Size int
 	}{
-		{
-			In:   []int{0, 1, 2, 3, 4},
-			Size: 2,
-		},
-		{
-			In:   []int{},
-			Size: 2,
-		},
-		{
-			In:   []int{1},
-			Size: 2,
-		},
+		{In: []int{0, 1, 2, 3, 4}, Size: 2},
+		{In: []int{}, Size: 2},
+		{In: []int{1}, Size: 2},
 	}
 
 	for idx, tc := range testCases {
@@ -80,28 +59,10 @@ func TestChainCompact(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
-		// Check with nils
-		{
-			In: []interface{}{42, nil, (*int)(nil)},
-		},
-
-		// Check with functions
-		{
-			In: []interface{}{42, emptyFuncPtr, emptyFunc, nonEmptyFuncPtr},
-		},
-
-		// Check with slices, maps, arrays and channels
-		{
-			In: []interface{}{
-				42, [2]int{}, map[int]int{}, []string{}, nonEmptyMapPtr, emptyMap,
-				emptyMapPtr, nonEmptyMap, nonEmptyChan, emptyChan, emptyChanPtr, nonEmptyChanPtr,
-			},
-		},
-
-		// Check with strings, numbers and booleans
-		{
-			In: []interface{}{true, 0, float64(0), "", "42", emptyStringPtr, nonEmptyStringPtr, false},
-		},
+		{In: []interface{}{42, nil, (*int)(nil)}},
+		{In: []interface{}{42, emptyFuncPtr, emptyFunc, nonEmptyFuncPtr}},
+		{In: []interface{}{42, [2]int{}, map[int]int{}, []string{}, nonEmptyMapPtr, emptyMap, emptyMapPtr, nonEmptyMap, nonEmptyChan, emptyChan, emptyChanPtr, nonEmptyChanPtr}},
+		{In: []interface{}{true, 0, float64(0), "", "42", emptyStringPtr, nonEmptyStringPtr, false}},
 	}
 
 	for idx, tc := range testCases {
@@ -121,10 +82,10 @@ func TestChainDrop(t *testing.T) {
 		In interface{}
 		N  int
 	}{
-		{
-			In: []int{0, 1, 1, 2, 3, 0, 0, 12},
-			N:  3,
-		},
+		{In: []int{0, 1, 1, 2, 3, 0, 0, 12}, N: 3},
+		// Bug: Issues from go-funk (n parameter can be greater than len(in))
+		// {In: []int{0, 1}, N: 3},
+		// {In: []int{}, N: 3},
 	}
 
 	for idx, tc := range testCases {
@@ -160,6 +121,24 @@ func TestChainFilter(t *testing.T) {
 			is.Equal(expected, actual)
 		})
 	}
+}
+func TestChainFilter_SideEffect(t *testing.T) {
+	is := assert.New(t)
+
+	type foo struct {
+		bar string
+	}
+	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+
+	chain := Chain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+
+	filtered := chain.Filter(func(x *foo) bool {
+		x.bar = "__" + x.bar + "__"
+		return x.bar == "foo"
+	})
+	is.Equal([]*foo{}, filtered.Value())
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
 }
 
 func TestChainFlattenDeep(t *testing.T) {
@@ -277,6 +256,25 @@ func TestChainMap(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestChainMap_SideEffect(t *testing.T) {
+	is := assert.New(t)
+
+	type foo struct {
+		bar string
+	}
+	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+
+	chain := Chain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+
+	mapped := chain.Map(func(x *foo) (string, bool) {
+		x.bar = "__" + x.bar + "__"
+		return x.bar, x.bar == "foo"
+	})
+	is.Equal(map[string]bool{"__foo__": false, "__bar__": false}, mapped.Value())
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
 }
 
 func TestChainReverse(t *testing.T) {
@@ -552,6 +550,25 @@ func TestChainFind(t *testing.T) {
 	}
 }
 
+func TestChainFind_SideEffect(t *testing.T) {
+	is := assert.New(t)
+
+	type foo struct {
+		bar string
+	}
+	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+
+	chain := Chain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+
+	result := chain.Find(func(x *foo) bool {
+		x.bar = "__" + x.bar + "__"
+		return x.bar == "foo"
+	})
+	is.Nil(result)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+}
+
 func TestChainForEach(t *testing.T) {
 	var expectedAcc, actualAcc []interface{}
 
@@ -594,6 +611,26 @@ func TestChainForEach(t *testing.T) {
 	}
 }
 
+func TestChainForEach_SideEffect(t *testing.T) {
+	is := assert.New(t)
+
+	type foo struct {
+		bar string
+	}
+	var out []*foo
+	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+
+	chain := Chain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+
+	chain.ForEach(func(x *foo) {
+		x.bar = "__" + x.bar + "__"
+		out = append(out, x)
+	})
+	is.Equal([]*foo{&foo{"__foo__"}, &foo{"__bar__"}}, out)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+}
+
 func TestChainForEachRight(t *testing.T) {
 	var expectedAcc, actualAcc []interface{}
 
@@ -634,6 +671,26 @@ func TestChainForEachRight(t *testing.T) {
 			is.ElementsMatch(expectedAcc, actualAcc)
 		})
 	}
+}
+
+func TestChainForEachRight_SideEffect(t *testing.T) {
+	is := assert.New(t)
+
+	type foo struct {
+		bar string
+	}
+	var out []*foo
+	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+
+	chain := Chain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+
+	chain.ForEachRight(func(x *foo) {
+		x.bar = "__" + x.bar + "__"
+		out = append(out, x)
+	})
+	is.Equal([]*foo{&foo{"__foo__"}, &foo{"__bar__"}}, out)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
 }
 
 func TestChainHead(t *testing.T) {
@@ -976,4 +1033,31 @@ func TestChainValues(t *testing.T) {
 			is.ElementsMatch(expected, actual)
 		})
 	}
+}
+
+func TestComplexChaining(t *testing.T) {
+	is := assert.New(t)
+
+	in := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	chain := Chain(in)
+
+	// Without builder
+	fa := Filter(in, func(x int) bool { return x%2 == 0 })
+	fb := Map(fa, func(x int) int { return x * 2 })
+	fc := Reverse(fa)
+
+	// With simple chaining
+	ca := chain.Filter(func(x int) bool { return x%2 == 0 })
+	cb := ca.Map(func(x int) int { return x * 2 })
+	cc := ca.Reverse()
+
+	is.Equal(fa, ca.Value())
+	is.Equal(fb, cb.Value())
+	is.Equal(fc, cc.Value())
+
+	is.Equal(Contains(fb, 2), cb.Contains(2))
+	is.Equal(Contains(fb, 4), cb.Contains(4))
+	is.Equal(Sum(fb), cb.Sum())
+	is.Equal(Head(fb), cb.Head())
+	is.Equal(Head(fc), cc.Head())
 }
