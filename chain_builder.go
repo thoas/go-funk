@@ -18,8 +18,6 @@ func (b *chainBuilder) Compact() Builder {
 func (b *chainBuilder) Drop(n int) Builder {
 	return &chainBuilder{Drop(b.collection, n)}
 }
-
-// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) Filter(predicate interface{}) Builder {
 	return &chainBuilder{Filter(b.collection, predicate)}
 }
@@ -32,8 +30,6 @@ func (b *chainBuilder) Initial() Builder {
 func (b *chainBuilder) Intersect(y interface{}) Builder {
 	return &chainBuilder{Intersect(b.collection, y)}
 }
-
-// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) Map(mapFunc interface{}) Builder {
 	return &chainBuilder{Map(b.collection, mapFunc)}
 }
@@ -49,6 +45,7 @@ func (b *chainBuilder) Tail() Builder {
 func (b *chainBuilder) Uniq() Builder {
 	return &chainBuilder{Uniq(b.collection)}
 }
+
 func (b *chainBuilder) All() bool {
 	v := reflect.ValueOf(b.collection)
 	t := v.Type()
@@ -83,18 +80,12 @@ func (b *chainBuilder) Contains(elem interface{}) bool {
 func (b *chainBuilder) Every(elements ...interface{}) bool {
 	return Every(b.collection, elements...)
 }
-
-// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) Find(predicate interface{}) interface{} {
 	return Find(b.collection, predicate)
 }
-
-// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) ForEach(predicate interface{}) {
 	ForEach(b.collection, predicate)
 }
-
-// TODO: Possible side-effect (b.collection can be modified)
 func (b *chainBuilder) ForEachRight(predicate interface{}) {
 	ForEachRight(b.collection, predicate)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestChainChunk(t *testing.T) {
+func TestLazyChunk(t *testing.T) {
 	testCases := []struct {
 		In   interface{}
 		Size int
@@ -23,14 +23,14 @@ func TestChainChunk(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Chunk(tc.In, tc.Size)
-			actual := Chain(tc.In).Chunk(tc.Size).Value()
+			actual := LazyChain(tc.In).Chunk(tc.Size).Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainCompact(t *testing.T) {
+func TestLazyCompact(t *testing.T) {
 	var emptyFunc func() bool
 	emptyFuncPtr := &emptyFunc
 
@@ -70,14 +70,14 @@ func TestChainCompact(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Compact(tc.In)
-			actual := Chain(tc.In).Compact().Value()
+			actual := LazyChain(tc.In).Compact().Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainDrop(t *testing.T) {
+func TestLazyDrop(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 		N  int
@@ -93,14 +93,14 @@ func TestChainDrop(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Drop(tc.In, tc.N)
-			actual := Chain(tc.In).Drop(tc.N).Value()
+			actual := LazyChain(tc.In).Drop(tc.N).Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainFilter(t *testing.T) {
+func TestLazyFilter(t *testing.T) {
 	testCases := []struct {
 		In        interface{}
 		Predicate interface{}
@@ -116,13 +116,13 @@ func TestChainFilter(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Filter(tc.In, tc.Predicate)
-			actual := Chain(tc.In).Filter(tc.Predicate).Value()
+			actual := LazyChain(tc.In).Filter(tc.Predicate).Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
-func TestChainFilter_SideEffect(t *testing.T) {
+func TestLazyFilter_SideEffect(t *testing.T) {
 	is := assert.New(t)
 
 	type foo struct {
@@ -130,21 +130,21 @@ func TestChainFilter_SideEffect(t *testing.T) {
 	}
 	in := []*foo{&foo{"foo"}, &foo{"bar"}}
 
-	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	LazyChain := LazyChain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 
-	filtered := chain.Filter(func(x *foo) bool {
+	filtered := LazyChain.Filter(func(x *foo) bool {
 		x.bar = "__" + x.bar + "__"
 		return x.bar == "foo"
 	})
 	is.Equal([]*foo{}, filtered.Value())
 
-	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	// Side effect: in and LazyChain.Value modified
+	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
 }
 
-func TestChainFlattenDeep(t *testing.T) {
+func TestLazyFlattenDeep(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -161,14 +161,14 @@ func TestChainFlattenDeep(t *testing.T) {
 			is := assert.New(t)
 
 			expected := FlattenDeep(tc.In)
-			actual := Chain(tc.In).FlattenDeep().Value()
+			actual := LazyChain(tc.In).FlattenDeep().Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainInitial(t *testing.T) {
+func TestLazyInitial(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -188,14 +188,14 @@ func TestChainInitial(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Initial(tc.In)
-			actual := Chain(tc.In).Initial().Value()
+			actual := LazyChain(tc.In).Initial().Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainIntersect(t *testing.T) {
+func TestLazyIntersect(t *testing.T) {
 	testCases := []struct {
 		In  interface{}
 		Sec interface{}
@@ -215,14 +215,14 @@ func TestChainIntersect(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Intersect(tc.In, tc.Sec)
-			actual := Chain(tc.In).Intersect(tc.Sec).Value()
+			actual := LazyChain(tc.In).Intersect(tc.Sec).Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainMap(t *testing.T) {
+func TestLazyMap(t *testing.T) {
 	testCases := []struct {
 		In     interface{}
 		MapFnc interface{}
@@ -250,7 +250,7 @@ func TestChainMap(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Map(tc.In, tc.MapFnc)
-			actual := Chain(tc.In).Map(tc.MapFnc).Value()
+			actual := LazyChain(tc.In).Map(tc.MapFnc).Value()
 
 			if reflect.TypeOf(expected).Kind() == reflect.Map {
 				is.Equal(expected, actual)
@@ -261,7 +261,7 @@ func TestChainMap(t *testing.T) {
 	}
 }
 
-func TestChainMap_SideEffect(t *testing.T) {
+func TestLazyMap_SideEffect(t *testing.T) {
 	is := assert.New(t)
 
 	type foo struct {
@@ -269,21 +269,21 @@ func TestChainMap_SideEffect(t *testing.T) {
 	}
 	in := []*foo{&foo{"foo"}, &foo{"bar"}}
 
-	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	LazyChain := LazyChain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 
-	mapped := chain.Map(func(x *foo) (string, bool) {
+	mapped := LazyChain.Map(func(x *foo) (string, bool) {
 		x.bar = "__" + x.bar + "__"
 		return x.bar, x.bar == "foo"
 	})
 	is.Equal(map[string]bool{"__foo__": false, "__bar__": false}, mapped.Value())
 
-	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	// Side effect: in and LazyChain.Value modified
+	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
 }
 
-func TestChainReverse(t *testing.T) {
+func TestLazyReverse(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -300,14 +300,14 @@ func TestChainReverse(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Reverse(tc.In)
-			actual := Chain(tc.In).Reverse().Value()
+			actual := LazyChain(tc.In).Reverse().Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainShuffle(t *testing.T) {
+func TestLazyShuffle(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -321,7 +321,7 @@ func TestChainShuffle(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Shuffle(tc.In)
-			actual := Chain(tc.In).Shuffle().Value()
+			actual := LazyChain(tc.In).Shuffle().Value()
 
 			is.NotEqual(expected, actual)
 			is.ElementsMatch(expected, actual)
@@ -329,7 +329,7 @@ func TestChainShuffle(t *testing.T) {
 	}
 }
 
-func TestChainTail(t *testing.T) {
+func TestLazyTail(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -349,14 +349,14 @@ func TestChainTail(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Tail(tc.In)
-			actual := Chain(tc.In).Tail().Value()
+			actual := LazyChain(tc.In).Tail().Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainUniq(t *testing.T) {
+func TestLazyUniq(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -370,14 +370,14 @@ func TestChainUniq(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Uniq(tc.In)
-			actual := Chain(tc.In).Uniq().Value()
+			actual := LazyChain(tc.In).Uniq().Value()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainAll(t *testing.T) {
+func TestLazyAll(t *testing.T) {
 	testCases := []struct {
 		In []interface{}
 	}{
@@ -397,14 +397,14 @@ func TestChainAll(t *testing.T) {
 			is := assert.New(t)
 
 			expected := All(tc.In...)
-			actual := Chain(tc.In).All()
+			actual := LazyChain(tc.In).All()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainAny(t *testing.T) {
+func TestLazyAny(t *testing.T) {
 	testCases := []struct {
 		In []interface{}
 	}{
@@ -424,14 +424,14 @@ func TestChainAny(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Any(tc.In...)
-			actual := Chain(tc.In).Any()
+			actual := LazyChain(tc.In).Any()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainContains(t *testing.T) {
+func TestLazyContains(t *testing.T) {
 	testCases := []struct {
 		In       interface{}
 		Contains interface{}
@@ -475,14 +475,14 @@ func TestChainContains(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Contains(tc.In, tc.Contains)
-			actual := Chain(tc.In).Contains(tc.Contains)
+			actual := LazyChain(tc.In).Contains(tc.Contains)
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainEvery(t *testing.T) {
+func TestLazyEvery(t *testing.T) {
 	testCases := []struct {
 		In       interface{}
 		Contains []interface{}
@@ -526,14 +526,14 @@ func TestChainEvery(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Every(tc.In, tc.Contains...)
-			actual := Chain(tc.In).Every(tc.Contains...)
+			actual := LazyChain(tc.In).Every(tc.Contains...)
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainFind(t *testing.T) {
+func TestLazyFind(t *testing.T) {
 	testCases := []struct {
 		In        interface{}
 		Predicate interface{}
@@ -549,14 +549,14 @@ func TestChainFind(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Find(tc.In, tc.Predicate)
-			actual := Chain(tc.In).Find(tc.Predicate)
+			actual := LazyChain(tc.In).Find(tc.Predicate)
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainFind_SideEffect(t *testing.T) {
+func TestLazyFind_SideEffect(t *testing.T) {
 	is := assert.New(t)
 
 	type foo struct {
@@ -564,27 +564,27 @@ func TestChainFind_SideEffect(t *testing.T) {
 	}
 	in := []*foo{&foo{"foo"}, &foo{"bar"}}
 
-	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	LazyChain := LazyChain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 
-	result := chain.Find(func(x *foo) bool {
+	result := LazyChain.Find(func(x *foo) bool {
 		x.bar = "__" + x.bar + "__"
 		return x.bar == "foo"
 	})
 	is.Nil(result)
 
-	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	// Side effect: in and LazyChain.Value modified
+	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
 }
 
-func TestChainForEach(t *testing.T) {
+func TestLazyForEach(t *testing.T) {
 	var expectedAcc, actualAcc []interface{}
 
 	testCases := []struct {
-		In            interface{}
-		FunkIterator  interface{}
-		ChainIterator interface{}
+		In                interface{}
+		FunkIterator      interface{}
+		LazyChainIterator interface{}
 	}{
 		{
 			In: []int{1, 2, 3, 4},
@@ -593,16 +593,16 @@ func TestChainForEach(t *testing.T) {
 					expectedAcc = append(expectedAcc, x)
 				}
 			},
-			ChainIterator: func(x int) {
+			LazyChainIterator: func(x int) {
 				if x%2 == 0 {
 					actualAcc = append(actualAcc, x)
 				}
 			},
 		},
 		{
-			In:            map[int]string{1: "Florent", 2: "Gilles"},
-			FunkIterator:  func(k int, v string) { expectedAcc = append(expectedAcc, fmt.Sprintf("%d:%s", k, v)) },
-			ChainIterator: func(k int, v string) { actualAcc = append(actualAcc, fmt.Sprintf("%d:%s", k, v)) },
+			In:                map[int]string{1: "Florent", 2: "Gilles"},
+			FunkIterator:      func(k int, v string) { expectedAcc = append(expectedAcc, fmt.Sprintf("%d:%s", k, v)) },
+			LazyChainIterator: func(k int, v string) { actualAcc = append(actualAcc, fmt.Sprintf("%d:%s", k, v)) },
 		},
 	}
 
@@ -613,14 +613,14 @@ func TestChainForEach(t *testing.T) {
 			actualAcc = []interface{}{}
 
 			ForEach(tc.In, tc.FunkIterator)
-			Chain(tc.In).ForEach(tc.ChainIterator)
+			LazyChain(tc.In).ForEach(tc.LazyChainIterator)
 
 			is.ElementsMatch(expectedAcc, actualAcc)
 		})
 	}
 }
 
-func TestChainForEach_SideEffect(t *testing.T) {
+func TestLazyForEach_SideEffect(t *testing.T) {
 	is := assert.New(t)
 
 	type foo struct {
@@ -629,27 +629,27 @@ func TestChainForEach_SideEffect(t *testing.T) {
 	var out []*foo
 	in := []*foo{&foo{"foo"}, &foo{"bar"}}
 
-	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	LazyChain := LazyChain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 
-	chain.ForEach(func(x *foo) {
+	LazyChain.ForEach(func(x *foo) {
 		x.bar = "__" + x.bar + "__"
 		out = append(out, x)
 	})
 	is.Equal([]*foo{&foo{"__foo__"}, &foo{"__bar__"}}, out)
 
-	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	// Side effect: in and LazyChain.Value modified
+	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
 }
 
-func TestChainForEachRight(t *testing.T) {
+func TestLazyForEachRight(t *testing.T) {
 	var expectedAcc, actualAcc []interface{}
 
 	testCases := []struct {
-		In            interface{}
-		FunkIterator  interface{}
-		ChainIterator interface{}
+		In                interface{}
+		FunkIterator      interface{}
+		LazyChainIterator interface{}
 	}{
 		{
 			In: []int{1, 2, 3, 4},
@@ -658,16 +658,16 @@ func TestChainForEachRight(t *testing.T) {
 					expectedAcc = append(expectedAcc, x)
 				}
 			},
-			ChainIterator: func(x int) {
+			LazyChainIterator: func(x int) {
 				if x%2 == 0 {
 					actualAcc = append(actualAcc, x)
 				}
 			},
 		},
 		{
-			In:            map[int]string{1: "Florent", 2: "Gilles"},
-			FunkIterator:  func(k int, v string) { expectedAcc = append(expectedAcc, fmt.Sprintf("%d:%s", k, v)) },
-			ChainIterator: func(k int, v string) { actualAcc = append(actualAcc, fmt.Sprintf("%d:%s", k, v)) },
+			In:                map[int]string{1: "Florent", 2: "Gilles"},
+			FunkIterator:      func(k int, v string) { expectedAcc = append(expectedAcc, fmt.Sprintf("%d:%s", k, v)) },
+			LazyChainIterator: func(k int, v string) { actualAcc = append(actualAcc, fmt.Sprintf("%d:%s", k, v)) },
 		},
 	}
 
@@ -678,14 +678,14 @@ func TestChainForEachRight(t *testing.T) {
 			actualAcc = []interface{}{}
 
 			ForEachRight(tc.In, tc.FunkIterator)
-			Chain(tc.In).ForEachRight(tc.ChainIterator)
+			LazyChain(tc.In).ForEachRight(tc.LazyChainIterator)
 
 			is.ElementsMatch(expectedAcc, actualAcc)
 		})
 	}
 }
 
-func TestChainForEachRight_SideEffect(t *testing.T) {
+func TestLazyForEachRight_SideEffect(t *testing.T) {
 	is := assert.New(t)
 
 	type foo struct {
@@ -694,21 +694,21 @@ func TestChainForEachRight_SideEffect(t *testing.T) {
 	var out []*foo
 	in := []*foo{&foo{"foo"}, &foo{"bar"}}
 
-	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	LazyChain := LazyChain(in)
+	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 
-	chain.ForEachRight(func(x *foo) {
+	LazyChain.ForEachRight(func(x *foo) {
 		x.bar = "__" + x.bar + "__"
 		out = append(out, x)
 	})
 	is.Equal([]*foo{&foo{"__bar__"}, &foo{"__foo__"}}, out)
 
-	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	// Side effect: in and LazyChain.Value modified
+	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
 	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
 }
 
-func TestChainHead(t *testing.T) {
+func TestLazyHead(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -722,14 +722,14 @@ func TestChainHead(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Head(tc.In)
-			actual := Chain(tc.In).Head()
+			actual := LazyChain(tc.In).Head()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainKeys(t *testing.T) {
+func TestLazyKeys(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -743,14 +743,14 @@ func TestChainKeys(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Keys(tc.In)
-			actual := Chain(tc.In).Keys()
+			actual := LazyChain(tc.In).Keys()
 
 			is.ElementsMatch(expected, actual)
 		})
 	}
 }
 
-func TestChainIndexOf(t *testing.T) {
+func TestLazyIndexOf(t *testing.T) {
 	testCases := []struct {
 		In   interface{}
 		Item interface{}
@@ -774,14 +774,14 @@ func TestChainIndexOf(t *testing.T) {
 			is := assert.New(t)
 
 			expected := IndexOf(tc.In, tc.Item)
-			actual := Chain(tc.In).IndexOf(tc.Item)
+			actual := LazyChain(tc.In).IndexOf(tc.Item)
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainIsEmpty(t *testing.T) {
+func TestLazyIsEmpty(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -800,14 +800,14 @@ func TestChainIsEmpty(t *testing.T) {
 			is := assert.New(t)
 
 			expected := IsEmpty(tc.In)
-			actual := Chain(tc.In).IsEmpty()
+			actual := LazyChain(tc.In).IsEmpty()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainLast(t *testing.T) {
+func TestLazyLast(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -821,14 +821,14 @@ func TestChainLast(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Last(tc.In)
-			actual := Chain(tc.In).Last()
+			actual := LazyChain(tc.In).Last()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainLastIndexOf(t *testing.T) {
+func TestLazyLastIndexOf(t *testing.T) {
 	testCases := []struct {
 		In   interface{}
 		Item interface{}
@@ -852,14 +852,14 @@ func TestChainLastIndexOf(t *testing.T) {
 			is := assert.New(t)
 
 			expected := LastIndexOf(tc.In, tc.Item)
-			actual := Chain(tc.In).LastIndexOf(tc.Item)
+			actual := LazyChain(tc.In).LastIndexOf(tc.Item)
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainNotEmpty(t *testing.T) {
+func TestLazyNotEmpty(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -878,14 +878,14 @@ func TestChainNotEmpty(t *testing.T) {
 			is := assert.New(t)
 
 			expected := NotEmpty(tc.In)
-			actual := Chain(tc.In).NotEmpty()
+			actual := LazyChain(tc.In).NotEmpty()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainProduct(t *testing.T) {
+func TestLazyProduct(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -899,14 +899,14 @@ func TestChainProduct(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Product(tc.In)
-			actual := Chain(tc.In).Product()
+			actual := LazyChain(tc.In).Product()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainReduce(t *testing.T) {
+func TestLazyReduce(t *testing.T) {
 	testCases := []struct {
 		In         interface{}
 		ReduceFunc interface{}
@@ -944,14 +944,14 @@ func TestChainReduce(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Reduce(tc.In, tc.ReduceFunc, tc.Acc)
-			actual := Chain(tc.In).Reduce(tc.ReduceFunc, tc.Acc)
+			actual := LazyChain(tc.In).Reduce(tc.ReduceFunc, tc.Acc)
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainSum(t *testing.T) {
+func TestLazySum(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -965,14 +965,14 @@ func TestChainSum(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Sum(tc.In)
-			actual := Chain(tc.In).Sum()
+			actual := LazyChain(tc.In).Sum()
 
 			is.Equal(expected, actual)
 		})
 	}
 }
 
-func TestChainType(t *testing.T) {
+func TestLazyType(t *testing.T) {
 	type key string
 	var x key
 
@@ -998,14 +998,14 @@ func TestChainType(t *testing.T) {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
 			is := assert.New(t)
 
-			actual := Chain(tc.In).Type()
+			actual := LazyChain(tc.In).Type()
 
 			is.Equal(reflect.TypeOf(tc.In), actual)
 		})
 	}
 }
 
-func TestChainValue(t *testing.T) {
+func TestLazyValue(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -1022,14 +1022,14 @@ func TestChainValue(t *testing.T) {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
 			is := assert.New(t)
 
-			actual := Chain(tc.In).Value()
+			actual := LazyChain(tc.In).Value()
 
 			is.Equal(tc.In, actual)
 		})
 	}
 }
 
-func TestChainValues(t *testing.T) {
+func TestLazyValues(t *testing.T) {
 	testCases := []struct {
 		In interface{}
 	}{
@@ -1043,36 +1043,50 @@ func TestChainValues(t *testing.T) {
 			is := assert.New(t)
 
 			expected := Values(tc.In)
-			actual := Chain(tc.In).Values()
+			actual := LazyChain(tc.In).Values()
 
 			is.ElementsMatch(expected, actual)
 		})
 	}
 }
 
-func TestComplexChaining(t *testing.T) {
+func TestComplexLazyChaining(t *testing.T) {
 	is := assert.New(t)
 
 	in := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	chain := Chain(in)
+	lazy := LazyChain(in)
+	lazyWith := LazyChainWith(func() interface{} { return in })
 
 	// Without builder
 	fa := Filter(in, func(x int) bool { return x%2 == 0 })
 	fb := Map(fa, func(x int) int { return x * 2 })
 	fc := Reverse(fa)
 
-	// With simple chaining
-	ca := chain.Filter(func(x int) bool { return x%2 == 0 })
-	cb := ca.Map(func(x int) int { return x * 2 })
-	cc := ca.Reverse()
+	// With lazy chaining
+	la := lazy.Filter(func(x int) bool { return x%2 == 0 })
+	lb := la.Map(func(x int) int { return x * 2 })
+	lc := la.Reverse()
 
-	is.Equal(fa, ca.Value())
-	is.Equal(fb, cb.Value())
-	is.Equal(fc, cc.Value())
+	// With lazy chaining with generator
+	lwa := lazyWith.Filter(func(x int) bool { return x%2 == 0 })
+	lwb := lwa.Map(func(x int) int { return x * 2 })
+	lwc := lwa.Reverse()
 
-	is.Equal(Contains(fb, 2), cb.Contains(2))
-	is.Equal(Contains(fb, 4), cb.Contains(4))
-	is.Equal(Sum(fb), cb.Sum())
-	is.Equal(Head(fb), cb.Head())
-	is.Equal(Head(fc), cc.Head())
+	is.Equal(fa, la.Value())
+	is.Equal(fb, lb.Value())
+	is.Equal(fc, lc.Value())
+	is.Equal(fa, lwa.Value())
+	is.Equal(fb, lwb.Value())
+	is.Equal(fc, lwc.Value())
+
+	is.Equal(Contains(fb, 2), lb.Contains(2))
+	is.Equal(Contains(fb, 4), lb.Contains(4))
+	is.Equal(Sum(fb), lb.Sum())
+	is.Equal(Head(fb), lb.Head())
+	is.Equal(Head(fc), lc.Head())
+	is.Equal(Contains(fb, 2), lwb.Contains(2))
+	is.Equal(Contains(fb, 4), lwb.Contains(4))
+	is.Equal(Sum(fb), lwb.Sum())
+	is.Equal(Head(fb), lwb.Head())
+	is.Equal(Head(fc), lwc.Head())
 }
