@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// Builder ...
+// Builder contains all tools wich can be chained.
 type Builder interface {
 	Chunk(size int) Builder
 	Compact() Builder
@@ -42,7 +42,8 @@ type Builder interface {
 	Values() interface{}
 }
 
-// Chain ...
+// Chain creates a simple new go-funk.Builder from a collection. Each method 
+// call generate a new builder containing the previous result.
 func Chain(v interface{}) Builder {
 	isNotNil(v, "Chain")
 
@@ -55,7 +56,9 @@ func Chain(v interface{}) Builder {
 	panic(fmt.Sprintf("Type %s is not supported by Chain", valueType.String()))
 }
 
-// LazyChain ...
+// LazyChain creates a lazy go-funk.Builder from a collection. Each method call
+// generate a new builder containing a method generating the previous value.
+// With that, all data are only generated when we call a tailling method like All or Find.
 func LazyChain(v interface{}) Builder {
 	isNotNil(v, "LazyChain")
 
@@ -69,7 +72,11 @@ func LazyChain(v interface{}) Builder {
 
 }
 
-// LazyChainWith ...
+// LazyChainWith creates a lzy go-funk.Builder from a generator. Like LazyChain, each 
+// method call generate a new builder containing a method generating the previous value.
+// But, instead of using a collection, it takes a generator which can generate values.
+// With LazyChainWith, to can create a generic pipeline of collection transformation and, 
+// throw the generator, sending different collection.
 func LazyChainWith(generator func() interface{}) Builder {
 	isNotNil(generator, "LazyChainWith")
 	return &lazyBuilder{func() interface{} {
