@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// Builder contains all tools wich can be chained.
+// Builder contains all tools which can be chained.
 type Builder interface {
 	Chunk(size int) Builder
 	Compact() Builder
