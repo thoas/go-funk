@@ -2,6 +2,7 @@ package funk
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 )
 
@@ -66,4 +67,59 @@ func Sum(arr interface{}) float64 {
 // Product computes the product of the values in array.
 func Product(arr interface{}) float64 {
 	return calculate(arr, "Product", '*')
+}
+
+// SumBy computes the sum of the values of the key in array
+func SumBy(arr interface{}, key string) float64 {
+	arrayValue := redirectValue(reflect.ValueOf(arr))
+
+	kind := arrayValue.Kind()
+	if kind == reflect.Array || kind == reflect.Slice {
+		length := arrayValue.Len()
+
+		if length == 0 {
+			return 0
+		}
+
+		var sum float64 = 0
+		for i := 0; i < length; i++ {
+			itemValue := redirectValue(reflect.ValueOf(arrayValue.Index(i).Interface())).FieldByName(key)
+			if isInt(itemValue) {
+				sum += float64(itemValue.Int())
+			} else if isFloat(itemValue) {
+				sum += itemValue.Float()
+			}
+		}
+		log.Println("sum is", sum)
+		return sum
+	}
+	return 0
+}
+
+func isInt(value reflect.Value) bool {
+	switch value.Kind() {
+	case reflect.Int:
+		return true
+	case reflect.Int8:
+		return true
+	case reflect.Int16:
+		return true
+	case reflect.Int32:
+		return true
+	case reflect.Int64:
+		return true
+	default:
+		return false
+	}
+}
+
+func isFloat(value reflect.Value) bool {
+	switch value.Kind() {
+	case reflect.Float32:
+		return true
+	case reflect.Float64:
+		return true
+	default:
+		return false
+	}
 }
