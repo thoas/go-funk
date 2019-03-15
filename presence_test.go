@@ -35,6 +35,7 @@ func TestContains(t *testing.T) {
 	is := assert.New(t)
 
 	is.True(Contains([]string{"foo", "bar"}, "bar"))
+	is.True(Contains([...]string{"foo", "bar"}, "bar"))
 
 	is.True(Contains(results, f))
 	is.False(Contains(results, nil))

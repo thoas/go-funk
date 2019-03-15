@@ -146,7 +146,7 @@ func Contains(in interface{}, elem interface{}) bool {
 				return true
 			}
 		}
-	case reflect.Slice:
+	case reflect.Slice, reflect.Array:
 		for i := 0; i < inValue.Len(); i++ {
 			if equal(inValue.Index(i).Interface(), elem) {
 				return true
