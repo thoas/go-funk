@@ -128,6 +128,9 @@ func NotEqual(expected interface{}, actual interface{}) bool {
 
 // IsIteratee returns if the argument is an iteratee.
 func IsIteratee(in interface{}) bool {
+	if in == nil {
+		return false
+	}
 	arrType := reflect.TypeOf(in)
 
 	kind := arrType.Kind()

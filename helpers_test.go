@@ -263,3 +263,9 @@ func TestAll(t *testing.T) {
 	is.False(All("", nil, false))
 	is.True(All("foo", true, 3))
 }
+
+func TestIsIteratee(t *testing.T) {
+	is := assert.New(t)
+
+	is.False(IsIteratee(nil))
+}
