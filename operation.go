@@ -27,21 +27,21 @@ func calculate(arr interface{}, name string, operation rune) float64 {
 			elem := redirectValue(value.Index(i)).Interface()
 
 			var value float64
-			switch elem.(type) {
+			switch e := elem.(type) {
 			case int:
-				value = float64(elem.(int))
+				value = float64(e)
 			case int8:
-				value = float64(elem.(int8))
+				value = float64(e)
 			case int16:
-				value = float64(elem.(int16))
+				value = float64(e)
 			case int32:
-				value = float64(elem.(int32))
+				value = float64(e)
 			case int64:
-				value = float64(elem.(int64))
+				value = float64(e)
 			case float32:
-				value = float64(elem.(float32))
+				value = float64(e)
 			case float64:
-				value = elem.(float64)
+				value = e
 			}
 
 			switch operation {
