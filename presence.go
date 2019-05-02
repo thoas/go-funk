@@ -1,6 +1,7 @@
 package funk
 
 import (
+	"fmt"
 	"reflect"
 	"strings"
 )
@@ -152,6 +153,8 @@ func Contains(in interface{}, elem interface{}) bool {
 				return true
 			}
 		}
+	default:
+		panic(fmt.Sprintf("Type %s is not supported by Contains, supported types are String, Map, Slice, Array", inType.String()))
 	}
 
 	return false

@@ -36,6 +36,7 @@ func TestContains(t *testing.T) {
 
 	is.True(Contains([]string{"foo", "bar"}, "bar"))
 	is.True(Contains([...]string{"foo", "bar"}, "bar"))
+	is.Panics(func() { Contains(1, 2) })
 
 	is.True(Contains(results, f))
 	is.False(Contains(results, nil))
