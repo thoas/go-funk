@@ -14,6 +14,10 @@ func Chunk(arr interface{}, size int) interface{} {
 		panic("First parameter must be neither array nor slice")
 	}
 
+	if size == 0 {
+		return arr
+	}
+
 	arrValue := reflect.ValueOf(arr)
 
 	arrType := arrValue.Type()

@@ -99,6 +99,7 @@ func TestChunk(t *testing.T) {
 
 	is.Len(Chunk([]int{}, 2), 0)
 	is.Len(Chunk([]int{1}, 2), 1)
+	is.Len(Chunk([]int{1, 2, 3}, 0), 3)
 }
 
 func TestFlattenDeep(t *testing.T) {
