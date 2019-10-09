@@ -31,6 +31,11 @@ var c = &Foo{
 
 var results = []*Foo{f, c}
 
+type Person struct {
+	name string
+	age  int
+}
+
 func TestContains(t *testing.T) {
 	is := assert.New(t)
 
@@ -67,6 +72,45 @@ func TestEvery(t *testing.T) {
 
 	is.True(Every(mapping, 1, 3))
 	is.False(Every(mapping, 2, 3))
+}
+
+func TestSome(t *testing.T) {
+	is := assert.New(t)
+
+	is.True(Some([]string{"foo", "bar", "baz"}, "foo"))
+	is.True(Some([]string{"foo", "bar", "baz"}, "foo", "qux"))
+
+	is.True(Some(results, f))
+	is.False(Some(results, b))
+	is.False(Some(results, nil))
+	is.True(Some(results, f, b))
+
+	is.True(Some("zeeshan", "zee", "tam"))
+	is.False(Some("zeeshan", "zi", "tam"))
+
+	persons := []Person{
+		Person{
+			name: "Zeeshan",
+			age:  23,
+		},
+		Person{
+			name: "Bob",
+			age:  26,
+		},
+	}
+
+	person := Person{"Zeeshan", 23}
+	person2 := Person{"Alice", 23}
+	person3 := Person{"John", 26}
+
+	is.True(Some(persons, person, person2))
+	is.False(Some(persons, person2, person3))
+
+	mapping := ToMap(results, "ID")
+
+	is.True(Some(mapping, 1, 2))
+	is.True(Some(mapping, 4, 1))
+	is.False(Some(mapping, 4, 5))
 }
 
 func TestIndexOf(t *testing.T) {
