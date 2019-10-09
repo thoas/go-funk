@@ -1,116 +1,194 @@
 package funk
 
-import (
-	"reflect"
-	"strings"
-)
+import "strings"
 
-// Max checks for the type of input, validates the input, compares the elements and returns the maximum element in an array/slice.
-// It accepts []int, []int8, []int16, []int32, []int64, []float32, []float64, []string
-// For strings, the first different character amongst the elements is compared using go's inbuilt strings.Compare method
-// It returns int or string or nil
+// MaxInt validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []int
+// It returns int or nil
 // It returns nil for the following cases:
-//  - input is not an array/slice
-//  - input has heterogeneous elements
-func Max(input interface{}) interface{} {
-
-	i := reflect.ValueOf(input)
-
-	if (i.Kind() != reflect.Slice && i.Kind() != reflect.Array) || i.Len() == 0 {
+//  - input is of length 0
+func MaxInt(i []int) interface{} {
+	if len(i) == 0 {
 		return nil
 	}
-
-	var max reflect.Value
-
-	for idx := 0; idx < i.Len(); idx++ {
-		item := i.Index(idx)
-
+	var max int
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
 		if idx == 0 {
 			max = item
 			continue
 		}
-
-		if item.Kind() != i.Index(idx - 1).Kind() {
-			return nil
+		if item > max {
+			max = item
 		}
-
-		switch item.Kind() {
-			case reflect.Int:
-				if int(item.Int()) > int(max.Int()) {
-					max = item
-				}
-				break
-			case reflect.Int8:
-				if int8(item.Int()) > int8(max.Int()) {
-					max = item
-				}
-				break
-			case reflect.Int16:
-				if int16(item.Int()) > int16(max.Int()) {
-					max = item
-				}
-				break
-			case reflect.Int32:
-				if int32(item.Int()) > int32(max.Int()) {
-					max = item
-				}
-				break
-			case reflect.Int64:
-				if int64(item.Int()) > int64(max.Int()) {
-					max = item
-				}
-				break
-			case reflect.Float32:
-				if float32(item.Float()) > float32(max.Float()) {
-					max = item
-				}
-				break
-			case reflect.Float64:
-				if float64(item.Float()) > float64(max.Float()) {
-					max = item
-				}
-				break
-			case reflect.String:
-				s := compareStrings(max.String(), item.String())
-				max = reflect.ValueOf(s)
-				break
-		}
-
 	}
-
-	switch max.Kind() {
-
-		case reflect.Int:
-			return int(max.Int())
-		case reflect.Int8:
-			return int8(max.Int())
-		case reflect.Int16:
-			return int16(max.Int())
-		case reflect.Int32:
-			return int32(max.Int())
-		case reflect.Int64:
-			return int64(max.Int())
-		case reflect.Float32:
-			return float32(max.Float())
-		case reflect.Float64:
-			return float64(max.Float())
-		case reflect.String:
-			return max.String()
-		default:
-			return nil
-
-	}
-
+	return max
 }
 
+// MaxInt8 validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []int8
+// It returns int8 or nil
+// It returns nil for the following cases:
+//  - input is of length 0
+func MaxInt8(i []int8) interface{} {
+	if len(i) == 0 {
+		return nil
+	}
+	var max int8
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
+		if idx == 0 {
+			max = item
+			continue
+		}
+		if item > max {
+			max = item
+		}
+	}
+	return max
+}
+
+// MaxInt16 validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []int16
+// It returns int16 or nil
+// It returns nil for the following cases:
+//  - input is of length 0
+func MaxInt16(i []int16) interface{} {
+	if len(i) == 0 {
+		return nil
+	}
+	var max int16
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
+		if idx == 0 {
+			max = item
+			continue
+		}
+		if item > max {
+			max = item
+		}
+	}
+	return max
+}
+
+// MaxInt32 validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []int32
+// It returns int32 or nil
+// It returns nil for the following cases:
+//  - input is of length 0
+func MaxInt32(i []int32) interface{} {
+	if len(i) == 0 {
+		return nil
+	}
+	var max int32
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
+		if idx == 0 {
+			max = item
+			continue
+		}
+		if item > max {
+			max = item
+		}
+	}
+	return max
+}
+
+// MaxInt64 validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []int64
+// It returns int64 or nil
+// It returns nil for the following cases:
+//  - input is of length 0
+func MaxInt64(i []int64) interface{} {
+	if len(i) == 0 {
+		return nil
+	}
+	var max int64
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
+		if idx == 0 {
+			max = item
+			continue
+		}
+		if item > max {
+			max = item
+		}
+	}
+	return max
+}
+
+// MaxFloat32 validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []float32
+// It returns float32 or nil
+// It returns nil for the following cases:
+//  - input is of length 0
+func MaxFloat32(i []float32) interface{} {
+	if len(i) == 0 {
+		return nil
+	}
+	var max float32
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
+		if idx == 0 {
+			max = item
+			continue
+		}
+		if item > max {
+			max = item
+		}
+	}
+	return max
+}
+
+// MaxFloat64 validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []float64
+// It returns float64 or nil
+// It returns nil for the following cases:
+//  - input is of length 0
+func MaxFloat64(i []float64) interface{} {
+	if len(i) == 0 {
+		return nil
+	}
+	var max float64
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
+		if idx == 0 {
+			max = item
+			continue
+		}
+		if item > max {
+			max = item
+		}
+	}
+	return max
+}
+
+// MaxString validates the input, compares the elements and returns the maximum element in an array/slice.
+// It accepts []string
+// It returns string or nil
+// It returns nil for the following cases:
+//  - input is of length 0
+func MaxString(i []string) interface{} {
+	if len(i) == 0 {
+		return nil
+	}
+	var max string
+	for idx := 0; idx < len(i); idx++ {
+		item := i[idx]
+		if idx == 0 {
+			max = item
+			continue
+		}
+		max = compareStrings(max, item)
+	}
+	return max
+}
+
+// compareStrings uses the strings.Compare method to compare two strings, and returns the greater one.
 func compareStrings(max, current string) string {
-
 	r := strings.Compare(strings.ToLower(max), strings.ToLower(current))
-
 	if r > 0 {
 		return max
-	} else {
-		return current
 	}
-
+	return current
 }
