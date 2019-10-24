@@ -51,6 +51,13 @@ func Filter(arr interface{}, predicate interface{}) interface{} {
 // Find iterates over elements of collection, returning the first
 // element predicate returns truthy for.
 func Find(arr interface{}, predicate interface{}) interface{} {
+	_, val := FindKey(arr, predicate)
+	return val
+}
+
+// Find iterates over elements of collection, returning the first
+// element predicate returns truthy for.
+func FindKey(arr interface{}, predicate interface{}) (matchKey, matchEle interface{}) {
 	if !IsIteratee(arr) {
 		panic("First parameter must be an iteratee")
 	}
@@ -68,18 +75,33 @@ func Find(arr interface{}, predicate interface{}) interface{} {
 	}
 
 	arrValue := reflect.ValueOf(arr)
+	var keyArrs []reflect.Value
 
+	isMap := arrValue.Kind() == reflect.Map
+	if isMap {
+		keyArrs = arrValue.MapKeys()
+	}
 	for i := 0; i < arrValue.Len(); i++ {
-		elem := arrValue.Index(i)
+		var (
+			elem reflect.Value
+			key  reflect.Value
+		)
+		if isMap {
+			key = keyArrs[i]
+			elem = arrValue.MapIndex(key)
+		} else {
+			key = reflect.ValueOf(i)
+			elem = arrValue.Index(i)
+		}
 
 		result := funcValue.Call([]reflect.Value{elem})[0].Interface().(bool)
 
 		if result {
-			return elem.Interface()
+			return key.Interface(), elem.Interface()
 		}
 	}
 
-	return nil
+	return nil, nil
 }
 
 // IndexOf gets the index at which the first occurrence of value is found in array or return -1

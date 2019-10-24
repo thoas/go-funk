@@ -148,4 +148,21 @@ func TestFind(t *testing.T) {
 	})
 
 	is.Equal(r, 2)
+
+}
+func TestFindKey(t *testing.T) {
+	is := assert.New(t)
+
+	k, r := FindKey(map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}, func(x int) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, 2)
+	is.Equal(k, "b")
+
+	k1, r1 := FindKey([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 0
+	})
+	is.Equal(r1, 2)
+	is.Equal(k1, 1)
 }
