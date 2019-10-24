@@ -56,7 +56,7 @@ func Find(arr interface{}, predicate interface{}) interface{} {
 }
 
 // Find iterates over elements of collection, returning the first
-// element predicate returns truthy for.
+// element of an array and random of a map which predicate returns truthy for.
 func FindKey(arr interface{}, predicate interface{}) (matchKey, matchEle interface{}) {
 	if !IsIteratee(arr) {
 		panic("First parameter must be an iteratee")

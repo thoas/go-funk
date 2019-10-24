@@ -154,7 +154,7 @@ func TestFindKey(t *testing.T) {
 	is := assert.New(t)
 
 	k, r := FindKey(map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}, func(x int) bool {
-		return x%2 == 0
+		return x == 2
 	})
 
 	is.Equal(r, 2)
