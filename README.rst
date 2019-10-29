@@ -17,8 +17,8 @@ go-funk
 
 Generic helpers rely on reflect_, be careful this code runs exclusively on runtime so you must have a good test suite.
 
-These helpers have started as an experiment to learn reflect_. It may looks like lodash_ in some aspects but
-it will have its own roadmap, lodash_ is an awesome library with a lot of works behind it, all features included in
+These helpers have started as an experiment to learn reflect_. It may look like lodash_ in some aspects but
+it will have its own roadmap. lodash_ is an awesome library with a lot of work behind it, all features included in
 ``go-funk`` come from internal use cases.
 
 You can also find typesafe implementation in the godoc_.
@@ -87,7 +87,7 @@ funk.Contains
 
 Returns true if an element is present in a iteratee (slice, map, string).
 
-One frustrating thing in Go is to implement ``contains`` methods for each types, for example:
+One frustrating thing in Go is to implement ``contains`` methods for each type, for example:
 
 .. code-block:: go
 
@@ -138,7 +138,7 @@ see also, typesafe implementations: ContainsInt_, ContainsInt64_, ContainsFloat3
 funk.IndexOf
 ............
 
-Gets the index at which the first occurrence of value is found in array or return -1
+Gets the index at which the first occurrence of a value is found in an array or return -1
 if the value cannot be found.
 
 .. code-block:: go
@@ -158,7 +158,7 @@ see also, typesafe implementations: IndexOfInt_, IndexOfInt64_, IndexOfFloat32_,
 funk.LastIndexOf
 ................
 
-Gets the index at which the last occurrence of value is found in array or return -1
+Gets the index at which the last occurrence of a value is found in an array or return -1
 if the value cannot be found.
 
 .. code-block:: go
@@ -417,7 +417,7 @@ If array can't be split evenly, the final chunk will be the remaining element.
 funk.FlattenDeep
 ................
 
-Recursively flattens array.
+Recursively flattens an array.
 
 .. code-block:: go
 
@@ -497,7 +497,7 @@ see also, typesafe implementations: ShuffleInt_, ShuffleInt64_, ShuffleFloat32_,
 funk.Sum
 ........
 
-Computes the sum of the values in array.
+Computes the sum of the values in an array.
 
 .. code-block:: go
 
@@ -514,7 +514,7 @@ see also, typesafe implementations: SumInt_, SumInt64_, SumFloat32_, SumFloat64_
 funk.Reverse
 ............
 
-Transforms an array the first element will become the last, the second element
+Transforms an array such that the first element will become the last, the second element
 will become the second to last, etc.
 
 .. code-block:: go
@@ -573,7 +573,7 @@ Generates a sharded string with a fixed length and depth.
 Performance
 -----------
 
-``go-funk`` has currently an open issue about performance_, don't hesitate to participate in the discussion
+``go-funk`` currently has an open issue about performance_, don't hesitate to participate in the discussion
 to enhance the generic helpers implementations.
 
 Let's stop beating around the bush, a typesafe implementation in pure Go of ``funk.Contains``, let's say for example:
@@ -592,7 +592,7 @@ Let's stop beating around the bush, a typesafe implementation in pure Go of ``fu
 will always outperform an implementation based on reflect_ in terms of speed and allocs because of
 how it's implemented in the language.
 
-If you want a similarity gorm_ will always be slower than sqlx_ (which is very low level btw) and will uses more allocs.
+If you want a similarity, gorm_ will always be slower than sqlx_ (which is very low level btw) and will use more allocs.
 
 You must not think generic helpers of ``go-funk`` as a replacement when you are dealing with performance in your codebase,
 you should use typesafe implementations instead.
