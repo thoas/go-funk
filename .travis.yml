@@ -3,9 +3,5 @@ before_install:
   - go get golang.org/x/tools/cmd/cover
   - go get github.com/stretchr/testify
 go:
-  - "1.7"
-  - "1.8"
-  - "1.9"
-  - "1.10"
-  - "tip"
+  - "1.13"
 script: make test
