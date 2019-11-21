@@ -21,7 +21,11 @@ func get(value reflect.Value, path string) reflect.Value {
 		var resultSlice reflect.Value
 
 		length := value.Len()
-
+		
+		if length == 0 {
+			return resultSlice
+		}
+		
 		for i := 0; i < length; i++ {
 			item := value.Index(i)
 
