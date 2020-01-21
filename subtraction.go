@@ -1,7 +1,6 @@
 package funk
 
 import (
-	"log"
 	"reflect"
 )
 
@@ -41,7 +40,7 @@ func Subtract(x interface{}, y interface{}) interface{} {
 			delete(hash, v)
 		}
 	}
-	log.Println(hash)
+
 	for k, _ := range hash {
 		kValue := reflect.ValueOf(k)
 		zSlice = reflect.Append(zSlice, kValue)
