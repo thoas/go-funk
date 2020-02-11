@@ -600,7 +600,7 @@ you should use typesafe implementations instead.
 Contributing
 ------------
 
-* Ping me on twitter `@thoas <https://twitter.com/thoas>`_
+* Ping me on twitter `@thoas <https://twitter.com/thoas>`_ (DMs, mentions, whatever :))
 * Fork the `project <https://github.com/thoas/go-funk>`_
 * Fix `open issues <https://github.com/thoas/go-funk/issues>`_ or request new features
 
