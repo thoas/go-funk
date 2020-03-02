@@ -114,13 +114,13 @@ func DifferenceString(x []string, y []string) ([]string, []string) {
 	rightSlice := []string{}
 
 	for _, v := range x {
-		if Contains(y, v) == false {
+		if ContainsString(y, v) == false {
 			leftSlice = append(leftSlice, v)
 		}
 	}
 
 	for _, v := range y {
-		if Contains(x, v) == false {
+		if ContainsString(x, v) == false {
 			rightSlice = append(rightSlice, v)
 		}
 	}
