@@ -150,6 +150,21 @@ see also, typesafe implementations: IntersectString
 .. IntersectString: https://godoc.org/github.com/thoas/go-funk#IntersectString
 
 
+funk.Difference
+..............
+
+Returns the difference between two collections.
+
+```
+left, right := funk.Difference([]int{1, 2, 3, 4}, []int{2, 4, 6})  // []int{1, 3}, []int{6}
+left, right := funk.Difference([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})  // []string{"hello"}, []string{}
+```
+
+see also, typesafe implementations: DifferenceString
+
+.. DifferenceString: https://godoc.org/github.com/thoas/go-funk#DifferenceString
+
+
 funk.IndexOf
 ............
 
