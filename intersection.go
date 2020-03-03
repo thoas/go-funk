@@ -66,3 +66,64 @@ func IntersectString(x []string, y []string) []string {
 
 	return set
 }
+
+// Difference returns the difference between two collections.
+func Difference(x interface{}, y interface{}) (interface{}, interface{}) {
+	if !IsCollection(x) {
+		panic("First parameter must be a collection")
+	}
+	if !IsCollection(y) {
+		panic("Second parameter must be a collection")
+	}
+
+	xValue := reflect.ValueOf(x)
+	xType := xValue.Type()
+
+	yValue := reflect.ValueOf(y)
+	yType := yValue.Type()
+
+	if NotEqual(xType, yType) {
+		panic("Parameters must have the same type")
+	}
+
+	leftType := reflect.SliceOf(xType.Elem())
+	leftSlice := reflect.MakeSlice(leftType, 0, 0)
+	rightType := reflect.SliceOf(yType.Elem())
+	rightSlice := reflect.MakeSlice(rightType, 0, 0)
+
+	for i := 0; i < xValue.Len(); i++ {
+		v := xValue.Index(i).Interface()
+		if Contains(y, v) == false {
+			leftSlice = reflect.Append(leftSlice, xValue.Index(i))
+		}
+	}
+
+	for i := 0; i < yValue.Len(); i++ {
+		v := yValue.Index(i).Interface()
+		if Contains(x, v) == false {
+			rightSlice = reflect.Append(rightSlice, yValue.Index(i))
+		}
+	}
+
+	return leftSlice.Interface(), rightSlice.Interface()
+}
+
+// DifferenceString returns the difference between two collections of strings.
+func DifferenceString(x []string, y []string) ([]string, []string) {
+	leftSlice := []string{}
+	rightSlice := []string{}
+
+	for _, v := range x {
+		if ContainsString(y, v) == false {
+			leftSlice = append(leftSlice, v)
+		}
+	}
+
+	for _, v := range y {
+		if ContainsString(x, v) == false {
+			rightSlice = append(rightSlice, v)
+		}
+	}
+
+	return leftSlice, rightSlice
+}

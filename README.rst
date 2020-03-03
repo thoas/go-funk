@@ -135,6 +135,36 @@ see also, typesafe implementations: ContainsInt_, ContainsInt64_, ContainsFloat3
 .. _ContainsInt64: https://godoc.org/github.com/thoas/go-funk#ContainsInt64
 .. _ContainsString: https://godoc.org/github.com/thoas/go-funk#ContainsString
 
+funk.Intersect
+..............
+
+Returns the intersection between two collections.
+
+```
+inter := funk.Intersect([]int{1, 2, 3, 4}, []int{2, 4, 6})  // []int{2, 4}
+inter := funk.Intersect([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})  // []string{"foo", "bar"}
+```
+
+see also, typesafe implementations: IntersectString
+
+.. IntersectString: https://godoc.org/github.com/thoas/go-funk#IntersectString
+
+
+funk.Difference
+..............
+
+Returns the difference between two collections.
+
+```
+left, right := funk.Difference([]int{1, 2, 3, 4}, []int{2, 4, 6})  // []int{1, 3}, []int{6}
+left, right := funk.Difference([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})  // []string{"hello"}, []string{}
+```
+
+see also, typesafe implementations: DifferenceString
+
+.. DifferenceString: https://godoc.org/github.com/thoas/go-funk#DifferenceString
+
+
 funk.IndexOf
 ............
 
