@@ -411,7 +411,7 @@ func IndexOfString(a []string, x string) int {
 }
 
 func lastIndexOf(n int, f func(int) bool) int {
-	for i := n - 1; i > 0; i-- {
+	for i := n - 1; i >= 0; i-- {
 		if f(i) {
 			return i
 		}
