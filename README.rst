@@ -372,6 +372,20 @@ Retrieves the value at path of struct(s).
     funk.Get([]*Foo{foo1, foo2}, "Bar.Name") // []string{"Test"}
     funk.Get(foo2, "Bar.Name") // nil
 
+
+
+funk.GetOrElse
+.........
+
+Retrieves the value of the pointer or default.
+
+.. code-block:: go
+    str := "hello world"
+    GetOrElse(&str, "foobar")   // string{"hello world"}
+    GetOrElse(str, "foobar")    // string{"hello world"}
+    GetOrElse(nil, "foobar")    // string{"foobar"}
+
+
 funk.Keys
 .........
 

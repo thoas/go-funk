@@ -46,3 +46,12 @@ func TestGetSimple(t *testing.T) {
 
 	is.Equal(result, []string{"Level1-1", "Level1-2"})
 }
+
+func TestGetOrElse(t *testing.T) {
+	is := assert.New(t)
+
+	str := "hello world"
+	is.Equal("hello world", GetOrElse(&str, "foobar"))
+	is.Equal("hello world", GetOrElse(str, "foobar"))
+	is.Equal("foobar", GetOrElse(nil, "foobar"))
+}
