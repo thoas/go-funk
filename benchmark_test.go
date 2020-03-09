@@ -17,6 +17,18 @@ func sliceGenerator(size uint, r *rand.Rand) (out []int64) {
 	return
 }
 
+func BenchmarkSubtract(b *testing.B) {
+	r := rand.New(rand.NewSource(seed))
+	testData := sliceGenerator(sliceSize, r)
+	what := sliceGenerator(sliceSize, r)
+
+	b.Run("Subtract", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			Subtract(testData, what)
+		}
+	})
+}
+
 func BenchmarkContains(b *testing.B) {
 	r := rand.New(rand.NewSource(seed))
 	testData := sliceGenerator(sliceSize, r)

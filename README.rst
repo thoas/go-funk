@@ -524,6 +524,21 @@ see also, typesafe implementations: ShuffleInt_, ShuffleInt64_, ShuffleFloat32_,
 .. _ShuffleInt64: https://godoc.org/github.com/thoas/go-funk#ShuffleInt64
 .. _ShuffleString: https://godoc.org/github.com/thoas/go-funk#ShuffleString
 
+funk.Subtract
+............
+
+Returns the subtraction between two collections. It preserve order.
+
+.. code-block:: go
+
+    funk.Subtract([]int{0, 1, 2, 3, 4}, []int{0, 4}) // []int{1, 2, 3}
+    funk.Subtract([]int{0, 3, 2, 3, 4}, []int{0, 4}) // []int{3, 2, 3}
+
+
+see also, typesafe implementations: SubtractString_
+
+.. SubtractString: https://godoc.org/github.com/thoas/go-funk#SubtractString
+
 funk.Sum
 ........
 

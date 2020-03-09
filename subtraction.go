@@ -41,9 +41,12 @@ func Subtract(x interface{}, y interface{}) interface{} {
 		}
 	}
 
-	for k, _ := range hash {
-		kValue := reflect.ValueOf(k)
-		zSlice = reflect.Append(zSlice, kValue)
+	for i := 0; i < xValue.Len(); i++ {
+		v := xValue.Index(i).Interface()
+		_, ok := hash[v]
+		if ok {
+			zSlice = reflect.Append(zSlice, xValue.Index(i))
+		}
 	}
 
 	return zSlice.Interface()
@@ -55,7 +58,7 @@ func SubtractString(x []string, y []string) []string {
 		return []string{}
 	}
 
-	set := []string{}
+	slice := []string{}
 	hash := map[string]struct{}{}
 
 	for _, v := range x {
@@ -69,9 +72,12 @@ func SubtractString(x []string, y []string) []string {
 		}
 	}
 
-	for k, _ := range hash {
-		set = append(set, k)
+	for _, v := range x {
+		_, ok := hash[v]
+		if ok {
+			slice = append(slice, v)
+		}
 	}
 
-	return set
+	return slice
 }
