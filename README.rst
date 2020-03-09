@@ -375,11 +375,12 @@ Retrieves the value at path of struct(s).
 
 
 funk.GetOrElse
-.........
+..............
 
 Retrieves the value of the pointer or default.
 
 .. code-block:: go
+
     str := "hello world"
     GetOrElse(&str, "foobar")   // string{"hello world"}
     GetOrElse(str, "foobar")    // string{"hello world"}
@@ -539,7 +540,7 @@ see also, typesafe implementations: ShuffleInt_, ShuffleInt64_, ShuffleFloat32_,
 .. _ShuffleString: https://godoc.org/github.com/thoas/go-funk#ShuffleString
 
 funk.Subtract
-............
+.............
 
 Returns the subtraction between two collections. It preserve order.
 
