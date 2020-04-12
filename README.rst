@@ -140,10 +140,10 @@ funk.Intersect
 
 Returns the intersection between two collections.
 
-```
-inter := funk.Intersect([]int{1, 2, 3, 4}, []int{2, 4, 6})  // []int{2, 4}
-inter := funk.Intersect([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})  // []string{"foo", "bar"}
-```
+.. code-block:: go
+
+    funk.Intersect([]int{1, 2, 3, 4}, []int{2, 4, 6})  // []int{2, 4}
+    funk.Intersect([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})  // []string{"foo", "bar"}
 
 see also, typesafe implementations: IntersectString
 
@@ -155,10 +155,10 @@ funk.Difference
 
 Returns the difference between two collections.
 
-```
-left, right := funk.Difference([]int{1, 2, 3, 4}, []int{2, 4, 6})  // []int{1, 3}, []int{6}
-left, right := funk.Difference([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})  // []string{"hello"}, []string{}
-```
+.. code-block:: go
+
+    funk.Difference([]int{1, 2, 3, 4}, []int{2, 4, 6})  // []int{1, 3}, []int{6}
+    funk.Difference([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})  // []string{"hello"}, []string{}
 
 see also, typesafe implementations: DifferenceString
 
