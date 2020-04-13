@@ -103,3 +103,22 @@ func BenchmarkDrop(b *testing.B) {
 		}
 	})
 }
+
+func BenchmarkJoin(b *testing.B) {
+	r := rand.New(rand.NewSource(seed))
+	fullArr := sliceGenerator(sliceSize, r)
+	leftArr := fullArr[:sliceSize/3*2]
+	rightArr := fullArr[sliceSize/3*1:]
+
+	b.Run("InnerJoinInt64", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			JoinInt64(leftArr, rightArr, InnerJoinInt64)
+		}
+	})
+
+	b.Run("InnerJoin", func(b *testing.B) {
+		for n := 0; n < b.N; n++ {
+			Join(leftArr, rightArr, InnerJoin)
+		}
+	})
+}
