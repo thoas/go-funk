@@ -5,6 +5,10 @@ import (
 )
 
 // Intersect returns the intersection between two collections.
+//
+// Deprecated: use Join(x, y, InnerJoin) instead of Intersect, InnerJoin
+// implements deduplication mechanism, so verify your code behaviour
+// before using it
 func Intersect(x interface{}, y interface{}) interface{} {
 	if !IsCollection(x) {
 		panic("First parameter must be a collection")

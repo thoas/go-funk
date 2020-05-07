@@ -30,6 +30,9 @@ func (b *chainBuilder) Initial() Builder {
 func (b *chainBuilder) Intersect(y interface{}) Builder {
 	return &chainBuilder{Intersect(b.collection, y)}
 }
+func (b *chainBuilder) Join(rarr interface{}, fnc JoinFnc) Builder {
+	return &chainBuilder{Join(b.collection, rarr, fnc)}
+}
 func (b *chainBuilder) Map(mapFunc interface{}) Builder {
 	return &chainBuilder{Map(b.collection, mapFunc)}
 }

@@ -15,6 +15,9 @@ func TestIntersect(t *testing.T) {
 	r = Intersect([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})
 	is.Equal(r, []string{"foo", "bar"})
 
+	r = Intersect([]string{"foo", "bar"}, []string{"foo", "bar", "hello", "bar"})
+	is.Equal(r, []string{"foo", "bar", "bar"})
+
 }
 
 func TestIntersectString(t *testing.T) {

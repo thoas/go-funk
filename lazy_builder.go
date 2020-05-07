@@ -27,6 +27,9 @@ func (b *lazyBuilder) Initial() Builder {
 func (b *lazyBuilder) Intersect(y interface{}) Builder {
 	return &lazyBuilder{func() interface{} { return Intersect(b.exec(), y) }}
 }
+func (b *lazyBuilder) Join(rarr interface{}, fnc JoinFnc) Builder {
+	return &lazyBuilder{func() interface{} { return Join(b.exec(), rarr, fnc) }}
+}
 func (b *lazyBuilder) Map(mapFunc interface{}) Builder {
 	return &lazyBuilder{func() interface{} { return Map(b.exec(), mapFunc) }}
 }
