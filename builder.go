@@ -20,6 +20,7 @@ type Builder interface {
 	Shuffle() Builder
 	Tail() Builder
 	Uniq() Builder
+	Without(values ...interface{}) Builder
 
 	All() bool
 	Any() bool

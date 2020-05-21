@@ -45,6 +45,9 @@ func (b *lazyBuilder) Tail() Builder {
 func (b *lazyBuilder) Uniq() Builder {
 	return &lazyBuilder{func() interface{} { return Uniq(b.exec()) }}
 }
+func (b *lazyBuilder) Without(values ...interface{}) Builder {
+	return &lazyBuilder{func() interface{} { return Without(b.exec(), values...) }}
+}
 
 func (b *lazyBuilder) All() bool {
 	return (&chainBuilder{b.exec()}).All()

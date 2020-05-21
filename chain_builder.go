@@ -48,6 +48,9 @@ func (b *chainBuilder) Tail() Builder {
 func (b *chainBuilder) Uniq() Builder {
 	return &chainBuilder{Uniq(b.collection)}
 }
+func (b *chainBuilder) Without(values ...interface{}) Builder {
+	return &chainBuilder{Without(b.collection, values...)}
+}
 
 func (b *chainBuilder) All() bool {
 	v := reflect.ValueOf(b.collection)
