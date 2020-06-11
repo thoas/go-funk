@@ -17,6 +17,12 @@ func TestSubtract(t *testing.T) {
 
 	r = Subtract([]string{"hello", "foo", "bar", "hello", "bar", "hi"}, []string{"foo", "bar"})
 	is.Equal([]string{"hello", "hello", "hi"}, r)
+
+	r = Subtract([]int{1, 2, 3, 4, 5}, []int{})
+	is.Equal([]int{1, 2, 3, 4, 5}, r)
+
+	r = Subtract([]string{"bar", "bar"}, []string{})
+	is.Equal([]string{"bar", "bar"}, r)
 }
 
 func TestSubtractString(t *testing.T) {
@@ -27,4 +33,10 @@ func TestSubtractString(t *testing.T) {
 
 	r = SubtractString([]string{"foo", "bar", "hello", "bar", "world", "world"}, []string{"foo", "bar"})
 	is.Equal([]string{"hello", "world", "world"}, r)
+
+	r = SubtractString([]string{"bar", "bar"}, []string{})
+	is.Equal([]string{"bar", "bar"}, r)
+
+	r = SubtractString([]string{}, []string{"bar", "bar"})
+	is.Equal([]string{}, r)
 }
