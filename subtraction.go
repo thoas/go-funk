@@ -54,8 +54,12 @@ func Subtract(x interface{}, y interface{}) interface{} {
 
 // SubtractString returns the subtraction between two collections of string
 func SubtractString(x []string, y []string) []string {
-	if len(x) == 0 || len(y) == 0 {
+	if len(x) == 0 {
 		return []string{}
+	}
+
+	if len(y) == 0 {
+		return x
 	}
 
 	slice := []string{}
