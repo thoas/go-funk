@@ -1,81 +1,86 @@
 package funk
 
 import (
+	"errors"
+	"fmt"
 	"reflect"
 	"strings"
 )
 
 func Set(in interface{}, val interface{}, path string) error {
 	inValue := reflect.ValueOf(in)
+	inKind := inValue.Type().Kind()
 
-	// TODO if it is not ptr then panic?
-	if inValue.Type().Kind() == reflect.Ptr {
+	if inKind == reflect.Ptr {
 		inValue = inValue.Elem()
 	}
 
-	return set(inValue, reflect.ValueOf(val), path)
+	// todo change checks
+	if !inValue.CanSet() && !IsIteratee(in) {
+		panic(fmt.Sprintf("Type %s cannot be set", inValue.Type().String()))
+	}
+
+	parts := []string{}
+	if path != "" {
+		parts = strings.Split(path, ".")
+	}
+
+	return set(inValue, reflect.ValueOf(val), parts)
 }
 
 // Set assigns struct field with val at path
 // i.e. in.path = val
-func set(inValue reflect.Value, setValue reflect.Value, path string) error {
+func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 
-	inKind := inValue.Type().Kind()
+	//inKind := inValue.Type().Kind()
 
-	if inKind == reflect.Slice || inKind == reflect.Array {
-		panic("TODO array")
+	// traverse the path to get the inValue we need to set
+	for _, part := range parts {
+		inValue = redirectValue(inValue)
+		kind := inValue.Kind()
+
+		if kind == reflect.Invalid {
+			// TODO: decide if initilize the struct and continue
+			return errors.New("nil pointer found along the path")
+		}
+
+		if kind == reflect.Struct {
+			inValue = inValue.FieldByName(part)
+			if !inValue.IsValid() {
+				return fmt.Errorf("field name %v is not found in struct %v", part, kind.String())
+			}
+			if !inValue.CanSet() {
+				panic(fmt.Sprintf("Type %s cannot be set", inValue.Type().String()))
+			}
+			continue
+		}
+
+		if kind == reflect.Slice || kind == reflect.Array {
+			// set all its elements
+			length := inValue.Len()
+			for i := 0; i < length; i++ {
+				err := set(inValue.Index(i), setValue, parts)
+				if err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+
+		return fmt.Errorf("field name %s not found", part)
 	}
 
-	currRest := strings.SplitN(path, ".", 2 /* num of substr */)
-	if len(currRest) == 0 {
-		// set in to be val
-		panic("TODO no path case")
-	}
-
-	if len(currRest) == 1 {
-		// set the in's field curr to be val
-		setStructField(inValue, setValue, currRest[0])
-		return nil
-	}
-
-	// len must be 2
-	curr := currRest[0]
-	rest := currRest[1]
-	// recursive
-	fValue := inValue.FieldByName(curr)
-	if !fValue.IsValid() {
-		panic("field not found")
-	}
-
-	return set(fValue, setValue, rest)
-
-}
-
-// s is struct
-func setStructField(s reflect.Value, setValue reflect.Value, name string) {
-
-	// s := ps.Elem()
-	if s.Kind() != reflect.Struct {
-		panic("s is not struct")
-	}
-
-	// exported field
-	f := s.FieldByName(name)
-	if !f.IsValid() {
-		panic("field not found")
-	}
-	// A Value can be changed only if it is
-	// addressable and was not obtained by
-	// the use of unexported struct fields.
-	if !f.CanSet() {
+	// inValue holds the value we need to set
+	if !inValue.CanSet() {
 		panic("field not addressable or unexported")
 	}
 
 	// change value of
-	if f.Kind() != setValue.Kind() {
+	if inValue.Kind() != setValue.Kind() {
 		panic("type not match")
 	}
 
-	f.Set(setValue)
+	inValue.Set(setValue)
 
+	return nil
 }
