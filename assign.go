@@ -59,10 +59,8 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 			}
 			// pointer case
 			if fValue.IsNil() {
-				tt, _ := inValue.Type().FieldByName(parts[i])
-				// allocate zero value for invlue
-				newPtr := reflect.New(tt.Type.Elem())
-				fValue.Set(newPtr)
+				// set the nil pointer to be the pointer to zero value of the type
+				fValue.Set(reflect.New(fValue.Type().Elem()))
 			}
 			inValue = fValue
 		case reflect.Slice | reflect.Array:
@@ -99,6 +97,7 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 	}
 
 	inValue.Set(setValue)
+	//json.Unmarshal()
 
 	return nil
 }
