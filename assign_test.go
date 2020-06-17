@@ -64,3 +64,18 @@ func TestSetSlice(t *testing.T) {
 	is.NoError(err)
 	is.Equal([]*Bar{{Name: "c"}, {Name: "c"}}, bars)
 }
+
+func TestSetSliceWithNilElements(t *testing.T) {
+	is := assert.New(t)
+	bars := []*Bar{nil, nil}
+	// Case slice
+	err := Set(bars, "c", "Name")
+	is.NoError(err)
+	is.Equal([]*Bar{{Name: "c"}, {Name: "c"}}, bars)
+
+	// Case ptr to slice
+	bars2 := []*Bar{nil, nil}
+	err = Set(&bars2, "c", "Name")
+	is.NoError(err)
+	is.Equal([]*Bar{{Name: "c"}, {Name: "c"}}, bars2)
+}

@@ -53,15 +53,6 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 			if !fValue.CanSet() {
 				panic(fmt.Sprintf("Type %s cannot be set", inValue.Type().String()))
 			}
-			if fValue.Kind() != reflect.Ptr {
-				inValue = fValue
-				continue
-			}
-			// pointer case
-			if fValue.IsNil() {
-				// set the nil pointer to be the pointer to zero value of the type
-				fValue.Set(reflect.New(fValue.Type().Elem()))
-			}
 			inValue = fValue
 		case reflect.Slice | reflect.Array:
 			// set all its elements
@@ -74,14 +65,16 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 			}
 			return nil
 		case reflect.Ptr:
-			if inValue.IsNil() {
-				panic("nil ptr")
-			}
 			// only traverse down one level
+			if inValue.IsNil() {
+				// set the nil pointer to be the pointer to zero value of the type
+				inValue.Set(reflect.New(inValue.Type().Elem()))
+			}
 			inValue = reflect.Indirect(inValue)
-			i-- // we did not assign parts[i]
+			i-- // we did not assign parts[i], so back off
 		default:
-			panic("not supported")
+			// TODO handle interface{} case
+			panic(fmt.Sprintf("kind %v in path is not supported", kind))
 		}
 
 	}
