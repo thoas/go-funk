@@ -51,15 +51,16 @@ func TestSetStructWithFieldNotInitialized(t *testing.T) {
 	myFoo := &Foo{
 		Bar: nil, // we will try to set bar's field
 	}
-	err := Set(myFoo, int64(2), "Bar.Name")
-	is.EqualError(err, "nil pointer found along the path")
+	err := Set(myFoo, "name", "Bar.Name")
+	is.NoError(err)
+	is.Equal("name", myFoo.Bar.Name)
 }
 
 func TestSetSlice(t *testing.T) {
 	is := assert.New(t)
 	bars := []*Bar{{Name: "a"}, {Name: "b"}}
 	// Note: take address is required
-	err := Set(bars, "c", "Name")
+	err := Set(&bars, "c", "Name")
 	is.NoError(err)
 	is.Equal([]*Bar{{Name: "c"}, {Name: "c"}}, bars)
 }

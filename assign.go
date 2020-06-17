@@ -3,6 +3,7 @@ package funk
 import (
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 )
@@ -32,42 +33,59 @@ func Set(in interface{}, val interface{}, path string) error {
 // i.e. in.path = val
 func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 
+	log.Println(parts)
 	//inKind := inValue.Type().Kind()
 
 	// traverse the path to get the inValue we need to set
-	for _, part := range parts {
-		inValue = redirectValue(inValue)
+	for i := 0; i < len(parts); i++ {
+
 		kind := inValue.Kind()
 
-		if kind == reflect.Invalid {
-			// TODO: decide if initilize the struct and continue
+		switch kind {
+		case reflect.Invalid:
 			return errors.New("nil pointer found along the path")
-		}
+		case reflect.Struct:
+			fValue := inValue.FieldByName(parts[i])
 
-		if kind == reflect.Struct {
-			inValue = inValue.FieldByName(part)
-			if !inValue.IsValid() {
-				return fmt.Errorf("field name %v is not found in struct %v", part, kind.String())
+			if !fValue.IsValid() {
+				return fmt.Errorf("field name %v is not found in struct %v", parts[i], kind.String())
 			}
-			if !inValue.CanSet() {
+			if !fValue.CanSet() {
 				panic(fmt.Sprintf("Type %s cannot be set", inValue.Type().String()))
 			}
-			continue
-		}
-
-		if kind == reflect.Slice || kind == reflect.Array {
+			if fValue.Kind() != reflect.Ptr {
+				inValue = fValue
+				continue
+			}
+			// pointer case
+			if fValue.IsNil() {
+				tt, _ := inValue.Type().FieldByName(parts[i])
+				// allocate zero value for invlue
+				newPtr := reflect.New(tt.Type.Elem())
+				fValue.Set(newPtr)
+			}
+			inValue = fValue
+		case reflect.Slice | reflect.Array:
 			// set all its elements
 			length := inValue.Len()
-			for i := 0; i < length; i++ {
-				err := set(inValue.Index(i), setValue, parts)
+			for j := 0; j < length; j++ {
+				err := set(inValue.Index(j), setValue, parts[i:])
 				if err != nil {
 					return err
 				}
 			}
 			return nil
+		case reflect.Ptr:
+			if inValue.IsNil() {
+				panic("nil ptr")
+			}
+			// only traverse down one level
+			inValue = reflect.Indirect(inValue)
+			i-- // we did not assign parts[i]
+		default:
+			panic("not supported")
 		}
 
-		return fmt.Errorf("field name %s not found", part)
 	}
 
 	// inValue holds the value we need to set
