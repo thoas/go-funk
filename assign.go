@@ -13,12 +13,9 @@ func Set(in interface{}, val interface{}, path string) error {
 	inKind := inValue.Type().Kind()
 
 	if inKind == reflect.Ptr {
-		inValue = inValue.Elem()
-	}
-
-	// todo change checks
-	if !inValue.CanSet() && !IsIteratee(in) {
-		panic(fmt.Sprintf("Type %s cannot be set", inValue.Type().String()))
+		inValue = inValue.Elem() // if it is ptr we set its content not ptr its self
+	} else if inKind != reflect.Array && inKind != reflect.Slice {
+		panic(fmt.Sprintf("Type %s not supported by Set", inValue.Type().String()))
 	}
 
 	parts := []string{}
@@ -37,7 +34,8 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 	//inKind := inValue.Type().Kind()
 
 	// traverse the path to get the inValue we need to set
-	for i := 0; i < len(parts); i++ {
+	i := 0
+	for i < len(parts) {
 
 		kind := inValue.Kind()
 
@@ -54,6 +52,7 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 				panic(fmt.Sprintf("Type %s cannot be set", inValue.Type().String()))
 			}
 			inValue = fValue
+			i++
 		case reflect.Slice | reflect.Array:
 			// set all its elements
 			length := inValue.Len()
@@ -70,8 +69,9 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 				// set the nil pointer to be the pointer to zero value of the type
 				inValue.Set(reflect.New(inValue.Type().Elem()))
 			}
-			inValue = reflect.Indirect(inValue)
-			i-- // we did not assign parts[i], so back off
+			inValue = inValue.Elem()
+		case reflect.Interface:
+			inValue = inValue.Elem()
 		default:
 			// TODO handle interface{} case
 			panic(fmt.Sprintf("kind %v in path is not supported", kind))
@@ -85,12 +85,11 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 	}
 
 	// change value of
-	if inValue.Kind() != setValue.Kind() {
-		panic("type not match")
+	if inValue.Kind() != setValue.Kind() && inValue.Kind() != reflect.Interface {
+		panic(fmt.Sprintf("type not match: target %v, arg %v", inValue.Kind(), setValue.Kind()))
 	}
 
 	inValue.Set(setValue)
-	//json.Unmarshal()
 
 	return nil
 }

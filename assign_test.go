@@ -1,6 +1,7 @@
 package funk
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -42,7 +43,7 @@ func TestSetStructNotPtr(t *testing.T) {
 	// copy here because we need to modify
 	fooCopy := *foo
 
-	is.PanicsWithValue("Type funk.Foo cannot be set", func() { Set(fooCopy, int64(2), "ID") })
+	is.PanicsWithValue("Type funk.Foo not supported by Set", func() { Set(fooCopy, int64(2), "ID") })
 
 }
 
@@ -78,4 +79,49 @@ func TestSetSliceWithNilElements(t *testing.T) {
 	err = Set(&bars2, "c", "Name")
 	is.NoError(err)
 	is.Equal([]*Bar{{Name: "c"}, {Name: "c"}}, bars2)
+}
+
+func TestInterface(t *testing.T) {
+
+	type Baz struct {
+		Name string
+		Itf  interface{}
+	}
+
+	baz := Baz{
+		Name: "Baz1",
+		Itf:  nil,
+	}
+
+	var testCases = []struct {
+		Path        string
+		SetVal      interface{}
+		ExpectedBaz Baz
+	}{
+		// set string field
+		{
+			"Name",
+			"hi",
+			Baz{Name: "hi", Itf: nil},
+		},
+		// set interface{} field
+		{
+			"Itf",
+			"str",
+			Baz{Name: "Baz1", Itf: "str"},
+		},
+	}
+	//interface{}(interface{}("c"))
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+			testBaz := baz // make a copy
+
+			err := Set(&testBaz, tc.SetVal, tc.Path)
+			is.NoError(err)
+			is.Equal(tc.ExpectedBaz, testBaz)
+		})
+	}
+
 }
