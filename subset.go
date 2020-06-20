@@ -14,8 +14,6 @@ func Subset(x interface{}, y interface{}) boolean {
 		panic("Second parameter must be a collection")
 	}
 
-	//hash := map[interface{}]struct{}{}
-
 	xValue := reflect.ValueOf(x)
 	xType := xValue.Type()
 
