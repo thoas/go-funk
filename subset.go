@@ -24,15 +24,15 @@ func Subset(x interface{}, y interface{}) boolean {
 		panic("Parameters must have the same type")
 	}
 
-  if yValue == nil || len(yValue)==0 ||  len(yValue)<len(xValue) {
-    return false
-  }
+	if xValue == nil || len(xValue)==0{
+    		return true
+  	}
+	
+  	if yValue == nil || len(yValue)==0 ||  len(yValue)<len(xValue) {
+    		return false
+  	}
   
-  if xValue == nil || len(xValue)==0{
-    return true
-  }
-  
-  for _, elem := range xValue {
+  	for _, elem := range xValue {
 		if !Contains(yValue, elem) {
 			return false
 		}
@@ -46,11 +46,11 @@ func SubsetString(x []string, y []string) boolean {
 		return true
 	}
 
-  if len(y) == 0 || len(x)>len(y) {
+  	if len(y) == 0 || len(x)>len(y) {
 		return false
 	}
   
-  for _, stringElem := range x {
+  	for _, stringElem := range x {
 		if !Contains(y, stringElem) {
 			return false
 		}
