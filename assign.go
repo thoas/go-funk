@@ -3,24 +3,38 @@ package funk
 import (
 	"errors"
 	"fmt"
-	"log"
 	"reflect"
 	"strings"
 )
 
 func Set(in interface{}, val interface{}, path string) error {
+	if in == nil {
+		return errors.New("Cannot Set nil")
+	}
+	parts := []string{}
+	if path != "" {
+		parts = strings.Split(path, ".")
+	}
+	return setByParts(in, val, parts)
+}
+
+func setByParts(in interface{}, val interface{}, parts []string) error {
+
+	if in == nil {
+		// nil interface can happen during traversing the path
+		return errors.New("Cannot traverse nil interface{}")
+	}
+
 	inValue := reflect.ValueOf(in)
 	inKind := inValue.Type().Kind()
 
+	// Note: if interface contains a struct (not ptr to struct) then the content of the struct cannot be set.
+	// I.e. it is not CanAddr() or CanSet()
+	// So we require in interface{} to be a ptr, slice or array
 	if inKind == reflect.Ptr {
 		inValue = inValue.Elem() // if it is ptr we set its content not ptr its self
 	} else if inKind != reflect.Array && inKind != reflect.Slice {
 		panic(fmt.Sprintf("Type %s not supported by Set", inValue.Type().String()))
-	}
-
-	parts := []string{}
-	if path != "" {
-		parts = strings.Split(path, ".")
 	}
 
 	return set(inValue, reflect.ValueOf(val), parts)
@@ -30,7 +44,7 @@ func Set(in interface{}, val interface{}, path string) error {
 // i.e. in.path = val
 func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 
-	log.Println(parts)
+	//log.Println(parts)
 	//inKind := inValue.Type().Kind()
 
 	// traverse the path to get the inValue we need to set
@@ -44,12 +58,11 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 			return errors.New("nil pointer found along the path")
 		case reflect.Struct:
 			fValue := inValue.FieldByName(parts[i])
-
 			if !fValue.IsValid() {
-				return fmt.Errorf("field name %v is not found in struct %v", parts[i], kind.String())
+				return fmt.Errorf("field name %v is not found in struct %v", parts[i], inValue.Type().String())
 			}
 			if !fValue.CanSet() {
-				panic(fmt.Sprintf("Type %s cannot be set", inValue.Type().String()))
+				panic(fmt.Sprintf("field name %v is not exported in struct %v", parts[i], inValue.Type().String()))
 			}
 			inValue = fValue
 			i++
@@ -66,14 +79,18 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 		case reflect.Ptr:
 			// only traverse down one level
 			if inValue.IsNil() {
-				// set the nil pointer to be the pointer to zero value of the type
+				// we initilize nil ptr to ptr to zero value of the type
+				// and continue traversing
 				inValue.Set(reflect.New(inValue.Type().Elem()))
 			}
-			inValue = inValue.Elem()
+			// traverse the ptr until it is not pointer any more or is nil again
+			inValue = redirectValue(inValue)
 		case reflect.Interface:
-			inValue = inValue.Elem()
+			// Note: if interface contains a struct (not ptr to struct) then the content of the struct cannot be set.
+			// I.e. it is not CanAddr() or CanSet()
+			// we treat this as a new call to setByParts, and it will do proper check of the types
+			return setByParts(inValue.Interface(), setValue.Interface(), parts[i:])
 		default:
-			// TODO handle interface{} case
 			panic(fmt.Sprintf("kind %v in path is not supported", kind))
 		}
 
@@ -81,14 +98,15 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 
 	// inValue holds the value we need to set
 	if !inValue.CanSet() {
-		panic("field not addressable or unexported")
+		// not expect to hit here
+		panic(fmt.Sprintf("field not addressable or unexported of type %v", inValue.Kind()))
 	}
 
-	// change value of
+	// interface{} can be set to any val
+	// other types we ensure the type matches
 	if inValue.Kind() != setValue.Kind() && inValue.Kind() != reflect.Interface {
 		panic(fmt.Sprintf("type not match: target %v, arg %v", inValue.Kind(), setValue.Kind()))
 	}
-
 	inValue.Set(setValue)
 
 	return nil
