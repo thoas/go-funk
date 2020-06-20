@@ -325,6 +325,9 @@ func Uniq(in interface{}) interface{} {
 			}
 
 			seen[v] = true
+			// Edits the original to add only unique elements.
+			// If there are j unique elements in the input, it will be modified to contain the unique elements from
+			// from index 0 through j
 			value.Index(j).Set(val)
 			j++
 		}
