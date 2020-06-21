@@ -1,12 +1,11 @@
-
 package funk
 
 import (
 	"reflect"
 )
 
-// Subset returns if collection x is a subset of y.
-func Subset(x interface{}, y interface{}) boolean {
+// Subset returns true if collection x is a subset of y.
+func Subset(x interface{}, y interface{}) bool {
 	if !IsCollection(x) {
 		panic("First parameter must be a collection")
 	}
@@ -24,37 +23,21 @@ func Subset(x interface{}, y interface{}) boolean {
 		panic("Parameters must have the same type")
 	}
 
-	if xValue == nil || len(xValue)==0{
-    		return true
-  	}
-	
-  	if yValue == nil || len(yValue)==0 ||  len(yValue)<len(xValue) {
-    		return false
-  	}
-  
-  	for _, elem := range xValue {
-		if !Contains(yValue, elem) {
-			return false
-		}
-	}
-	return true
-}
-
-
-func SubsetString(x []string, y []string) boolean {
-	if len(x) == 0 {
+	if xValue.Len() == 0 {
 		return true
 	}
 
-  	if len(y) == 0 || len(x)>len(y) {
+	if yValue.Len() == 0 || yValue.Len() < xValue.Len() {
 		return false
 	}
-  
-  	for _, stringElem := range x {
-		if !Contains(y, stringElem) {
+
+	for i := 0; i < xValue.Len(); i++ {
+		if !Contains(yValue.Interface(), xValue.Index(i).Interface()) {
 			return false
 		}
+		return true
 	}
-	return true
-	
+
+	return false
+
 }
