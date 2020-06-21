@@ -9,27 +9,23 @@ func TestSubset(t *testing.T) {
 	is := assert.New(t)
 
 	r := Subset([]int{1, 2, 4}, []int{1, 2, 3, 4, 5})
-	is.Equal(true, r)
+	is.True(r)
 
 	r = Subset([]string{"foo", "bar"},[]string{"foo", "bar", "hello", "bar", "hi"})
-	is.Equal(true, r)
+	is.True(r)
 
 	r = Subset([]string{"hello", "foo", "bar", "hello", "bar", "hi"}, []string{})
-	is.Equal(false, r)
+	is.False(r)
   
-  r = Subset([]string{}, []string{"hello", "foo", "bar", "hello", "bar", "hi"})
-	is.Equal(true, r)
-}
+    r = Subset([]string{}, []string{"hello", "foo", "bar", "hello", "bar", "hi"})
+	is.True(r)
 
-func TestSubtractString(t *testing.T) {
-	is := assert.New(t)
+	r = Subset([]string{}, []string{})
+	is.True(r)
 
-	r = SubsetString([]string{"foo", "bar"},[]string{"foo", "bar", "hello", "bar", "hi"})
-	is.Equal(true, r)
+	r = Subset([]string{}, []string{"hello"})
+	is.True(r)
 
-	r = SubsetString([]string{"hello", "foo", "bar", "hello", "bar", "hi"}, []string{})
-	is.Equal(false, r)
-  
-  r = SubsetString([]string{}, []string{})
-	is.Equal(true, r)
+	r = Subset([]string{"hello", "foo", "bar", "hello", "bar", "hi"}, []string{"foo", "bar"} )
+	is.False(r)
 }
