@@ -3,7 +3,6 @@ package funk
 import (
 	"database/sql"
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -94,16 +93,96 @@ func TestSetStructBasicOneLevel(t *testing.T) {
 	is.Equal(baz, expected)
 }
 
-func TestSetStructTwoLevels(t *testing.T) {
-	is := assert.New(t)
+func TestSetStructMultiLevels(t *testing.T) {
 
-	// copy here because we need to modify
-	fooCopy := *foo
+	var testCases = []struct {
+		Original Bar
+		Path     string
+		SetVal   interface{}
+		Expected Bar
+	}{
+		// Set slice in 4th level
+		{
+			Original: Bar{
+				Name: "1", // name indicates level
+				Bar: &Bar{
+					Name: "2",
+					Bars: []*Bar{
+						{Name: "3-1", Bars: []*Bar{{Name: "4-1"}, {Name: "4-2"}, {Name: "4-3"}}},
+						{Name: "3-2", Bars: []*Bar{{Name: "4-1"}, {Name: "4-2"}}},
+					},
+				},
+			},
+			Path:   "Bar.Bars.Bars.Name",
+			SetVal: "val",
+			Expected: Bar{
+				Name: "1",
+				Bar: &Bar{
+					Name: "2",
+					Bars: []*Bar{
+						{Name: "3-1", Bars: []*Bar{{Name: "val"}, {Name: "val"}, {Name: "val"}}},
+						{Name: "3-2", Bars: []*Bar{{Name: "val"}, {Name: "val"}}},
+					},
+				},
+			},
+		},
+		// Set multilevel uninitialized ptr
+		{
+			Original: Bar{
+				Name: "1", // name indicates level
+				Bar:  nil,
+			},
+			Path:   "Bar.Bar.Bar.Name",
+			SetVal: "val",
+			Expected: Bar{
+				Name: "1",
+				Bar: &Bar{
+					Name: "", // level 2
+					Bar: &Bar{
+						Bar: &Bar{
+							Name: "val", //level 3
+						},
+					},
+				},
+			},
+		},
+		// mix of uninitialized ptr and slices
+		{
+			Original: Bar{
+				Name: "1", // name indicates level
+				Bar: &Bar{
+					Name: "2",
+					Bars: []*Bar{
+						{Name: "3-1", Bars: []*Bar{{Name: "4-1"}, {Name: "4-2"}, {Name: "4-3"}}},
+						{Name: "3-2", Bars: []*Bar{{Name: "4-1"}, {Name: "4-2"}}},
+					},
+				},
+			},
+			Path:   "Bar.Bars.Bars.Bar.Name",
+			SetVal: "val",
+			Expected: Bar{
+				Name: "1", // name indicates level
+				Bar: &Bar{
+					Name: "2",
+					Bars: []*Bar{
+						{Name: "3-1", Bars: []*Bar{{Name: "4-1", Bar: &Bar{Name: "val"}},
+							{Name: "4-2", Bar: &Bar{Name: "val"}}, {Name: "4-3", Bar: &Bar{Name: "val"}}}},
+						{Name: "3-2", Bars: []*Bar{{Name: "4-1", Bar: &Bar{Name: "val"}}, {Name: "4-2", Bar: &Bar{Name: "val"}}}},
+					},
+				},
+			},
+		},
+	}
 
-	err := Set(&fooCopy, int64(2), "EmptyValue.Int64")
-	is.NoError(err)
-	is.Equal(int64(2), fooCopy.EmptyValue.Int64)
-
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+			// take the addr and then pass it in
+			err := Set(&tc.Original, tc.SetVal, tc.Path)
+			is.NoError(err)
+			is.Equal(tc.Expected, tc.Original)
+		})
+	}
 }
 
 func TestSetStructWithCyclicStruct(t *testing.T) {
@@ -340,32 +419,4 @@ func TestInterface(t *testing.T) {
 		})
 	}
 
-}
-
-func TestInterfaceTry(t *testing.T) {
-	// type Baz struct {
-	// 	Name string
-	// 	Itf  interface{}
-	// }
-
-	type Baz struct {
-		Name string
-		Itf  Bar
-	}
-	baz := Baz{Name: "", Itf: Bar{Name: "dummy"}}
-
-	f := reflect.ValueOf(&baz).Elem().FieldByName("Itf")
-	if !f.CanSet() {
-		t.Error("cannot set f")
-	}
-
-	ff := f.FieldByName("Name")
-	if !ff.CanAddr() {
-		t.Error("ff cannot addr")
-	}
-
-	if !ff.CanSet() {
-		t.Error(ff.String())
-		t.Error("cannot set ff")
-	}
 }

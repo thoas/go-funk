@@ -3,6 +3,7 @@ package funk
 import (
 	"errors"
 	"fmt"
+	"log"
 	"reflect"
 	"strings"
 )
@@ -44,7 +45,7 @@ func setByParts(in interface{}, val interface{}, parts []string) error {
 // i.e. in.path = val
 func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 
-	//log.Println(parts)
+	log.Println(parts)
 	//inKind := inValue.Type().Kind()
 
 	// traverse the path to get the inValue we need to set
