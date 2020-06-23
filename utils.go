@@ -1,6 +1,8 @@
 package funk
 
-import "reflect"
+import (
+	"reflect"
+)
 
 func equal(expected, actual interface{}) bool {
 	if expected == nil || actual == nil {
