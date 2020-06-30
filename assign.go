@@ -3,11 +3,21 @@ package funk
 import (
 	"errors"
 	"fmt"
-	"log"
 	"reflect"
 	"strings"
 )
 
+// Set assigns in at path with value val. i.e. in.path = val
+// in accepts types of ptr to struct, ptr to variable, slice and ptr to slice.
+// Along the path, interface{} is supported and nil ptr is initialized to ptr to zero value
+// of the type until the variable to be set is obtained.
+// It returns errors when along the path unknown types, uninitialized
+// interface{} or interface{} containing struct directly (not ptr to struct).
+// Slice is resolved similarly in funk.Get(), by traversing each element of the slice,
+// If Set is called on slice with empty path "", it behaves the same as funk.Fill()
+//
+// If in is well formed, i.e. do not expect above errors to happen, funk.MustSet()
+// is a short hand wrapper to discard error return
 func Set(in interface{}, val interface{}, path string) error {
 	if in == nil {
 		return errors.New("Cannot Set nil")
@@ -19,11 +29,12 @@ func Set(in interface{}, val interface{}, path string) error {
 	return setByParts(in, val, parts)
 }
 
+// we need this layer to handle interface{} type
 func setByParts(in interface{}, val interface{}, parts []string) error {
 
 	if in == nil {
 		// nil interface can happen during traversing the path
-		return errors.New("Cannot traverse nil interface{}")
+		return errors.New("Cannot traverse nil/uninitialized interface{}")
 	}
 
 	inValue := reflect.ValueOf(in)
@@ -35,18 +46,14 @@ func setByParts(in interface{}, val interface{}, parts []string) error {
 	if inKind == reflect.Ptr {
 		inValue = inValue.Elem() // if it is ptr we set its content not ptr its self
 	} else if inKind != reflect.Array && inKind != reflect.Slice {
-		panic(fmt.Sprintf("Type %s not supported by Set", inValue.Type().String()))
+		return fmt.Errorf("Type %s not supported by Set", inValue.Type().String())
 	}
 
 	return set(inValue, reflect.ValueOf(val), parts)
 }
 
-// Set assigns struct field with val at path
-// i.e. in.path = val
+// traverse inValue using path in parts and set the dst to be setValue
 func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
-
-	log.Println(parts)
-	//inKind := inValue.Type().Kind()
 
 	// traverse the path to get the inValue we need to set
 	i := 0
@@ -63,7 +70,7 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 				return fmt.Errorf("field name %v is not found in struct %v", parts[i], inValue.Type().String())
 			}
 			if !fValue.CanSet() {
-				panic(fmt.Sprintf("field name %v is not exported in struct %v", parts[i], inValue.Type().String()))
+				return fmt.Errorf("field name %v is not exported in struct %v", parts[i], inValue.Type().String())
 			}
 			inValue = fValue
 			i++
@@ -80,7 +87,7 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 		case reflect.Ptr:
 			// only traverse down one level
 			if inValue.IsNil() {
-				// we initilize nil ptr to ptr to zero value of the type
+				// we initialize nil ptr to ptr to zero value of the type
 				// and continue traversing
 				inValue.Set(reflect.New(inValue.Type().Elem()))
 			}
@@ -88,27 +95,32 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 			inValue = redirectValue(inValue)
 		case reflect.Interface:
 			// Note: if interface contains a struct (not ptr to struct) then the content of the struct cannot be set.
-			// I.e. it is not CanAddr() or CanSet()
+			// I.e. it is not CanAddr() or CanSet(). This is why setByParts has a nil ptr check.
 			// we treat this as a new call to setByParts, and it will do proper check of the types
 			return setByParts(inValue.Interface(), setValue.Interface(), parts[i:])
 		default:
-			panic(fmt.Sprintf("kind %v in path is not supported", kind))
+			return fmt.Errorf("kind %v in path is not supported", kind)
 		}
 
 	}
-
-	// inValue holds the value we need to set
-	if !inValue.CanSet() {
-		// not expect to hit here
-		panic(fmt.Sprintf("field not addressable or unexported of type %v", inValue.Kind()))
-	}
+	// here inValue holds the value we need to set
 
 	// interface{} can be set to any val
 	// other types we ensure the type matches
 	if inValue.Kind() != setValue.Kind() && inValue.Kind() != reflect.Interface {
-		panic(fmt.Sprintf("type not match: target %v, arg %v", inValue.Kind(), setValue.Kind()))
+		return fmt.Errorf("cannot set target of type %v with type %v", inValue.Kind(), setValue.Kind())
 	}
 	inValue.Set(setValue)
 
 	return nil
+}
+
+// MustSet is functionally the same as Set.
+// It panics instead of returning error.
+// It is safe to use if the in value is well formed.
+func MustSet(in interface{}, val interface{}, path string) {
+	err := Set(in, val, path)
+	if err != nil {
+		panic(err)
+	}
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSetEmptyPath(t *testing.T) {
+func TestSet_EmptyPath(t *testing.T) {
 	// it is supposed to change the var passed in
 	var testCases = []struct {
 		// will use path = ""
@@ -49,7 +49,7 @@ func TestSetEmptyPath(t *testing.T) {
 	}
 }
 
-func TestSetStructBasicOneLevel(t *testing.T) {
+func TestSet_StructBasicOneLevel(t *testing.T) {
 	is := assert.New(t)
 	// we set field one by one of baz with expected value
 	baz := Foo{
@@ -93,7 +93,7 @@ func TestSetStructBasicOneLevel(t *testing.T) {
 	is.Equal(baz, expected)
 }
 
-func TestSetStructMultiLevels(t *testing.T) {
+func TestSetStruct_MultiLevels(t *testing.T) {
 
 	var testCases = []struct {
 		Original Bar
@@ -185,7 +185,7 @@ func TestSetStructMultiLevels(t *testing.T) {
 	}
 }
 
-func TestSetStructWithCyclicStruct(t *testing.T) {
+func TestSet_StructWithCyclicStruct(t *testing.T) {
 	is := assert.New(t)
 
 	testBar := Bar{
@@ -199,28 +199,7 @@ func TestSetStructWithCyclicStruct(t *testing.T) {
 	is.Equal("val", testBar.Name)
 }
 
-// func TestPointerCycle(t *testing.T) {
-// 	is := assert.New(t)
-
-// 	x := 10
-
-// 	intPtr := &x
-// 	intPtrPtr := &intPtr
-// 	intPtrPtr = intPtrPtr
-
-// }
-
-func TestSetStructNotPtr(t *testing.T) {
-	is := assert.New(t)
-
-	// copy here because we need to modify
-	fooCopy := *foo
-
-	is.PanicsWithValue("Type funk.Foo not supported by Set", func() { Set(fooCopy, int64(2), "ID") })
-
-}
-
-func TestSetStructWithFieldNotInitialized(t *testing.T) {
+func TestSet_StructWithFieldNotInitialized(t *testing.T) {
 	is := assert.New(t)
 	myFoo := &Foo{
 		Bar: nil, // we will try to set bar's field
@@ -230,7 +209,7 @@ func TestSetStructWithFieldNotInitialized(t *testing.T) {
 	is.Equal("name", myFoo.Bar.Name)
 }
 
-func TestSetSlicePassByPtr(t *testing.T) {
+func TestSet_SlicePassByPtr(t *testing.T) {
 
 	var testCases = []struct {
 		Original interface{} // slice or array
@@ -293,7 +272,7 @@ func TestSetSlicePassByPtr(t *testing.T) {
 	}
 }
 
-func TestSetSlicePassDirectly(t *testing.T) {
+func TestSet_SlicePassDirectly(t *testing.T) {
 	// TODO merge with above
 	var testCases = []struct {
 		Original interface{} // slice or array
@@ -301,13 +280,8 @@ func TestSetSlicePassDirectly(t *testing.T) {
 		SetVal   interface{}
 		Expected interface{}
 	}{
-		// Set Slice itself
-		// {
-		// 	Original: []*Bar{},
-		// 	Path:     "", // empty path means set the passed in ptr itself
-		// 	SetVal:   []*Bar{{Name: "bar"}},
-		// 	Expected: []*Bar{{Name: "bar"}},
-		// }, // this will fail
+		// Set Slice itself does not work here since not passing by ptr
+
 		// empty slice
 		{
 			Original: []*Bar{},
@@ -399,14 +373,6 @@ func TestInterface(t *testing.T) {
 			"val",
 			Baz{Name: "", Itf: &Baz{Name: "", Itf: "val"}},
 		},
-		// uninit interface
-		// {
-		// 	Baz{Name: "", Itf: &Baz{Name: "", Itf: nil}},
-		// 	"Itf.Itf.Name",
-		// 	"val",
-		// 	Baz{Name: "", Itf: &Baz{Name: "", Itf: &Baz{Name: "val"}}},
-		// },
-
 	}
 
 	for idx, tc := range testCases {
@@ -419,4 +385,77 @@ func TestInterface(t *testing.T) {
 		})
 	}
 
+}
+
+func TestSet_ErrorCaces(t *testing.T) {
+	type Baz struct {
+		Name string
+		Itf  interface{}
+	}
+
+	var testCases = []struct {
+		OriginalBaz Baz
+		Path        string
+		SetVal      interface{}
+	}{
+		// uninit interface
+		// Itf is not initialized so Set cannot properly allocate type
+		{
+			Baz{Name: "", Itf: nil},
+			"Itf.Name",
+			"val",
+		},
+		{
+			Baz{Name: "", Itf: &Baz{Name: "", Itf: nil}},
+			"Itf.Itf.Name",
+			"val",
+		},
+		// type mismatch
+		{
+			Baz{Name: ""},
+			"Name",
+			20,
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			err := Set(&tc.OriginalBaz, tc.SetVal, tc.Path)
+			is.Error(err)
+		})
+	}
+
+	t.Run("not pointer", func(t *testing.T) {
+		is := assert.New(t)
+		baz := Baz{Name: "dummy"}
+		err := Set(baz, Baz{Name: "dummy2"}, "Name")
+		is.Error(err)
+	})
+
+	t.Run("Unexported field", func(t *testing.T) {
+		is := assert.New(t)
+		s := struct {
+			name string
+		}{name: "dummy"}
+		err := Set(&s, s, "name")
+		is.Error(err)
+	})
+}
+
+func TestMustSet_Basic(t *testing.T) {
+	t.Run("Variable", func(t *testing.T) {
+		is := assert.New(t)
+		s := 1
+		MustSet(&s, 2, "")
+		is.Equal(2, s)
+	})
+
+	t.Run("Struct", func(t *testing.T) {
+		is := assert.New(t)
+		s := Bar{Name: "a"}
+		MustSet(&s, "b", "Name")
+		is.Equal("b", s.Name)
+	})
 }
