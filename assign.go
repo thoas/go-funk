@@ -11,9 +11,11 @@ import (
 // in accepts types of ptr to struct, ptr to variable, slice and ptr to slice.
 // Along the path, interface{} is supported and nil ptr is initialized to ptr to zero value
 // of the type until the variable to be set is obtained.
-// It returns errors when along the path unknown types, uninitialized
-// interface{} or interface{} containing struct directly (not ptr to struct).
+// It returns errors when encountering along the path unknown types, uninitialized
+// interface{} or interface{} containing struct (not ptr to struct).
+//
 // Slice is resolved similarly in funk.Get(), by traversing each element of the slice,
+// so that each element of the slice's corresponding field are going to be set to the same provided val.
 // If Set is called on slice with empty path "", it behaves the same as funk.Fill()
 //
 // If in is well formed, i.e. do not expect above errors to happen, funk.MustSet()
@@ -63,6 +65,7 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 
 		switch kind {
 		case reflect.Invalid:
+			// do not expect this case to happen
 			return errors.New("nil pointer found along the path")
 		case reflect.Struct:
 			fValue := inValue.FieldByName(parts[i])
