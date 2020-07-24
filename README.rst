@@ -628,7 +628,7 @@ Generates a sharded string with a fixed length and depth.
 
     funk.Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, false) // []string{"e8", "9d", "e89d66bdfdd4dd26b682cc77e23a86eb"}
 
-    funk.Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 2, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
+    funk.Shard("e89d66bdfdd4dd26b682cc77e23a86eb", 2, 3, true) // []string{"e8", "9d", "66", "bdfdd4dd26b682cc77e23a86eb"}
 
 funk.Subset
 .............
