@@ -26,6 +26,9 @@ type Foo struct {
 	Bar        *Bar
 	Bars       []*Bar
 	EmptyValue sql.NullInt64
+
+	BarInterface interface{}
+	BarPointer   interface{}
 }
 
 func (f Foo) TableName() string {
@@ -64,6 +67,8 @@ var foo = &Foo{
 		bar,
 		bar,
 	},
+	BarInterface: bar,
+	BarPointer:   &bar,
 }
 
 var foo2 = &Foo{
