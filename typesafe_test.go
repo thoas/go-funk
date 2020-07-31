@@ -17,6 +17,15 @@ func TestContainsInt(t *testing.T) {
 
 	is.True(ContainsInt64([]int64{1, 2, 3, 4}, 4))
 	is.False(ContainsInt64([]int64{1, 2, 3, 4}, 5))
+
+	is.True(ContainsUInt([]uint{1, 2, 3, 4}, 4))
+	is.False(ContainsUInt([]uint{1, 2, 3, 4}, 5))
+
+	is.True(ContainsUInt32([]uint32{1, 2, 3, 4}, 4))
+	is.False(ContainsUInt32([]uint32{1, 2, 3, 4}, 5))
+
+	is.True(ContainsUInt64([]uint64{1, 2, 3, 4}, 4))
+	is.False(ContainsUInt64([]uint64{1, 2, 3, 4}, 5))
 }
 
 func TestContainsString(t *testing.T) {
@@ -66,6 +75,36 @@ func TestFilterInt64(t *testing.T) {
 	is.Equal(r, []int64{2, 4})
 }
 
+func TestFilterUInt(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterUInt([]uint{1, 2, 3, 4}, func(x uint) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, []uint{2, 4})
+}
+
+func TestFilterUInt32(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterUInt32([]uint32{1, 2, 3, 4}, func(x uint32) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, []uint32{2, 4})
+}
+
+func TestFilterUInt64(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterUInt64([]uint64{1, 2, 3, 4}, func(x uint64) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, []uint64{2, 4})
+}
+
 func TestFilterFloat64(t *testing.T) {
 	is := assert.New(t)
 
@@ -102,6 +141,9 @@ func TestSumNumeral(t *testing.T) {
 	is.Equal(SumInt([]int{1, 2, 3}), 6)
 	is.Equal(SumInt64([]int64{1, 2, 3}), int64(6))
 
+	is.Equal(SumUInt([]uint{1, 2, 3}), uint(6))
+	is.Equal(SumUInt64([]uint64{1, 2, 3}), uint64(6))
+
 	is.Equal(SumFloat32([]float32{0.1, 0.2, 0.1}), float32(0.4))
 	is.Equal(SumFloat64([]float64{0.1, 0.2, 0.1}), float64(0.4))
 }
@@ -112,6 +154,8 @@ func TestTypesafeReverse(t *testing.T) {
 	is.Equal(ReverseString("abcdefg"), "gfedcba")
 	is.Equal(ReverseInt([]int{1, 2, 3, 4}), []int{4, 3, 2, 1})
 	is.Equal(ReverseInt64([]int64{1, 2, 3, 4}), []int64{4, 3, 2, 1})
+	is.Equal(ReverseUInt([]uint{1, 2, 3, 4}), []uint{4, 3, 2, 1})
+	is.Equal(ReverseUInt64([]uint64{1, 2, 3, 4}), []uint64{4, 3, 2, 1})
 	is.Equal(ReverseStrings([]string{"flo", "gilles"}), []string{"gilles", "flo"})
 	is.Equal(ReverseFloat64([]float64{0.1, 0.2, 0.3}), []float64{0.3, 0.2, 0.1})
 	is.Equal(ReverseFloat32([]float32{0.1, 0.2, 0.3}), []float32{0.3, 0.2, 0.1})
@@ -129,6 +173,9 @@ func TestTypesafeIndexOf(t *testing.T) {
 	is.Equal(IndexOfInt64([]int64{0, 1, 2}, 1), 1)
 	is.Equal(IndexOfInt64([]int64{0, 1, 2}, 3), -1)
 
+	is.Equal(IndexOfUInt64([]uint64{0, 1, 2}, 1), 1)
+	is.Equal(IndexOfUInt64([]uint64{0, 1, 2}, 3), -1)
+
 	is.Equal(IndexOfFloat64([]float64{0.1, 0.2, 0.3}, 0.2), 1)
 	is.Equal(IndexOfFloat64([]float64{0.1, 0.2, 0.3}, 0.4), -1)
 }
@@ -139,6 +186,8 @@ func TestTypesafeLastIndexOf(t *testing.T) {
 	is.Equal(LastIndexOfString([]string{"foo", "bar", "bar"}, "bar"), 2)
 	is.Equal(LastIndexOfInt([]int{1, 2, 2, 3}, 2), 2)
 	is.Equal(LastIndexOfInt64([]int64{1, 2, 2, 3}, 4), -1)
+	is.Equal(LastIndexOfUInt([]uint{1, 2, 2, 3}, 2), 2)
+	is.Equal(LastIndexOfUInt64([]uint64{1, 2, 2, 3}, 4), -1)
 }
 
 func TestTypesafeUniq(t *testing.T) {
@@ -146,6 +195,8 @@ func TestTypesafeUniq(t *testing.T) {
 
 	is.Equal(UniqInt64([]int64{0, 1, 1, 2, 3, 0, 0, 12}), []int64{0, 1, 2, 3, 12})
 	is.Equal(UniqInt([]int{0, 1, 1, 2, 3, 0, 0, 12}), []int{0, 1, 2, 3, 12})
+	is.Equal(UniqUInt([]uint{0, 1, 1, 2, 3, 0, 0, 12}), []uint{0, 1, 2, 3, 12})
+	is.Equal(UniqUInt64([]uint64{0, 1, 1, 2, 3, 0, 0, 12}), []uint64{0, 1, 2, 3, 12})
 	is.Equal(UniqFloat64([]float64{0.0, 0.1, 0.1, 0.2, 0.3, 0.0, 0.0, 0.12}), []float64{0.0, 0.1, 0.2, 0.3, 0.12})
 	is.Equal(UniqString([]string{"foo", "bar", "foo", "bar"}), []string{"foo", "bar"})
 }
@@ -202,6 +253,36 @@ func TestDropInt64(t *testing.T) {
 	is.Len(results, 1)
 
 	is.Equal([]int64{4}, results)
+}
+
+func TestDropUInt(t *testing.T) {
+	results := DropUInt([]uint{0, 0, 0, 0}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]uint{0}, results)
+}
+
+func TestDropUInt32(t *testing.T) {
+	results := DropUInt32([]uint32{1, 2, 3, 4}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]uint32{4}, results)
+}
+
+func TestDropUInt64(t *testing.T) {
+	results := DropUInt64([]uint64{1, 2, 3, 4}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 1)
+
+	is.Equal([]uint64{4}, results)
 }
 
 func TestDropFloat32(t *testing.T) {

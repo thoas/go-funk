@@ -313,6 +313,8 @@ func Uniq(in interface{}) interface{} {
 	if kind == reflect.Array || kind == reflect.Slice {
 		length := value.Len()
 
+		result := makeSlice(value, 0)
+
 		seen := make(map[interface{}]bool, length)
 		j := 0
 
@@ -325,11 +327,11 @@ func Uniq(in interface{}) interface{} {
 			}
 
 			seen[v] = true
-			value.Index(j).Set(val)
+			result = reflect.Append(result, val)
 			j++
 		}
 
-		return value.Slice(0, j).Interface()
+		return result.Interface()
 	}
 
 	panic(fmt.Sprintf("Type %s is not supported by Uniq", valueType.String()))

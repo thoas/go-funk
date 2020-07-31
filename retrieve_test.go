@@ -35,6 +35,13 @@ func TestGetNil(t *testing.T) {
 	is.Equal(Get([]*Foo{foo, foo2}, "Bar.Name"), []string{"Test"})
 }
 
+func TestGetThroughInterface(t *testing.T) {
+	is := assert.New(t)
+
+	is.Equal(Get(foo, "BarInterface.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
+	is.Equal(Get(foo, "BarPointer.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
+}
+
 func TestGetSimple(t *testing.T) {
 	is := assert.New(t)
 

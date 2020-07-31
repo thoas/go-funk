@@ -1,6 +1,8 @@
 package funk
 
-import "reflect"
+import (
+	"reflect"
+)
 
 func equal(expected, actual interface{}) bool {
 	if expected == nil || actual == nil {
@@ -23,14 +25,14 @@ func sliceElem(rtype reflect.Type) reflect.Type {
 
 func redirectValue(value reflect.Value) reflect.Value {
 	for {
-		if !value.IsValid() || value.Kind() != reflect.Ptr {
+		if !value.IsValid() || (value.Kind() != reflect.Ptr && value.Kind() != reflect.Interface) {
 			return value
 		}
 
-		res := reflect.Indirect(value)
+		res := value.Elem()
 
 		// Test for a circular type.
-		if res.Kind() == reflect.Ptr && value.Pointer() == res.Pointer() {
+		if res.Kind() == reflect.Ptr && value.Kind() == reflect.Ptr && value.Pointer() == res.Pointer() {
 			return value
 		}
 

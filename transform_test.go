@@ -134,13 +134,15 @@ func TestReverse(t *testing.T) {
 }
 
 func TestUniq(t *testing.T) {
-	results := Uniq([]int{0, 1, 1, 2, 3, 0, 0, 12})
-
 	is := assert.New(t)
 
+	results := Uniq([]int{0, 1, 1, 2, 3, 0, 0, 12})
 	is.Len(results, 5)
-
 	is.Equal(results, []int{0, 1, 2, 3, 12})
+
+	results = Uniq([]string{"foo", "bar", "foo", "bar", "bar"})
+	is.Len(results, 2)
+	is.Equal(results, []string{"foo", "bar"})
 }
 
 func TestConvertSlice(t *testing.T) {
