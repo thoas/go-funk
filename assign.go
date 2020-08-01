@@ -12,13 +12,13 @@ import (
 // Along the path, interface{} is supported and nil ptr is initialized to ptr to zero value
 // of the type until the variable to be set is obtained.
 // It returns errors when encountering along the path unknown types, uninitialized
-// interface{} or interface{} containing struct (not ptr to struct).
+// interface{} or interface{} containing struct directly (not ptr to struct).
 //
-// Slice is resolved similarly in funk.Get(), by traversing each element of the slice,
+// Slice is resolved the same way in funk.Get(), by traversing each element of the slice,
 // so that each element of the slice's corresponding field are going to be set to the same provided val.
 // If Set is called on slice with empty path "", it behaves the same as funk.Fill()
 //
-// If in is well formed, i.e. do not expect above errors to happen, funk.MustSet()
+// If in is well formed, i.e. do not expect above descripted errors to happen, funk.MustSet()
 // is a short hand wrapper to discard error return
 func Set(in interface{}, val interface{}, path string) error {
 	if in == nil {
@@ -102,7 +102,7 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 			// we treat this as a new call to setByParts, and it will do proper check of the types
 			return setByParts(inValue.Interface(), setValue.Interface(), parts[i:])
 		default:
-			return fmt.Errorf("kind %v in path is not supported", kind)
+			return fmt.Errorf("kind %v in path %v is not supported", kind, parts[i])
 		}
 
 	}

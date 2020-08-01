@@ -273,7 +273,6 @@ func TestSet_SlicePassByPtr(t *testing.T) {
 }
 
 func TestSet_SlicePassDirectly(t *testing.T) {
-	// TODO merge with above
 	var testCases = []struct {
 		Original interface{} // slice or array
 		Path     string
@@ -332,46 +331,41 @@ func TestSet_SlicePassDirectly(t *testing.T) {
 
 func TestInterface(t *testing.T) {
 
-	type Baz struct {
-		Name string
-		Itf  interface{}
-	}
-
 	var testCases = []struct {
-		OriginalBaz Baz
+		OriginalFoo Foo
 		Path        string
 		SetVal      interface{}
-		ExpectedBaz Baz
+		ExpectedFoo Foo
 	}{
 		// set string field
 		{
-			Baz{Name: "", Itf: nil},
-			"Name",
+			Foo{FirstName: ""},
+			"FirstName",
 			"hi",
-			Baz{Name: "hi", Itf: nil},
+			Foo{FirstName: "hi"},
 		},
 		// set interface{} field
 		{
-			Baz{Name: "", Itf: nil},
-			"Itf",
+			Foo{FirstName: "", GeneralInterface: nil},
+			"GeneralInterface",
 			"str",
-			Baz{Name: "", Itf: "str"},
+			Foo{FirstName: "", GeneralInterface: "str"},
 		},
 		// set field of the interface{} field
-		// TODO: set uninitialized interface{} should fail
+		// Note: set uninitialized interface{} should fail
 		// Note: interface of struct (not ptr to struct) should fail
 		{
-			Baz{Name: "", Itf: &Baz{Name: "", Itf: nil}},
-			"Itf.Name",
-			"Baz2",
-			Baz{Name: "", Itf: &Baz{Name: "Baz2", Itf: nil}},
+			Foo{FirstName: "", GeneralInterface: &Foo{FirstName: ""}}, // if Foo is not ptr this will fail
+			"GeneralInterface.FirstName",
+			"foo",
+			Foo{FirstName: "", GeneralInterface: &Foo{FirstName: "foo"}},
 		},
 		// interface two level
 		{
-			Baz{Name: "", Itf: &Baz{Name: "", Itf: nil}},
-			"Itf.Itf",
+			Foo{FirstName: "", GeneralInterface: &Foo{GeneralInterface: nil}},
+			"GeneralInterface.GeneralInterface",
 			"val",
-			Baz{Name: "", Itf: &Baz{Name: "", Itf: "val"}},
+			Foo{FirstName: "", GeneralInterface: &Foo{GeneralInterface: "val"}},
 		},
 	}
 
@@ -379,41 +373,37 @@ func TestInterface(t *testing.T) {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
 			is := assert.New(t)
 
-			err := Set(&tc.OriginalBaz, tc.SetVal, tc.Path)
+			err := Set(&tc.OriginalFoo, tc.SetVal, tc.Path)
 			is.NoError(err)
-			is.Equal(tc.ExpectedBaz, tc.OriginalBaz)
+			is.Equal(tc.ExpectedFoo, tc.OriginalFoo)
 		})
 	}
 
 }
 
 func TestSet_ErrorCaces(t *testing.T) {
-	type Baz struct {
-		Name string
-		Itf  interface{}
-	}
 
 	var testCases = []struct {
-		OriginalBaz Baz
+		OriginalFoo Foo
 		Path        string
 		SetVal      interface{}
 	}{
 		// uninit interface
 		// Itf is not initialized so Set cannot properly allocate type
 		{
-			Baz{Name: "", Itf: nil},
-			"Itf.Name",
+			Foo{BarInterface: nil},
+			"BarInterface.Name",
 			"val",
 		},
 		{
-			Baz{Name: "", Itf: &Baz{Name: "", Itf: nil}},
-			"Itf.Itf.Name",
+			Foo{GeneralInterface: &Foo{BarInterface: nil}},
+			"GeneralInterface.BarInterface.Name",
 			"val",
 		},
 		// type mismatch
 		{
-			Baz{Name: ""},
-			"Name",
+			Foo{FirstName: ""},
+			"FirstName",
 			20,
 		},
 	}
@@ -422,15 +412,15 @@ func TestSet_ErrorCaces(t *testing.T) {
 		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
 			is := assert.New(t)
 
-			err := Set(&tc.OriginalBaz, tc.SetVal, tc.Path)
+			err := Set(&tc.OriginalFoo, tc.SetVal, tc.Path)
 			is.Error(err)
 		})
 	}
 
 	t.Run("not pointer", func(t *testing.T) {
 		is := assert.New(t)
-		baz := Baz{Name: "dummy"}
-		err := Set(baz, Baz{Name: "dummy2"}, "Name")
+		baz := Bar{Name: "dummy"}
+		err := Set(baz, Bar{Name: "dummy2"}, "Name")
 		is.Error(err)
 	})
 
