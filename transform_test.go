@@ -1,6 +1,7 @@
 package funk
 
 import (
+	"database/sql"
 	"fmt"
 	"reflect"
 	"testing"
@@ -169,10 +170,107 @@ func TestDrop(t *testing.T) {
 
 func TestPrune(t *testing.T) {
 
-	is := assert.New(t)
-	res, err := Prune(foo, []string{"FirstName"})
-	fooPrune := res.(*Foo)
-	is.NoError(err)
-	is.Equal(foo.FirstName, fooPrune.FirstName)
-	is.Equal(&Foo{FirstName: foo.FirstName}, fooPrune)
+	var testCases = []struct {
+		OriginalFoo *Foo
+		Paths       []string
+		ExpectedFoo *Foo
+	}{
+		{
+			foo,
+			[]string{"FirstName"},
+			&Foo{
+				FirstName: foo.FirstName,
+			},
+		},
+		{
+			foo,
+			[]string{"FirstName", "ID"},
+			&Foo{
+				FirstName: foo.FirstName,
+				ID:        foo.ID,
+			},
+		},
+		{
+			foo,
+			[]string{"EmptyValue.Int64"},
+			&Foo{
+				EmptyValue: sql.NullInt64{
+					Int64: foo.EmptyValue.Int64,
+				},
+			},
+		},
+		{
+			foo,
+			[]string{"FirstName", "ID", "EmptyValue.Int64"},
+			&Foo{
+				FirstName: foo.FirstName,
+				ID:        foo.ID,
+				EmptyValue: sql.NullInt64{
+					Int64: foo.EmptyValue.Int64,
+				},
+			},
+		},
+		{
+			foo,
+			[]string{"FirstName", "ID", "EmptyValue.Int64"},
+			&Foo{
+				FirstName: foo.FirstName,
+				ID:        foo.ID,
+				EmptyValue: sql.NullInt64{
+					Int64: foo.EmptyValue.Int64,
+				},
+			},
+		},
+		{
+			foo,
+			[]string{"FirstName", "ID", "Bar"},
+			&Foo{
+				FirstName: foo.FirstName,
+				ID:        foo.ID,
+				Bar:       foo.Bar,
+			},
+		},
+		{
+			foo,
+			[]string{"Bar", "Bars"},
+			&Foo{
+				Bar:  foo.Bar,
+				Bars: foo.Bars,
+			},
+		},
+		{
+			foo,
+			[]string{"FirstName", "Bars.Name"},
+			&Foo{
+				FirstName: foo.FirstName,
+				Bars: []*Bar{
+					{Name: bar.Name},
+					{Name: bar.Name},
+				},
+			},
+		},
+		{
+			foo,
+			[]string{"Bars.Name", "Bars.Bars.Name"},
+			&Foo{
+				Bars: []*Bar{
+					{Name: bar.Name, Bars: []*Bar{{Name: "Level1-1"}, {Name: "Level1-2"}}},
+					{Name: bar.Name, Bars: []*Bar{{Name: "Level1-1"}, {Name: "Level1-2"}}},
+				},
+			},
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%v", idx), func(t *testing.T) {
+			is := assert.New(t)
+			res, err := Prune(tc.OriginalFoo, tc.Paths)
+			is.NoError(err)
+
+			fooPrune := res.(*Foo)
+			is.Equal(tc.ExpectedFoo, fooPrune)
+		})
+
+	}
+
 }

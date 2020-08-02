@@ -426,8 +426,10 @@ func prune(inValue reflect.Value, ret reflect.Value, parts []string) error {
 		if inValue.IsNil() {
 			return nil
 		}
-		// init ret and go to next level
-		ret.Set(reflect.New(inValue.Type().Elem()))
+		if ret.IsNil() {
+			// init ret and go to next level
+			ret.Set(reflect.New(inValue.Type().Elem()))
+		}
 		prune(inValue.Elem(), ret.Elem(), parts)
 	case reflect.Struct:
 		part := parts[0]
@@ -439,15 +441,17 @@ func prune(inValue reflect.Value, ret reflect.Value, parts []string) error {
 			return fmt.Errorf("field name %v is not exported in struct %v", part, inValue.Type().String())
 		}
 		fRet := ret.FieldByName(part)
-		fRet.Set(reflect.New(fValue.Type()).Elem())
-
+		if fRet.IsZero() {
+			fRet.Set(reflect.New(fValue.Type()).Elem())
+		}
 		prune(fValue, fRet, parts[1:])
 	case reflect.Array, reflect.Slice:
 		// set all its elements
 		length := inValue.Len()
-		// return on 0?
 		// init ret
-		ret.Set(reflect.MakeSlice(inValue.Type().Elem(), length /*len*/, length /*cap*/))
+		if ret.IsNil() {
+			ret.Set(reflect.MakeSlice(inValue.Type(), length /*len*/, length /*cap*/))
+		}
 		for j := 0; j < length; j++ {
 			prune(inValue.Index(j), ret.Index(j), parts)
 		}
