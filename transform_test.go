@@ -259,10 +259,19 @@ func TestPrune(t *testing.T) {
 				},
 			},
 		},
+		{
+			foo,
+			[]string{"BarInterface", "BarPointer"},
+			&Foo{
+				BarInterface: bar,
+				BarPointer:   &bar,
+			},
+		},
 	}
 
+	// pass to prune by pointer to struct
 	for idx, tc := range testCases {
-		t.Run(fmt.Sprintf("test case #%v", idx), func(t *testing.T) {
+		t.Run(fmt.Sprintf("pointer test case #%v", idx), func(t *testing.T) {
 			is := assert.New(t)
 			res, err := Prune(tc.OriginalFoo, tc.Paths)
 			is.NoError(err)
@@ -270,7 +279,52 @@ func TestPrune(t *testing.T) {
 			fooPrune := res.(*Foo)
 			is.Equal(tc.ExpectedFoo, fooPrune)
 		})
-
 	}
 
+	// pass to prune by struct directly
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("non pointer test case #%v", idx), func(t *testing.T) {
+			is := assert.New(t)
+			fooNonPtr := *tc.OriginalFoo
+			res, err := Prune(fooNonPtr, tc.Paths)
+			is.NoError(err)
+
+			fooPrune := res.(Foo)
+			is.Equal(*tc.ExpectedFoo, fooPrune)
+		})
+	}
+
+	t.Run("Bar Slice", func(t *testing.T) {
+		is := assert.New(t)
+		barSlice := []*Bar{bar, bar}
+		barSlicePruned, err := Prune(barSlice, []string{"Name"})
+		is.NoError(err)
+		is.Equal([]*Bar{{Name: bar.Name}, {Name: bar.Name}}, barSlicePruned)
+	})
+
+	t.Run("Bar Array", func(t *testing.T) {
+		is := assert.New(t)
+		barArr := [2]*Bar{bar, bar}
+		barArrPruned, err := Prune(barArr, []string{"Name"})
+		is.NoError(err)
+		is.Equal([2]*Bar{{Name: bar.Name}, {Name: bar.Name}}, barArrPruned)
+	})
+
+	t.Run("Copy Value", func(t *testing.T) {
+		is := assert.New(t)
+		fooTest := &Foo{
+			Bar: &Bar{
+				Name: "bar",
+			},
+		}
+		res, err := Prune(fooTest, []string{"Bar.Name"})
+		is.NoError(err)
+		fooTestPruned := res.(*Foo)
+		is.Equal(fooTest, fooTestPruned)
+
+		// change pruned
+		fooTestPruned.Bar.Name = "changed bar"
+		// check original is unchanged
+		is.Equal(fooTest.Bar.Name, "bar")
+	})
 }

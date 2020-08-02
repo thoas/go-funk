@@ -396,7 +396,7 @@ func Drop(in interface{}, n int) interface{} {
 	panic(fmt.Sprintf("Type %s is not supported by Drop", valueType.String()))
 }
 
-// copy only paths in to return
+// Prune returns a copy of in that only contains fields in paths.
 func Prune(in interface{}, paths []string) (interface{}, error) {
 
 	inValue := reflect.ValueOf(in)
@@ -421,7 +421,9 @@ func prune(inValue reflect.Value, ret reflect.Value, parts []string) error {
 		return nil
 	}
 
-	switch inValue.Kind() {
+	inKind := inValue.Kind()
+
+	switch inKind {
 	case reflect.Ptr:
 		if inValue.IsNil() {
 			return nil
@@ -437,9 +439,6 @@ func prune(inValue reflect.Value, ret reflect.Value, parts []string) error {
 		if !fValue.IsValid() {
 			return fmt.Errorf("field name %v is not found in struct %v", part, inValue.Type().String())
 		}
-		if !fValue.CanSet() {
-			return fmt.Errorf("field name %v is not exported in struct %v", part, inValue.Type().String())
-		}
 		fRet := ret.FieldByName(part)
 		if fRet.IsZero() {
 			fRet.Set(reflect.New(fValue.Type()).Elem())
@@ -449,14 +448,18 @@ func prune(inValue reflect.Value, ret reflect.Value, parts []string) error {
 		// set all its elements
 		length := inValue.Len()
 		// init ret
-		if ret.IsNil() {
-			ret.Set(reflect.MakeSlice(inValue.Type(), length /*len*/, length /*cap*/))
+		if ret.IsZero() {
+			if inKind == reflect.Slice {
+				ret.Set(reflect.MakeSlice(inValue.Type(), length /*len*/, length /*cap*/))
+			} else { // array
+				ret.Set(reflect.New(inValue.Type()).Elem())
+			}
 		}
 		for j := 0; j < length; j++ {
 			prune(inValue.Index(j), ret.Index(j), parts)
 		}
 	default:
-		return fmt.Errorf("kind %v in path %v is not supported", inValue.Kind(), parts)
+		return fmt.Errorf("kind %v in path %v is not supported", inValue.Kind(), strings.Join(parts, "."))
 	}
 
 	return nil
