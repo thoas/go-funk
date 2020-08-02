@@ -166,3 +166,13 @@ func TestDrop(t *testing.T) {
 
 	is.Equal([]int{2, 3, 0, 0, 12}, results)
 }
+
+func TestPrune(t *testing.T) {
+
+	is := assert.New(t)
+	res, err := Prune(foo, []string{"FirstName"})
+	fooPrune := res.(*Foo)
+	is.NoError(err)
+	is.Equal(foo.FirstName, fooPrune.FirstName)
+	is.Equal(&Foo{FirstName: foo.FirstName}, fooPrune)
+}

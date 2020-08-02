@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
+	"strings"
 )
 
 // Chunk creates an array of elements split into groups with the length of size.
@@ -393,4 +394,66 @@ func Drop(in interface{}, n int) interface{} {
 	}
 
 	panic(fmt.Sprintf("Type %s is not supported by Drop", valueType.String()))
+}
+
+// copy only paths in to return
+func Prune(in interface{}, paths []string) (interface{}, error) {
+
+	inValue := reflect.ValueOf(in)
+
+	ret := reflect.New(inValue.Type()).Elem()
+
+	for _, path := range paths {
+		parts := strings.Split(path, ".")
+		if err := prune(inValue, ret, parts); err != nil {
+			return nil, err
+		}
+	}
+	return ret.Interface(), nil
+}
+
+func prune(inValue reflect.Value, ret reflect.Value, parts []string) error {
+
+	if len(parts) == 0 {
+		// we reached the location that ret needs to hold inValue
+		// TODO: copy inValue?
+		ret.Set(inValue)
+		return nil
+	}
+
+	switch inValue.Kind() {
+	case reflect.Ptr:
+		if inValue.IsNil() {
+			return nil
+		}
+		// init ret and go to next level
+		ret.Set(reflect.New(inValue.Type().Elem()))
+		prune(inValue.Elem(), ret.Elem(), parts)
+	case reflect.Struct:
+		part := parts[0]
+		fValue := inValue.FieldByName(part)
+		if !fValue.IsValid() {
+			return fmt.Errorf("field name %v is not found in struct %v", part, inValue.Type().String())
+		}
+		if !fValue.CanSet() {
+			return fmt.Errorf("field name %v is not exported in struct %v", part, inValue.Type().String())
+		}
+		fRet := ret.FieldByName(part)
+		fRet.Set(reflect.New(fValue.Type()).Elem())
+
+		prune(fValue, fRet, parts[1:])
+	case reflect.Array, reflect.Slice:
+		// set all its elements
+		length := inValue.Len()
+		// return on 0?
+		// init ret
+		ret.Set(reflect.MakeSlice(inValue.Type().Elem(), length /*len*/, length /*cap*/))
+		for j := 0; j < length; j++ {
+			prune(inValue.Index(j), ret.Index(j), parts)
+		}
+	default:
+		return fmt.Errorf("kind %v in path %v is not supported", inValue.Kind(), parts)
+	}
+
+	return nil
 }
