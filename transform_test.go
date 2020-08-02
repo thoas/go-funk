@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMap(t *testing.T) {
@@ -174,6 +175,7 @@ func TestPrune(t *testing.T) {
 		OriginalFoo *Foo
 		Paths       []string
 		ExpectedFoo *Foo
+		TagName     *string
 	}{
 		{
 			foo,
@@ -181,6 +183,7 @@ func TestPrune(t *testing.T) {
 			&Foo{
 				FirstName: foo.FirstName,
 			},
+			nil,
 		},
 		{
 			foo,
@@ -189,6 +192,7 @@ func TestPrune(t *testing.T) {
 				FirstName: foo.FirstName,
 				ID:        foo.ID,
 			},
+			nil,
 		},
 		{
 			foo,
@@ -198,6 +202,7 @@ func TestPrune(t *testing.T) {
 					Int64: foo.EmptyValue.Int64,
 				},
 			},
+			nil,
 		},
 		{
 			foo,
@@ -209,6 +214,7 @@ func TestPrune(t *testing.T) {
 					Int64: foo.EmptyValue.Int64,
 				},
 			},
+			nil,
 		},
 		{
 			foo,
@@ -220,6 +226,7 @@ func TestPrune(t *testing.T) {
 					Int64: foo.EmptyValue.Int64,
 				},
 			},
+			nil,
 		},
 		{
 			foo,
@@ -229,6 +236,7 @@ func TestPrune(t *testing.T) {
 				ID:        foo.ID,
 				Bar:       foo.Bar,
 			},
+			nil,
 		},
 		{
 			foo,
@@ -237,6 +245,7 @@ func TestPrune(t *testing.T) {
 				Bar:  foo.Bar,
 				Bars: foo.Bars,
 			},
+			nil,
 		},
 		{
 			foo,
@@ -248,6 +257,7 @@ func TestPrune(t *testing.T) {
 					{Name: bar.Name},
 				},
 			},
+			nil,
 		},
 		{
 			foo,
@@ -258,6 +268,7 @@ func TestPrune(t *testing.T) {
 					{Name: bar.Name, Bars: []*Bar{{Name: "Level1-1"}, {Name: "Level1-2"}}},
 				},
 			},
+			nil,
 		},
 		{
 			foo,
@@ -266,6 +277,19 @@ func TestPrune(t *testing.T) {
 				BarInterface: bar,
 				BarPointer:   &bar,
 			},
+			nil,
+		},
+		// test on tag
+		{
+			foo,
+			[]string{"tag 1", "tag 4.BarName"},
+			&Foo{
+				FirstName: foo.FirstName,
+				Bar: &Bar{
+					Name: bar.Name,
+				},
+			},
+			&[]string{"tag_name"}[0],
 		},
 	}
 
@@ -273,8 +297,8 @@ func TestPrune(t *testing.T) {
 	for idx, tc := range testCases {
 		t.Run(fmt.Sprintf("pointer test case #%v", idx), func(t *testing.T) {
 			is := assert.New(t)
-			res, err := Prune(tc.OriginalFoo, tc.Paths)
-			is.NoError(err)
+			res, err := Prune(tc.OriginalFoo, tc.Paths, tc.TagName)
+			require.NoError(t, err)
 
 			fooPrune := res.(*Foo)
 			is.Equal(tc.ExpectedFoo, fooPrune)
@@ -286,8 +310,8 @@ func TestPrune(t *testing.T) {
 		t.Run(fmt.Sprintf("non pointer test case #%v", idx), func(t *testing.T) {
 			is := assert.New(t)
 			fooNonPtr := *tc.OriginalFoo
-			res, err := Prune(fooNonPtr, tc.Paths)
-			is.NoError(err)
+			res, err := Prune(fooNonPtr, tc.Paths, tc.TagName)
+			require.NoError(t, err)
 
 			fooPrune := res.(Foo)
 			is.Equal(*tc.ExpectedFoo, fooPrune)
@@ -295,30 +319,30 @@ func TestPrune(t *testing.T) {
 	}
 
 	t.Run("Bar Slice", func(t *testing.T) {
-		is := assert.New(t)
 		barSlice := []*Bar{bar, bar}
-		barSlicePruned, err := Prune(barSlice, []string{"Name"})
-		is.NoError(err)
-		is.Equal([]*Bar{{Name: bar.Name}, {Name: bar.Name}}, barSlicePruned)
+		barSlicePruned, err := Prune(barSlice, []string{"Name"}, nil /*tag*/)
+		require.NoError(t, err)
+		assert.Equal(t, []*Bar{{Name: bar.Name}, {Name: bar.Name}}, barSlicePruned)
 	})
 
 	t.Run("Bar Array", func(t *testing.T) {
-		is := assert.New(t)
 		barArr := [2]*Bar{bar, bar}
-		barArrPruned, err := Prune(barArr, []string{"Name"})
-		is.NoError(err)
-		is.Equal([2]*Bar{{Name: bar.Name}, {Name: bar.Name}}, barArrPruned)
+		barArrPruned, err := Prune(barArr, []string{"Name"}, nil /*tag*/)
+		require.NoError(t, err)
+		assert.Equal(t, [2]*Bar{{Name: bar.Name}, {Name: bar.Name}}, barArrPruned)
 	})
 
-	t.Run("Copy Value", func(t *testing.T) {
+	// test values are copied and not referenced in return result
+	// NOTE: pointers at the end of path are referenced. Maybe we need to make a copy
+	t.Run("Copy Value Str", func(t *testing.T) {
 		is := assert.New(t)
 		fooTest := &Foo{
 			Bar: &Bar{
 				Name: "bar",
 			},
 		}
-		res, err := Prune(fooTest, []string{"Bar.Name"})
-		is.NoError(err)
+		res, err := Prune(fooTest, []string{"Bar.Name"}, nil)
+		require.NoError(t, err)
 		fooTestPruned := res.(*Foo)
 		is.Equal(fooTest, fooTestPruned)
 
@@ -327,4 +351,60 @@ func TestPrune(t *testing.T) {
 		// check original is unchanged
 		is.Equal(fooTest.Bar.Name, "bar")
 	})
+
+	// error cases
+	var errCases = []struct {
+		InputFoo *Foo
+		Paths    []string
+		TagName  *string
+	}{
+		{
+			foo,
+			[]string{"NotExist"},
+			nil,
+		},
+		{
+			foo,
+			[]string{"FirstName.NotExist", "LastName"},
+			nil,
+		},
+		{
+			foo,
+			[]string{"LastName", "FirstName.NotExist"},
+			nil,
+		},
+		{
+			foo,
+			[]string{"LastName", "Bars.NotExist"},
+			nil,
+		},
+		// tags
+		{
+			foo,
+			[]string{"tag 999"},
+			&[]string{"tag_name"}[0],
+		},
+		{
+			foo,
+			[]string{"tag 1.NotExist"},
+			&[]string{"tag_name"}[0],
+		},
+		{
+			foo,
+			[]string{"tag 4.NotExist"},
+			&[]string{"tag_name"}[0],
+		},
+		{
+			foo,
+			[]string{"FirstName"},
+			&[]string{"tag_name_not_exist"}[0],
+		},
+	}
+
+	for idx, errTC := range errCases {
+		t.Run(fmt.Sprintf("error test case #%v", idx), func(t *testing.T) {
+			_, err := Prune(errTC.InputFoo, errTC.Paths, errTC.TagName)
+			assert.Error(t, err)
+		})
+	}
 }
