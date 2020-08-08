@@ -386,6 +386,37 @@ Retrieves the value of the pointer or default.
     GetOrElse(str, "foobar")    // string{"hello world"}
     GetOrElse(nil, "foobar")    // string{"foobar"}
 
+funk.Set
+........
+Set value at a path of a struct
+
+.. code-block:: go
+
+    var bar Bar = Bar{
+        Name: "level-0", 
+        Bar: &Bar{
+            Name: "level-1",
+            Bars: []*Bar{
+                {Name: "level2-1"},
+                {Name: "level2-2"},
+            },
+        },
+    }
+
+    _ = Set(&bar, "level-0-new", "Name")
+    fmt.Println(bar.Name) // "level-0-new"
+
+    MustSet(&bar, "level-1-new", "Bar.Name")
+    fmt.Println(bar.Bar.Name) // "level-1-new"
+
+    Set(&bar, "level-2-new", "Bar.Bars.Name")
+    fmt.Println(bar.Bar.Bars[0].Name) // "level-2-new"
+    fmt.Println(bar.Bar.Bars[1].Name) // "level-2-new"
+
+funk.MustSet
+............
+Short hand for funk.Set if struct does not contain interface{} field type to discard errors.
+
 
 funk.Keys
 .........

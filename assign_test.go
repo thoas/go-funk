@@ -449,3 +449,36 @@ func TestMustSet_Basic(t *testing.T) {
 		is.Equal("b", s.Name)
 	})
 }
+
+// Examples
+
+func ExampleSet() {
+
+	var bar Bar = Bar{
+		Name: "level-0",
+		Bar: &Bar{
+			Name: "level-1",
+			Bars: []*Bar{
+				{Name: "level2-1"},
+				{Name: "level2-2"},
+			},
+		},
+	}
+
+	_ = Set(&bar, "level-0-new", "Name")
+	fmt.Println(bar.Name)
+
+	// discard error use MustSet
+	MustSet(&bar, "level-1-new", "Bar.Name")
+	fmt.Println(bar.Bar.Name)
+
+	_ = Set(&bar, "level-2-new", "Bar.Bars.Name")
+	fmt.Println(bar.Bar.Bars[0].Name)
+	fmt.Println(bar.Bar.Bars[1].Name)
+
+	// Output:
+	// level-0-new
+	// level-1-new
+	// level-2-new
+	// level-2-new
+}
