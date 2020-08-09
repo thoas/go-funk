@@ -27,8 +27,9 @@ type Foo struct {
 	Bars       []*Bar
 	EmptyValue sql.NullInt64
 
-	BarInterface interface{}
-	BarPointer   interface{}
+	BarInterface     interface{}
+	BarPointer       interface{}
+	GeneralInterface interface{}
 }
 
 func (f Foo) TableName() string {
