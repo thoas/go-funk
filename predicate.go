@@ -11,7 +11,7 @@ func predicatesImpl(value interface{}, wantedAnswer bool, predicates interface{}
 	}
 
 	predicatesValue := reflect.ValueOf(predicates)
-	inputValue  := reflect.ValueOf(value)
+	inputValue := reflect.ValueOf(value)
 
 	for i := 0; i < predicatesValue.Len(); i++ {
 		funcValue := predicatesValue.Index(i)
