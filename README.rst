@@ -417,6 +417,33 @@ funk.MustSet
 ............
 Short hand for funk.Set if struct does not contain interface{} field type to discard errors.
 
+funk.Prune
+..........
+Copy a struct with only selected fields. Slice is handled by pruning all elements.
+
+.. code-block:: go
+    bar := &Bar{
+        Name: "Test",
+    }
+
+    foo1 := &Foo{
+        ID:        1,
+        FirstName: "Dark",
+        LastName:  "Vador",
+        Bar:       bar,
+    }
+
+    pruned, _ := Prune(foo1, []string{"FirstName", "Bar.Name"})
+    // *Foo{
+    //    ID:        0,
+    //    FirstName: "Dark",
+    //    LastName:  "",
+    //    Bar:       &Bar{Name: "Test},
+    // }
+
+funk.PruneByTag
+..........
+Same functionality as funk.Prune, but uses struct tags instead of struct field names.
 
 funk.Keys
 .........
