@@ -397,9 +397,22 @@ func Drop(in interface{}, n int) interface{} {
 }
 
 // Prune returns a copy of "in" that only contains fields in "paths"
+// which are looked up using struct field name.
+// For lookup paths by field tag instead, use funk.PruneByTag()
+func Prune(in interface{}, paths []string) (interface{}, error) {
+	return pruneByTag(in, paths, nil /*tag*/)
+}
+
+// pruneByTag returns a copy of "in" that only contains fields in "paths"
+// which are looked up using struct field Tag "tag".
+func PruneByTag(in interface{}, paths []string, tag string) (interface{}, error) {
+	return pruneByTag(in, paths, &tag)
+}
+
+// pruneByTag returns a copy of "in" that only contains fields in "paths"
 // which are looked up using struct field Tag "tag". If tag is nil,
 // traverse paths using struct field name
-func Prune(in interface{}, paths []string, tag *string) (interface{}, error) {
+func pruneByTag(in interface{}, paths []string, tag *string) (interface{}, error) {
 
 	inValue := reflect.ValueOf(in)
 
