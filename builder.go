@@ -74,7 +74,7 @@ func LazyChain(v interface{}) Builder {
 
 }
 
-// LazyChainWith creates a lzy go-funk.Builder from a generator. Like LazyChain, each 
+// LazyChainWith creates a lazy go-funk.Builder from a generator. Like LazyChain, each 
 // method call generate a new builder containing a method generating the previous value.
 // But, instead of using a collection, it takes a generator which can generate values.
 // With LazyChainWith, to can create a generic pipeline of collection transformation and, 
