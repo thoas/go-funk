@@ -8,7 +8,7 @@ type Model interface {
 
 // Bar is
 type Bar struct {
-	Name string
+	Name string `tag_name:"BarName"`
 	Bar  *Bar
 	Bars []*Bar
 }
@@ -23,7 +23,7 @@ type Foo struct {
 	FirstName  string `tag_name:"tag 1"`
 	LastName   string `tag_name:"tag 2"`
 	Age        int    `tag_name:"tag 3"`
-	Bar        *Bar
+	Bar        *Bar   `tag_name:"tag 4"`
 	Bars       []*Bar
 	EmptyValue sql.NullInt64
 

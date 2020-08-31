@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"reflect"
+	"strings"
 )
 
 // Chunk creates an array of elements split into groups with the length of size.
@@ -393,4 +394,115 @@ func Drop(in interface{}, n int) interface{} {
 	}
 
 	panic(fmt.Sprintf("Type %s is not supported by Drop", valueType.String()))
+}
+
+// Prune returns a copy of "in" that only contains fields in "paths"
+// which are looked up using struct field name.
+// For lookup paths by field tag instead, use funk.PruneByTag()
+func Prune(in interface{}, paths []string) (interface{}, error) {
+	return pruneByTag(in, paths, nil /*tag*/)
+}
+
+// pruneByTag returns a copy of "in" that only contains fields in "paths"
+// which are looked up using struct field Tag "tag".
+func PruneByTag(in interface{}, paths []string, tag string) (interface{}, error) {
+	return pruneByTag(in, paths, &tag)
+}
+
+// pruneByTag returns a copy of "in" that only contains fields in "paths"
+// which are looked up using struct field Tag "tag". If tag is nil,
+// traverse paths using struct field name
+func pruneByTag(in interface{}, paths []string, tag *string) (interface{}, error) {
+
+	inValue := reflect.ValueOf(in)
+
+	ret := reflect.New(inValue.Type()).Elem()
+
+	for _, path := range paths {
+		parts := strings.Split(path, ".")
+		if err := prune(inValue, ret, parts, tag); err != nil {
+			return nil, err
+		}
+	}
+	return ret.Interface(), nil
+}
+
+func prune(inValue reflect.Value, ret reflect.Value, parts []string, tag *string) error {
+
+	if len(parts) == 0 {
+		// we reached the location that ret needs to hold inValue
+		// Note: The value at the end of the path is not copied, maybe we need to change.
+		// ret and the original data holds the same reference to this value
+		ret.Set(inValue)
+		return nil
+	}
+
+	inKind := inValue.Kind()
+
+	switch inKind {
+	case reflect.Ptr:
+		if inValue.IsNil() {
+			// TODO validate
+			return nil
+		}
+		if ret.IsNil() {
+			// init ret and go to next level
+			ret.Set(reflect.New(inValue.Type().Elem()))
+		}
+		return prune(inValue.Elem(), ret.Elem(), parts, tag)
+	case reflect.Struct:
+		part := parts[0]
+		var fValue reflect.Value
+		var fRet reflect.Value
+		if tag == nil {
+			// use field name
+			fValue = inValue.FieldByName(part)
+			if !fValue.IsValid() {
+				return fmt.Errorf("field name %v is not found in struct %v", part, inValue.Type().String())
+			}
+			fRet = ret.FieldByName(part)
+		} else {
+			// search tag that has key equal to part
+			found := false
+			for i := 0; i < inValue.NumField(); i++ {
+				f := inValue.Type().Field(i)
+				if key, ok := f.Tag.Lookup(*tag); ok {
+					if key == part {
+						fValue = inValue.Field(i)
+						fRet = ret.Field(i)
+						found = true
+						break
+					}
+				}
+			}
+			if !found {
+				return fmt.Errorf("Struct tag %v is not found with key %v", *tag, part)
+			}
+		}
+		// init Ret is zero and go down one more level
+		if fRet.IsZero() {
+			fRet.Set(reflect.New(fValue.Type()).Elem())
+		}
+		return prune(fValue, fRet, parts[1:], tag)
+	case reflect.Array, reflect.Slice:
+		// set all its elements
+		length := inValue.Len()
+		// init ret
+		if ret.IsZero() {
+			if inKind == reflect.Slice {
+				ret.Set(reflect.MakeSlice(inValue.Type(), length /*len*/, length /*cap*/))
+			} else { // array
+				ret.Set(reflect.New(inValue.Type()).Elem())
+			}
+		}
+		for j := 0; j < length; j++ {
+			if err := prune(inValue.Index(j), ret.Index(j), parts, tag); err != nil {
+				return err
+			}
+		}
+	default:
+		return fmt.Errorf("path %v cannot be looked up on kind of %v", strings.Join(parts, "."), inValue.Kind())
+	}
+
+	return nil
 }
