@@ -422,6 +422,7 @@ funk.Prune
 Copy a struct with only selected fields. Slice is handled by pruning all elements.
 
 .. code-block:: go
+
     bar := &Bar{
         Name: "Test",
     }
