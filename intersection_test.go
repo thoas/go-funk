@@ -17,7 +17,6 @@ func TestIntersect(t *testing.T) {
 
 	r = Intersect([]string{"foo", "bar"}, []string{"foo", "bar", "hello", "bar"})
 	is.Equal(r, []string{"foo", "bar", "bar"})
-
 }
 
 func TestIntersectString(t *testing.T) {
@@ -25,7 +24,6 @@ func TestIntersectString(t *testing.T) {
 
 	r := IntersectString([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})
 	is.Equal(r, []string{"foo", "bar"})
-
 }
 
 func TestDifference(t *testing.T) {
@@ -38,7 +36,6 @@ func TestDifference(t *testing.T) {
 	r1, r2 = Difference([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})
 	is.Equal(r1, []string{"hello"})
 	is.Equal(r2, []string{})
-
 }
 
 func TestDifferenceString(t *testing.T) {
@@ -47,5 +44,12 @@ func TestDifferenceString(t *testing.T) {
 	r1, r2 := DifferenceString([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})
 	is.Equal(r1, []string{"hello"})
 	is.Equal(r2, []string{})
+}
 
+func TestDifferenceInt64(t *testing.T) {
+	is := assert.New(t)
+
+	r1, r2 := DifferenceInt64([]int64{1, 2, 3, 4}, []int64{4, 6})
+	is.Equal(r1, []int64{1, 2, 3})
+	is.Equal(r2, []int64{6})
 }

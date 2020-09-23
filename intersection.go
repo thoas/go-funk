@@ -131,3 +131,43 @@ func DifferenceString(x []string, y []string) ([]string, []string) {
 
 	return leftSlice, rightSlice
 }
+
+// DifferenceInt64 returns the difference between two collections of int64s.
+func DifferenceInt64(x []int64, y []int64) ([]int64, []int64) {
+	leftSlice := []int64{}
+	rightSlice := []int64{}
+
+	for _, v := range x {
+		if ContainsInt64(y, v) == false {
+			leftSlice = append(leftSlice, v)
+		}
+	}
+
+	for _, v := range y {
+		if ContainsInt64(x, v) == false {
+			rightSlice = append(rightSlice, v)
+		}
+	}
+
+	return leftSlice, rightSlice
+}
+
+// DifferenceInt returns the difference between two collections of ints.
+func DifferenceInt(x []int, y []int) ([]int, []int) {
+	leftSlice := []int{}
+	rightSlice := []int{}
+
+	for _, v := range x {
+		if ContainsInt(y, v) == false {
+			leftSlice = append(leftSlice, v)
+		}
+	}
+
+	for _, v := range y {
+		if ContainsInt(x, v) == false {
+			rightSlice = append(rightSlice, v)
+		}
+	}
+
+	return leftSlice, rightSlice
+}
