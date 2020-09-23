@@ -7,7 +7,7 @@ go-funk
 
 .. image:: https://godoc.org/github.com/thoas/go-funk?status.svg
     :alt: GoDoc
-    :target: https://godoc.org/github.com/thoas/go-funk
+    :target: https://pkg.go.dev/github.com/thoas/go-funk
 
 .. image:: https://goreportcard.com/badge/github.com/thoas/go-funk
     :alt: Go report
