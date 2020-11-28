@@ -35,9 +35,7 @@ func Subset(x interface{}, y interface{}) bool {
 		if !Contains(yValue.Interface(), xValue.Index(i).Interface()) {
 			return false
 		}
-		return true
 	}
 
-	return false
-
+    return true
 }

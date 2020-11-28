@@ -14,6 +14,9 @@ func TestSubset(t *testing.T) {
 	r = Subset([]string{"foo", "bar"},[]string{"foo", "bar", "hello", "bar", "hi"})
 	is.True(r)
 
+	r = Subset([]string{"foo", "bar","extra"},[]string{"foo", "bar", "hello", "bar", "hi"})
+	is.False(r)
+
 	r = Subset([]string{"hello", "foo", "bar", "hello", "bar", "hi"}, []string{})
 	is.False(r)
   
