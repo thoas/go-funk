@@ -48,6 +48,16 @@ func Filter(arr interface{}, predicate interface{}) interface{} {
 	return resultSlice.Interface()
 }
 
+// ContainWithFunction iterates over elements of collection, returning true if at least one
+// element predicate returns truthy for.
+func ContainWithFunction(arr interface{}, predicate interface{}) bool {
+	_, val := FindKey(arr, predicate)
+	if val == nil {
+		return false
+	}
+	return true
+}
+
 // Find iterates over elements of collection, returning the first
 // element predicate returns truthy for.
 func Find(arr interface{}, predicate interface{}) interface{} {

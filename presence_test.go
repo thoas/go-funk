@@ -140,6 +140,22 @@ func TestFilter(t *testing.T) {
 	is.Equal(r, []int{2, 4})
 }
 
+func TestContainWithFunction(t *testing.T) {
+	is := assert.New(t)
+
+	r := ContainWithFunction([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r, true)
+
+	r1 := ContainWithFunction([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%5 == 0
+	})
+
+	is.Equal(r1, false)
+}
+
 func TestFind(t *testing.T) {
 	is := assert.New(t)
 

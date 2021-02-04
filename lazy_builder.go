@@ -64,6 +64,9 @@ func (b *lazyBuilder) Every(elements ...interface{}) bool {
 func (b *lazyBuilder) Find(predicate interface{}) interface{} {
 	return Find(b.exec(), predicate)
 }
+func (b *lazyBuilder) ContainWithFunction(predicate interface{}) bool {
+	return ContainWithFunction(b.exec(), predicate)
+}
 func (b *lazyBuilder) ForEach(predicate interface{}) {
 	ForEach(b.exec(), predicate)
 }

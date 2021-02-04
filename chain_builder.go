@@ -89,6 +89,9 @@ func (b *chainBuilder) Every(elements ...interface{}) bool {
 func (b *chainBuilder) Find(predicate interface{}) interface{} {
 	return Find(b.collection, predicate)
 }
+func (b *chainBuilder) ContainWithFunction(predicate interface{}) bool {
+	return ContainWithFunction(b.collection, predicate)
+}
 func (b *chainBuilder) ForEach(predicate interface{}) {
 	ForEach(b.collection, predicate)
 }
