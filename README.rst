@@ -305,6 +305,29 @@ Manipulates an iteratee (map, slice) and transforms it to another type:
         return fmt.Sprintf("%d", k), v
     }) // map[string]string{"1": "Florent", "2": "Gilles"}
 
+funk.FlatMap
+........
+
+Manipulates an iteratee (map, slice) and transforms it to to a flattened collection of another type:
+
+* map -> slice
+* slice -> slice
+
+.. code-block:: go
+
+    r := funk.FlatMap([][]int{{1, 2}, {3, 4}}, func(x []int) []int {
+        return append(x, 0)
+    }) // []int{1, 2, 0, 3, 4, 0}
+
+    mapping := map[string][]int{
+        "Florent": {1, 2},
+        "Gilles": {3, 4},
+    }
+
+    r = funk.FlatMap(mapping, func(k string, v []int) []int {
+        return v
+    }) // []int{1, 2, 3, 4}
+
 funk.Get
 ........
 

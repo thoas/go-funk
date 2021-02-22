@@ -11,11 +11,13 @@ type Builder interface {
 	Compact() Builder
 	Drop(n int) Builder
 	Filter(predicate interface{}) Builder
+	Flatten() Builder
 	FlattenDeep() Builder
 	Initial() Builder
 	Intersect(y interface{}) Builder
 	Join(rarr interface{}, fnc JoinFnc) Builder
 	Map(mapFunc interface{}) Builder
+	FlatMap(mapFunc interface{}) Builder
 	Reverse() Builder
 	Shuffle() Builder
 	Tail() Builder

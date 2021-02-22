@@ -98,7 +98,7 @@ func ToMap(in interface{}, pivot string) interface{} {
 	return collection.Interface()
 }
 
-func mapSlice(arrValue reflect.Value, funcValue reflect.Value) interface{} {
+func mapSlice(arrValue reflect.Value, funcValue reflect.Value) reflect.Value {
 	funcType := funcValue.Type()
 
 	if funcType.NumIn() != 1 || funcType.NumOut() == 0 || funcType.NumOut() > 2 {
@@ -125,7 +125,7 @@ func mapSlice(arrValue reflect.Value, funcValue reflect.Value) interface{} {
 			resultSlice = reflect.Append(resultSlice, result)
 		}
 
-		return resultSlice.Interface()
+		return resultSlice
 	}
 
 	if funcType.NumOut() == 2 {
@@ -141,13 +141,13 @@ func mapSlice(arrValue reflect.Value, funcValue reflect.Value) interface{} {
 			collection.SetMapIndex(results[0], results[1])
 		}
 
-		return collection.Interface()
+		return collection
 	}
 
-	return nil
+	return reflect.Value{}
 }
 
-func mapMap(arrValue reflect.Value, funcValue reflect.Value) interface{} {
+func mapMap(arrValue reflect.Value, funcValue reflect.Value) reflect.Value {
 	funcType := funcValue.Type()
 
 	if funcType.NumIn() != 2 || funcType.NumOut() == 0 || funcType.NumOut() > 2 {
@@ -170,7 +170,7 @@ func mapMap(arrValue reflect.Value, funcValue reflect.Value) interface{} {
 			resultSlice = reflect.Append(resultSlice, result)
 		}
 
-		return resultSlice.Interface()
+		return resultSlice
 	}
 
 	// two parameters, should be a map
@@ -188,14 +188,24 @@ func mapMap(arrValue reflect.Value, funcValue reflect.Value) interface{} {
 
 		}
 
-		return collection.Interface()
+		return collection
+	}
+
+	return reflect.Value{}
+}
+
+// Map manipulates an iteratee and transforms it to another type.
+func Map(arr interface{}, mapFunc interface{}) interface{} {
+	result := mapFn(arr, mapFunc, "Map")
+
+	if result.IsValid() {
+		return result.Interface()
 	}
 
 	return nil
 }
 
-// Map manipulates an iteratee and transforms it to another type.
-func Map(arr interface{}, mapFunc interface{}) interface{} {
+func mapFn(arr interface{}, mapFunc interface{}, funcName string) reflect.Value {
 	if !IsIteratee(arr) {
 		panic("First parameter must be an iteratee")
 	}
@@ -214,13 +224,50 @@ func Map(arr interface{}, mapFunc interface{}) interface{} {
 
 	if kind == reflect.Slice || kind == reflect.Array {
 		return mapSlice(arrValue, funcValue)
-	}
-
-	if kind == reflect.Map {
+	} else if kind == reflect.Map {
 		return mapMap(arrValue, funcValue)
 	}
 
-	panic(fmt.Sprintf("Type %s is not supported by Map", arrType.String()))
+	panic(fmt.Sprintf("Type %s is not supported by "+funcName, arrType.String()))
+}
+
+// FlatMap manipulates an iteratee and transforms it to a flattened collection of another type.
+func FlatMap(arr interface{}, mapFunc interface{}) interface{} {
+	result := mapFn(arr, mapFunc, "FlatMap")
+
+	if result.IsValid() {
+		return flatten(result).Interface()
+	}
+
+	return nil
+}
+
+// Flatten flattens a two-dimensional array.
+func Flatten(out interface{}) interface{} {
+	return flatten(reflect.ValueOf(out)).Interface()
+}
+
+func flatten(value reflect.Value) reflect.Value {
+	sliceType := value.Type()
+
+	if (value.Kind() != reflect.Slice && value.Kind() != reflect.Array) ||
+		(sliceType.Elem().Kind() != reflect.Slice && sliceType.Elem().Kind() != reflect.Array) {
+		panic("Argument must be an array or slice of at least two dimensions")
+	}
+
+	resultSliceType := sliceType.Elem().Elem()
+
+	resultSlice := reflect.MakeSlice(reflect.SliceOf(resultSliceType), 0, 0)
+
+	length := value.Len()
+
+	for i := 0; i < length; i++ {
+		item := value.Index(i)
+
+		resultSlice = reflect.AppendSlice(resultSlice, item)
+	}
+
+	return resultSlice
 }
 
 // FlattenDeep recursively flattens array.
@@ -233,10 +280,10 @@ func flattenDeep(value reflect.Value) reflect.Value {
 
 	resultSlice := reflect.MakeSlice(reflect.SliceOf(sliceType), 0, 0)
 
-	return flatten(value, resultSlice)
+	return flattenRecursive(value, resultSlice)
 }
 
-func flatten(value reflect.Value, result reflect.Value) reflect.Value {
+func flattenRecursive(value reflect.Value, result reflect.Value) reflect.Value {
 	length := value.Len()
 
 	for i := 0; i < length; i++ {
@@ -244,7 +291,7 @@ func flatten(value reflect.Value, result reflect.Value) reflect.Value {
 		kind := item.Kind()
 
 		if kind == reflect.Slice || kind == reflect.Array {
-			result = flatten(item, result)
+			result = flattenRecursive(item, result)
 		} else {
 			result = reflect.Append(result, item)
 		}
