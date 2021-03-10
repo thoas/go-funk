@@ -75,7 +75,7 @@ func PtrOf(itf interface{}) interface{} {
 func IsFunction(in interface{}, num ...int) bool {
 	funcType := reflect.TypeOf(in)
 
-	result := funcType.Kind() == reflect.Func
+	result := funcType != nil && funcType.Kind() == reflect.Func
 
 	if len(num) >= 1 {
 		result = result && funcType.NumIn() == num[0]
@@ -83,6 +83,27 @@ func IsFunction(in interface{}, num ...int) bool {
 
 	if len(num) == 2 {
 		result = result && funcType.NumOut() == num[1]
+	}
+
+	return result
+}
+
+// IsPredicate returns if the argument is a predicate function.
+func IsPredicate(in interface{}, inTypes ...reflect.Type) bool {
+	if len(inTypes) == 0 {
+		inTypes = append(inTypes, nil)
+	}
+
+	funcType := reflect.TypeOf(in)
+
+	result := funcType != nil && funcType.Kind() == reflect.Func
+
+	result = result && funcType.NumOut() == 1 && funcType.Out(0).Kind() == reflect.Bool
+	result = result && funcType.NumIn() == len(inTypes)
+
+	for i := 0; result && i < len(inTypes); i++ {
+		inType := inTypes[i]
+		result = inType == nil || inType.ConvertibleTo(funcType.In(i))
 	}
 
 	return result

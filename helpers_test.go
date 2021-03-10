@@ -269,3 +269,32 @@ func TestIsIteratee(t *testing.T) {
 
 	is.False(IsIteratee(nil))
 }
+
+func TestIsFunction(t *testing.T) {
+	is := assert.New(t)
+
+	is.False(IsFunction(nil))
+	is.False(IsFunction(""))
+	is.True(IsFunction(func() {}))
+	is.True(IsFunction(func(string, string, string) bool { return false }, 3))
+	is.False(IsFunction(func(string, string, string) bool { return false }, 3, 0))
+	is.True(IsFunction(func(string, string, string) (bool, error) { return false, nil }, 3, 2))
+}
+
+func TestIsPredicate(t *testing.T) {
+	is := assert.New(t)
+
+	is.False(IsPredicate(nil))
+	is.False(IsPredicate(""))
+	is.False(IsPredicate(func() {}))
+	is.False(IsPredicate(func() bool { return false}))
+	is.True(IsPredicate(func(int) bool { return false}))
+	is.True(IsPredicate(func(int) bool { return false}, nil))
+	is.False(IsPredicate(func(int) bool { return false}, reflect.TypeOf("")))
+	is.True(IsPredicate(func(int) bool { return false}, reflect.TypeOf(0)))
+	is.False(IsPredicate(func(int, string) bool { return false}, reflect.TypeOf("")))
+	is.False(IsPredicate(func(int, string) bool { return false}, reflect.TypeOf(""), reflect.TypeOf(0)))
+	is.True(IsPredicate(func(int, string) bool { return false}, reflect.TypeOf(0), reflect.TypeOf("")))
+	is.False(IsPredicate(func(struct{}, string) bool { return false}, reflect.TypeOf(0), reflect.TypeOf("")))
+	is.True(IsPredicate(func(struct{}, string) bool { return false}, nil, reflect.TypeOf("")))
+}
