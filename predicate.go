@@ -20,7 +20,7 @@ func predicatesImpl(value interface{}, wantedAnswer bool, predicates interface{}
 		}
 
 		funcType := funcValue.Type()
-		if funcType.NumIn() != 1 || funcType.NumOut() != 1 || funcType.Out(0).Kind() != reflect.Bool {
+		if !IsPredicate(funcValue.Interface()) {
 			panic("Predicate function must have 1 parameter and must return boolean")
 		}
 

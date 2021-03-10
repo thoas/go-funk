@@ -492,6 +492,12 @@ func TestChainContains(t *testing.T) {
 			Contains: "bar",
 		},
 		{
+			In:       []string{"foo", "bar"},
+			Contains: func (value string) bool {
+				return value == "bar"
+			},
+		},
+		{
 			In:       results,
 			Contains: f,
 		},
@@ -518,6 +524,12 @@ func TestChainContains(t *testing.T) {
 		{
 			In:       map[int]*Foo{1: f, 3: c},
 			Contains: 2,
+		},
+		{
+			In:       map[int]*Foo{1: f, 3: c},
+			Contains: func (key int, foo *Foo) bool {
+				return key == 3 && foo.FirstName == "Harald"
+			},
 		},
 	}
 
@@ -811,6 +823,12 @@ func TestChainIndexOf(t *testing.T) {
 			Item: "bar",
 		},
 		{
+			In:   []string{"foo", "bar"},
+			Item: func (value string) bool {
+				return value == "bar"
+			},
+		},
+		{
 			In:   results,
 			Item: f,
 		},
@@ -887,6 +905,12 @@ func TestChainLastIndexOf(t *testing.T) {
 		{
 			In:   []string{"foo", "bar", "bar"},
 			Item: "bar",
+		},
+		{
+			In:   []string{"foo", "bar", "bar"},
+			Item: func (value string) bool {
+				return value == "bar"
+			},
 		},
 		{
 			In:   []int{1, 2, 2, 3},

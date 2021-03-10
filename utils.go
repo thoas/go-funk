@@ -1,16 +1,57 @@
 package funk
 
 import (
+	"fmt"
 	"reflect"
 )
 
-func equal(expected, actual interface{}) bool {
-	if expected == nil || actual == nil {
-		return expected == actual
+func equal(expectedOrPredicate interface{}, optionalIsMap ...bool) func(keyValueIfMap, actualValue reflect.Value) bool {
+	isMap := append(optionalIsMap, false)[0]
+
+	if IsFunction(expectedOrPredicate) {
+		inTypes := []reflect.Type{nil}; if isMap {
+			inTypes = append(inTypes, nil)
+		}
+
+		if !IsPredicate(expectedOrPredicate, inTypes...) {
+			panic(fmt.Sprintf("Predicate function must have %d parameter and must return boolean", len(inTypes)))
+		}
+
+		predicateValue := reflect.ValueOf(expectedOrPredicate)
+
+		return func(keyValueIfMap, actualValue reflect.Value) bool {
+
+			if isMap && !keyValueIfMap.Type().ConvertibleTo(predicateValue.Type().In(0)) {
+				panic("Given key is not compatible with type of parameter for the predicate.")
+			}
+
+			if (isMap && !actualValue.Type().ConvertibleTo(predicateValue.Type().In(1))) ||
+				(!isMap && !actualValue.Type().ConvertibleTo(predicateValue.Type().In(0))) {
+				panic("Given value is not compatible with type of parameter for the predicate.")
+			}
+
+			args := []reflect.Value{actualValue}
+			if isMap {
+				args = append([]reflect.Value{keyValueIfMap}, args...)
+			}
+
+			return predicateValue.Call(args)[0].Bool()
+		}
 	}
 
-	return reflect.DeepEqual(expected, actual)
+	expected := expectedOrPredicate
 
+	return func(keyValueIfMap, actualValue reflect.Value) bool {
+		if isMap {
+			actualValue = keyValueIfMap
+		}
+
+		if expected == nil || actualValue.IsZero() {
+			return actualValue.Interface() == expected
+		}
+
+		return reflect.DeepEqual(actualValue.Interface(), expected)
+	}
 }
 
 func sliceElem(rtype reflect.Type) reflect.Type {

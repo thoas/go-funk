@@ -109,6 +109,9 @@ this can be replaced by ``funk.Contains``:
 
     // slice of Foo ptr
     funk.Contains([]*Foo{f}, f) // true
+    funk.Contains([]*Foo{f}, func (foo *Foo) bool {
+        return foo.ID == f.ID
+    }) // true
     funk.Contains([]*Foo{f}, nil) // false
 
     b := &Foo{
@@ -126,6 +129,9 @@ this can be replaced by ``funk.Contains``:
 
     // even map
     funk.Contains(map[int]string{1: "Florent"}, 1) // true
+    funk.Contains(map[int]string{1: "Florent"}, func(key int, name string) bool {
+        return key == 1 // or `name == "Florent"` for the value type
+    }) // true
 
 see also, typesafe implementations: ContainsInt_, ContainsInt64_, ContainsFloat32_, ContainsFloat64_, ContainsString_
 
@@ -175,6 +181,9 @@ if the value cannot be found.
 
     // slice of string
     funk.IndexOf([]string{"foo", "bar"}, "bar") // 1
+    funk.IndexOf([]string{"foo", "bar"}, func(value string) bool {
+        return value == "bar"
+    }) // 1
     funk.IndexOf([]string{"foo", "bar"}, "gilles") // -1
 
 see also, typesafe implementations: IndexOfInt_, IndexOfInt64_, IndexOfFloat32_, IndexOfFloat64_, IndexOfString_
@@ -195,6 +204,9 @@ if the value cannot be found.
 
     // slice of string
     funk.LastIndexOf([]string{"foo", "bar", "bar"}, "bar") // 2
+    funk.LastIndexOf([]string{"foo", "bar"}, func(value string) bool {
+        return value == "bar"
+    }) // 2
     funk.LastIndexOf([]string{"foo", "bar"}, "gilles") // -1
 
 see also, typesafe implementations: LastIndexOfInt_, LastIndexOfInt64_, LastIndexOfFloat32_, LastIndexOfFloat64_, LastIndexOfString_

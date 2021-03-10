@@ -118,8 +118,9 @@ func IndexOf(in interface{}, elem interface{}) int {
 	}
 
 	if inType.Kind() == reflect.Slice {
+		equalTo := equal(elem)
 		for i := 0; i < inValue.Len(); i++ {
-			if equal(inValue.Index(i).Interface(), elem) {
+			if equalTo(reflect.Value{}, inValue.Index(i)) {
 				return i
 			}
 		}
@@ -144,8 +145,9 @@ func LastIndexOf(in interface{}, elem interface{}) int {
 	if inType.Kind() == reflect.Slice {
 		length := inValue.Len()
 
+		equalTo := equal(elem)
 		for i := length - 1; i >= 0; i-- {
-			if equal(inValue.Index(i).Interface(), elem) {
+			if equalTo(reflect.Value{}, inValue.Index(i)) {
 				return i
 			}
 		}
@@ -164,14 +166,16 @@ func Contains(in interface{}, elem interface{}) bool {
 	case reflect.String:
 		return strings.Contains(inValue.String(), elemValue.String())
 	case reflect.Map:
+		equalTo := equal(elem, true)
 		for _, key := range inValue.MapKeys() {
-			if equal(key.Interface(), elem) {
+			if equalTo(key, inValue.MapIndex(key)) {
 				return true
 			}
 		}
 	case reflect.Slice, reflect.Array:
+		equalTo := equal(elem)
 		for i := 0; i < inValue.Len(); i++ {
-			if equal(inValue.Index(i).Interface(), elem) {
+			if equalTo(reflect.Value{}, inValue.Index(i)) {
 				return true
 			}
 		}
