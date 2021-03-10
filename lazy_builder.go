@@ -100,7 +100,7 @@ func (b *lazyBuilder) NotEmpty() bool {
 func (b *lazyBuilder) Product() float64 {
 	return Product(b.exec())
 }
-func (b *lazyBuilder) Reduce(reduceFunc, acc interface{}) float64 {
+func (b *lazyBuilder) Reduce(reduceFunc, acc interface{}) interface{} {
 	return Reduce(b.exec(), reduceFunc, acc)
 }
 func (b *lazyBuilder) Sum() float64 {

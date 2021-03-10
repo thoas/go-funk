@@ -6,7 +6,7 @@ import (
 
 // Reduce takes a collection and reduces it to a single value using a reduction
 // function (or a valid symbol) and an accumulator value.
-func Reduce(arr, reduceFunc, acc interface{}) float64 {
+func Reduce(arr, reduceFunc, acc interface{}) interface{} {
 	arrValue := redirectValue(reflect.ValueOf(arr))
 
 	if !IsIteratee(arrValue.Interface()) {
@@ -83,6 +83,5 @@ func Reduce(arr, reduceFunc, acc interface{}) float64 {
 		accValue = result[0]
 	}
 
-	resultInterface := accValue.Convert(returnType).Interface()
-	return resultInterface.(float64)
+	return accValue.Convert(returnType).Interface()
 }
