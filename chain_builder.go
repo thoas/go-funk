@@ -21,6 +21,9 @@ func (b *chainBuilder) Drop(n int) Builder {
 func (b *chainBuilder) Filter(predicate interface{}) Builder {
 	return &chainBuilder{Filter(b.collection, predicate)}
 }
+func (b *chainBuilder) Flatten() Builder {
+	return &chainBuilder{Flatten(b.collection)}
+}
 func (b *chainBuilder) FlattenDeep() Builder {
 	return &chainBuilder{FlattenDeep(b.collection)}
 }
@@ -35,6 +38,9 @@ func (b *chainBuilder) Join(rarr interface{}, fnc JoinFnc) Builder {
 }
 func (b *chainBuilder) Map(mapFunc interface{}) Builder {
 	return &chainBuilder{Map(b.collection, mapFunc)}
+}
+func (b *chainBuilder) FlatMap(mapFunc interface{}) Builder {
+	return &chainBuilder{FlatMap(b.collection, mapFunc)}
 }
 func (b *chainBuilder) Reverse() Builder {
 	return &chainBuilder{Reverse(b.collection)}

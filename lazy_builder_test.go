@@ -144,6 +144,30 @@ func TestLazyFilter_SideEffect(t *testing.T) {
 	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
 }
 
+func TestLazyFlatten(t *testing.T) {
+	testCases := []struct {
+		In interface{}
+	}{
+		{
+			In: [][]int{{1, 2}, {3, 4}},
+		},
+		{
+			In: [][][]int{{{1, 2}, {3, 4}}, {{5, 6}}},
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Flatten(tc.In)
+			actual := LazyChain(tc.In).Flatten().Value()
+
+			is.Equal(expected, actual)
+		})
+	}
+}
+
 func TestLazyFlattenDeep(t *testing.T) {
 	testCases := []struct {
 		In interface{}
@@ -257,6 +281,33 @@ func TestLazyMap(t *testing.T) {
 			} else {
 				is.ElementsMatch(expected, actual)
 			}
+		})
+	}
+}
+
+func TestLazyFlatMap(t *testing.T) {
+	testCases := []struct {
+		In         interface{}
+		FlatMapFnc interface{}
+	}{
+		{
+			In:         [][]int{{1}, {2}, {3}, {4}},
+			FlatMapFnc: func(x []int) []int { return x },
+		},
+		{
+			In:         map[string][]int{"Florent": {1}, "Gilles": {2}},
+			FlatMapFnc: func(k string, v []int) []int { return v },
+		},
+	}
+
+	for idx, tc := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			expected := Map(tc.In, tc.FlatMapFnc)
+			actual := LazyChain(tc.In).Map(tc.FlatMapFnc).Value()
+
+			is.ElementsMatch(expected, actual)
 		})
 	}
 }

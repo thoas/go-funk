@@ -18,6 +18,9 @@ func (b *lazyBuilder) Drop(n int) Builder {
 func (b *lazyBuilder) Filter(predicate interface{}) Builder {
 	return &lazyBuilder{func() interface{} { return Filter(b.exec(), predicate) }}
 }
+func (b *lazyBuilder) Flatten() Builder {
+	return &lazyBuilder{func() interface{} { return Flatten(b.exec()) }}
+}
 func (b *lazyBuilder) FlattenDeep() Builder {
 	return &lazyBuilder{func() interface{} { return FlattenDeep(b.exec()) }}
 }
@@ -32,6 +35,9 @@ func (b *lazyBuilder) Join(rarr interface{}, fnc JoinFnc) Builder {
 }
 func (b *lazyBuilder) Map(mapFunc interface{}) Builder {
 	return &lazyBuilder{func() interface{} { return Map(b.exec(), mapFunc) }}
+}
+func (b *lazyBuilder) FlatMap(mapFunc interface{}) Builder {
+	return &lazyBuilder{func() interface{} { return FlatMap(b.exec(), mapFunc) }}
 }
 func (b *lazyBuilder) Reverse() Builder {
 	return &lazyBuilder{func() interface{} { return Reverse(b.exec()) }}

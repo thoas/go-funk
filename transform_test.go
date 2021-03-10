@@ -55,6 +55,37 @@ func TestMap(t *testing.T) {
 	is.True(resultType.Elem().Kind() == reflect.String)
 }
 
+func TestFlatMap(t *testing.T) {
+
+	is := assert.New(t)
+
+	x := reflect.Value{}.IsValid()
+	fmt.Println(x)
+
+	r := FlatMap([][]int{{1}, {2}, {3}, {4}}, func(x []int) []int {
+		return x
+	})
+
+	result, ok := r.([]int)
+
+	is.True(ok)
+	is.ElementsMatch(result, []int{1, 2, 3, 4})
+
+	mapping := map[string][]int{
+		"a": {1},
+		"b": {2},
+	}
+
+	r = FlatMap(mapping, func(k string, v []int) []int {
+		return v
+	})
+
+	result, ok = r.([]int)
+
+	is.True(ok)
+	is.ElementsMatch(result, []int{1, 2})
+}
+
 func TestToMap(t *testing.T) {
 	is := assert.New(t)
 
@@ -104,10 +135,16 @@ func TestChunk(t *testing.T) {
 	is.Len(Chunk([]int{1, 2, 3}, 0), 3)
 }
 
+func TestFlatten(t *testing.T) {
+	is := assert.New(t)
+
+	is.Equal(Flatten([][][]int{{{1, 2}}, {{3, 4}}}), [][]int{{1, 2}, {3, 4}})
+}
+
 func TestFlattenDeep(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(FlattenDeep([][]int{{1, 2}, {3, 4}}), []int{1, 2, 3, 4})
+	is.Equal(FlattenDeep([][][]int{{{1, 2}}, {{3, 4}}}), []int{1, 2, 3, 4})
 }
 
 func TestShuffle(t *testing.T) {
