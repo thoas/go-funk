@@ -77,6 +77,10 @@ func redirectValue(value reflect.Value) reflect.Value {
 			return value
 		}
 
+		if !res.IsValid() && value.Kind() == reflect.Ptr {
+			return reflect.Zero(value.Type().Elem())
+		}
+
 		value = res
 	}
 }
