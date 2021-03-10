@@ -78,3 +78,34 @@ var foo2 = &Foo{
 	LastName:  "Vador",
 	Age:       30,
 }
+
+var m1 = map[string]interface{}{
+	"id":        1,
+	"firstname": "dark",
+	"lastname":  "vador",
+	"age":       30,
+	"bar": map[string]interface{}{
+		"name": "test",
+		"bars": []map[string]interface{}{
+			{
+				"name": "level1-1",
+				"bar": map[string]interface{}{
+					"name": "level2-1",
+				},
+			},
+			{
+				"name": "level1-2",
+				"bar": map[string]interface{}{
+					"name": "level2-2",
+				},
+			},
+		},
+	},
+}
+
+var m2 = map[string]interface{}{
+	"id":        1,
+	"firstname": "dark",
+	"lastname":  "vador",
+	"age":       30,
+}

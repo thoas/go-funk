@@ -35,11 +35,34 @@ func TestGetNil(t *testing.T) {
 	is.Equal(Get([]*Foo{foo, foo2}, "Bar.Name"), []string{"Test"})
 }
 
+func TestGetMap(t *testing.T) {
+	is := assert.New(t)
+	m := map[string]interface{}{
+		"bar": map[string]interface{}{
+			"name": "foobar",
+		},
+	}
+
+	is.Equal("foobar", Get(m, "bar.name"))
+	is.Equal(nil, Get(m, "foo.name"))
+	is.Equal([]interface{}{"dark", "dark"}, Get([]map[string]interface{}{m1, m2}, "firstname"))
+	is.Equal([]interface{}{"test"}, Get([]map[string]interface{}{m1, m2}, "bar.name"))
+}
+
 func TestGetThroughInterface(t *testing.T) {
 	is := assert.New(t)
 
 	is.Equal(Get(foo, "BarInterface.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
 	is.Equal(Get(foo, "BarPointer.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
+}
+
+func TestGetNotFound(t *testing.T) {
+	is := assert.New(t)
+
+	is.Equal(nil, Get(foo, "id"))
+	is.Equal(nil, Get(foo, "id.id"))
+	is.Equal(nil, Get(foo, "Bar.id"))
+	is.Equal(nil, Get(foo, "Bars.id"))
 }
 
 func TestGetSimple(t *testing.T) {
@@ -68,5 +91,4 @@ func TestGetOrElse(t *testing.T) {
 		// test GetOrElse coveers this case
 		is.Equal("foobar", GetOrElse((*string)(nil), "foobar"))
 	})
-
 }
