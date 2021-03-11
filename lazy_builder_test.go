@@ -1012,6 +1012,11 @@ func TestLazyReduce(t *testing.T) {
 			ReduceFunc: '*',
 			Acc:        1,
 		},
+		{
+			In:         []string{"1", "2", "3", "4"},
+			ReduceFunc: func(acc string, elem string) string { return acc + elem },
+			Acc:        "",
+		},
 	}
 
 	for idx, tc := range testCases {

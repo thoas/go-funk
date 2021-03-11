@@ -12,11 +12,11 @@ func TestReduce(t *testing.T) {
 		Arr    interface{}
 		Func   interface{}
 		Acc    interface{}
-		Result float64
+		Result interface{}
 	}{
 		{
 			[]int{1, 2, 3, 4},
-			func(acc, elem int) int { return acc + elem },
+			func(acc, elem float64) float64 { return acc + elem },
 			0,
 			float64(10),
 		},
@@ -24,7 +24,7 @@ func TestReduce(t *testing.T) {
 			&[]int16{1, 2, 3, 4},
 			'+',
 			5,
-			float64(15),
+			int16(15),
 		},
 		{
 			[]float64{1.1, 2.2, 3.3},
@@ -36,13 +36,19 @@ func TestReduce(t *testing.T) {
 			&[]int{1, 2, 3, 5},
 			func(acc int8, elem int16) int32 { return int32(acc) * int32(elem) },
 			1,
-			float64(30),
+			int32(30),
 		},
 		{
 			[]interface{}{1, 2, 3.3, 4},
 			'*',
 			1,
 			float64(26.4),
+		},
+		{
+			[]string{"1", "2", "3", "4"},
+			func(acc string, elem string) string { return acc + elem },
+			"",
+			"1234",
 		},
 	}
 

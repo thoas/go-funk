@@ -39,7 +39,7 @@ type Builder interface {
 	LastIndexOf(elem interface{}) int
 	NotEmpty() bool
 	Product() float64
-	Reduce(reduceFunc, acc interface{}) float64
+	Reduce(reduceFunc, acc interface{}) interface{}
 	Sum() float64
 	Type() reflect.Type
 	Value() interface{}

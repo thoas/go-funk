@@ -261,6 +261,26 @@ see also, typesafe implementations: FilterInt_, FilterInt64_, FilterFloat32_, Fi
 .. _FilterInt64: https://godoc.org/github.com/thoas/go-funk#FilterInt64
 .. _FilterString: https://godoc.org/github.com/thoas/go-funk#FilterString
 
+funk.Reduce
+...........
+
+Reduces an iteratee based on an accumulator function or operation rune for numbers.
+
+.. code-block:: go
+
+    // Using operation runes. '+' and '*' only supported.
+    r := funk.Reduce([]int{1, 2, 3, 4}, '+', float64(0)) // 10
+    r := funk.Reduce([]int{1, 2, 3, 4}, '*', 1) // 24
+
+    // Using accumulator function
+    r := funk.Reduce([]int{1, 2, 3, 4}, func(acc float64, num int) float64 {
+        return acc + float64(num)
+    }, float64(0)) // 10
+
+    r := funk.Reduce([]int{1, 2, 3, 4}, func(acc string, num int) string {
+        return acc + fmt.Sprint(num)
+    }, "") // "1234"
+
 funk.Find
 .........
 
@@ -318,7 +338,7 @@ Manipulates an iteratee (map, slice) and transforms it to another type:
     }) // map[string]string{"1": "Florent", "2": "Gilles"}
 
 funk.FlatMap
-........
+............
 
 Manipulates an iteratee (map, slice) and transforms it to to a flattened collection of another type:
 

@@ -125,7 +125,7 @@ func (b *chainBuilder) NotEmpty() bool {
 func (b *chainBuilder) Product() float64 {
 	return Product(b.collection)
 }
-func (b *chainBuilder) Reduce(reduceFunc, acc interface{}) float64 {
+func (b *chainBuilder) Reduce(reduceFunc, acc interface{}) interface{} {
 	return Reduce(b.collection, reduceFunc, acc)
 }
 func (b *chainBuilder) Sum() float64 {
