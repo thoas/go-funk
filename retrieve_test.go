@@ -12,6 +12,9 @@ func TestGetSlice(t *testing.T) {
 	is.Equal(Get(SliceOf(foo), "ID"), []int{1})
 	is.Equal(Get(SliceOf(foo), "Bar.Name"), []string{"Test"})
 	is.Equal(Get(SliceOf(foo), "Bar"), []*Bar{bar})
+	is.Equal(Get(([]Foo)(nil), "Bar.Name"), []string{})
+	is.Equal(Get([]Foo{}, "Bar.Name"), []string{})
+	is.Equal(Get([]*Foo{}, "Bar.Name"), []string{})
 }
 
 func TestGetSliceMultiLevel(t *testing.T) {
@@ -33,6 +36,7 @@ func TestGetNil(t *testing.T) {
 
 	is.Equal(Get(foo2, "Bar.Name"), nil)
 	is.Equal(Get([]*Foo{foo, foo2}, "Bar.Name"), []string{"Test"})
+	is.Equal(Get([]*Foo{foo, foo2}, "Bar"), []*Bar{bar})
 }
 
 func TestGetMap(t *testing.T) {

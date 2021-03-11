@@ -9,7 +9,7 @@ import (
 func Get(out interface{}, path string) interface{} {
 	result := get(reflect.ValueOf(out), path)
 
-	if result.Kind() != reflect.Invalid {
+	if result.Kind() != reflect.Invalid && !result.IsZero() {
 		return result.Interface()
 	}
 
@@ -23,7 +23,11 @@ func get(value reflect.Value, path string) reflect.Value {
 		length := value.Len()
 
 		if length == 0 {
-			return resultSlice
+			zeroElement := reflect.Zero(value.Type().Elem())
+			pathValue := get(zeroElement, path)
+			value = reflect.MakeSlice(reflect.SliceOf(pathValue.Type()), 0, 0)
+
+			return value
 		}
 
 		for i := 0; i < length; i++ {
@@ -31,7 +35,7 @@ func get(value reflect.Value, path string) reflect.Value {
 
 			resultValue := get(item, path)
 
-			if resultValue.Kind() == reflect.Invalid {
+			if resultValue.Kind() == reflect.Invalid || resultValue.IsZero() {
 				continue
 			}
 
