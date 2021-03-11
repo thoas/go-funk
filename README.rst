@@ -343,7 +343,7 @@ Manipulates an iteratee (map, slice) and transforms it to to a flattened collect
 funk.Get
 ........
 
-Retrieves the value at path of struct(s).
+Retrieves the value at path of struct(s) or map(s).
 
 .. code-block:: go
 
@@ -380,6 +380,34 @@ Retrieves the value at path of struct(s).
     funk.Get([]*Foo{foo}, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
     funk.Get(foo, "Bar.Bars.Bar.Name") // []string{"Level2-1", "Level2-2"}
     funk.Get(foo, "Bar.Name") // Test
+
+``funk.Get`` also support ``map`` values:
+
+.. code-block:: go
+
+    bar := map[string]interface{}{
+        "Name": "Test",
+    }
+
+    foo1 := map[string]interface{}{
+        "ID":        1,
+        "FirstName": "Dark",
+        "LastName":  "Vador",
+        "Age":       30,
+        "Bar":       bar,
+    }
+
+    foo2 := &map[string]interface{}{
+        "ID":        1,
+        "FirstName": "Dark",
+        "LastName":  "Vador",
+        "Age":       30,
+    } // foo2.Bar is nil
+
+    funk.Get(bar, "Name") // "Test"
+    funk.Get([]map[string]interface{}{foo1, foo2}, "Bar.Name") // []string{"Test"}
+    funk.Get(foo2, "Bar.Name") // nil
+
 
 ``funk.Get`` also handles ``nil`` values:
 
