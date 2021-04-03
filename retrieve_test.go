@@ -28,13 +28,18 @@ func TestGetNull(t *testing.T) {
 	is := assert.New(t)
 
 	is.Equal(Get(foo, "EmptyValue.Int64"), int64(10))
+	is.Equal(Get(foo, "ZeroValue"), nil)
+	is.Equal( false, GetAllowZero(foo, "ZeroBoolValue"))
+	is.Equal(GetAllowZero(foo, "ZeroIntValue"), 0)
+	is.Equal(GetAllowZero(foo, "ZeroIntPtrValue"), nil)
+	is.Equal(GetAllowZero(foo, "EmptyValue.Int64"), int64(10))
 	is.Equal(Get(SliceOf(foo), "EmptyValue.Int64"), []int64{10})
 }
 
 func TestGetNil(t *testing.T) {
 	is := assert.New(t)
-
 	is.Equal(Get(foo2, "Bar.Name"), nil)
+	is.Equal(GetAllowZero(foo2, "Bar.Name"), "")
 	is.Equal(Get([]*Foo{foo, foo2}, "Bar.Name"), []string{"Test"})
 	is.Equal(Get([]*Foo{foo, foo2}, "Bar"), []*Bar{bar})
 }

@@ -16,6 +16,18 @@ func Get(out interface{}, path string) interface{} {
 	return nil
 }
 
+func GetAllowZero(out interface{}, path string) interface{} {
+	result := get(reflect.ValueOf(out), path)
+
+	if result.Kind() != reflect.Invalid {
+		if result.Kind() == reflect.Ptr && result.IsZero() {
+			return nil
+		}
+		return result.Interface()
+	}
+	return nil
+}
+
 func get(value reflect.Value, path string) reflect.Value {
 	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
 		var resultSlice reflect.Value

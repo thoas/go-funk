@@ -19,7 +19,7 @@ func TestKeys(t *testing.T) {
 
 	sort.Strings(fields)
 
-	is.Equal(fields, []string{"Age", "Bar", "BarInterface", "BarPointer", "Bars", "EmptyValue", "FirstName", "GeneralInterface", "ID", "LastName"})
+	is.Equal(fields, []string{"Age", "Bar", "BarInterface", "BarPointer", "Bars", "EmptyValue", "FirstName", "GeneralInterface", "ID", "LastName", "ZeroBoolValue", "ZeroIntPtrValue", "ZeroIntValue"})
 }
 
 func TestValues(t *testing.T) {
@@ -32,5 +32,5 @@ func TestValues(t *testing.T) {
 
 	values := Values(foo).([]interface{})
 
-	is.Len(values, 10)
+	is.Len(values, 13)
 }
