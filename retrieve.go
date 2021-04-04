@@ -9,7 +9,7 @@ import (
 func Get(out interface{}, path string) interface{} {
 	result := get(reflect.ValueOf(out), path)
 
-	if result.Kind() != reflect.Invalid && !result.IsZero() {
+	if result.Kind() != reflect.Invalid && !result.IsZero() && result.CanInterface() {
 		return result.Interface()
 	}
 
@@ -19,7 +19,7 @@ func Get(out interface{}, path string) interface{} {
 func GetAllowZero(out interface{}, path string) interface{} {
 	result := get(reflect.ValueOf(out), path)
 
-	if result.Kind() != reflect.Invalid {
+	if result.Kind() != reflect.Invalid && result.CanInterface() {
 		if result.Kind() == reflect.Ptr && result.IsZero() {
 			return nil
 		}

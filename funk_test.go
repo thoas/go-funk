@@ -31,8 +31,8 @@ type Foo struct {
 	BarPointer       interface{}
 	GeneralInterface interface{}
 
-	ZeroBoolValue bool
-	ZeroIntValue  int
+	ZeroBoolValue   bool
+	ZeroIntValue    int
 	ZeroIntPtrValue *int
 }
 
@@ -72,10 +72,10 @@ var foo = &Foo{
 		bar,
 		bar,
 	},
-	BarInterface: bar,
-	BarPointer:   &bar,
-	ZeroBoolValue: false,
-	ZeroIntValue: 0,
+	BarInterface:    bar,
+	BarPointer:      &bar,
+	ZeroBoolValue:   false,
+	ZeroIntValue:    0,
 	ZeroIntPtrValue: nil,
 }
 
@@ -115,4 +115,12 @@ var m2 = map[string]interface{}{
 	"firstname": "dark",
 	"lastname":  "vador",
 	"age":       30,
+}
+
+type FooUnexported struct {
+	unexported bool
+}
+
+var fooUnexported = &FooUnexported{
+	unexported: true,
 }
