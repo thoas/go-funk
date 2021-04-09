@@ -6,27 +6,26 @@ import (
 )
 
 // Get retrieves the value at path of struct(s).
-func Get(out interface{}, path string) interface{} {
+func Get(out interface{}, path string, allowZero bool) interface{} {
 	result := get(reflect.ValueOf(out), path)
 
-	if result.Kind() != reflect.Invalid && !result.IsZero() && result.CanInterface() {
-		return result.Interface()
-	}
-
-	return nil
-}
-
-func GetAllowZero(out interface{}, path string) interface{} {
-	result := get(reflect.ValueOf(out), path)
-
+	// valid kind and we can return a result.Interface() without panic
 	if result.Kind() != reflect.Invalid && result.CanInterface() {
-		if result.Kind() == reflect.Ptr && result.IsZero() {
+		// if we don't allow zero and the result is a zero value return nil
+		if !allowZero && result.IsZero() {
 			return nil
 		}
+		// if the result kind is a pointer and its nil return nil
+		if result.Kind() == reflect.Ptr && result.IsNil() {
+			return nil
+		}
+		// return the result interface (i.e the zero value of it)
 		return result.Interface()
 	}
+
 	return nil
 }
+
 
 func get(value reflect.Value, path string) reflect.Value {
 	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
