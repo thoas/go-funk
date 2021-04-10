@@ -21,20 +21,20 @@ func GetOrElse(v interface{}, def interface{}) interface{} {
 	return val.Elem().Interface()
 }
 
-type RetrieverOption func(retriever *Retriever)
+type RetrieverOption func(retriever *retriever)
 
 func WithAllowZero() RetrieverOption {
-	return func(r *Retriever) {
+	return func(r *retriever) {
 		r.AllowZero = true
 	}
 }
 
-type Retriever struct {
+type retriever struct {
 	AllowZero bool
 }
 
-func newRetriever(opts ...RetrieverOption) *Retriever {
-	r := &Retriever{
+func newRetriever(opts ...RetrieverOption) *retriever {
+	r := &retriever{
 		AllowZero: false,
 	}
 	for _, opt := range opts {
@@ -45,7 +45,7 @@ func newRetriever(opts ...RetrieverOption) *Retriever {
 }
 
 // Get retrieves the value at path of struct(s).
-func (r Retriever) Get(out interface{}, path string) interface{} {
+func (r retriever) Get(out interface{}, path string) interface{} {
 	result := r.get(reflect.ValueOf(out), path)
 	// valid kind and we can return a result.Interface() without panic
 	if result.Kind() != reflect.Invalid && result.CanInterface() {
@@ -64,7 +64,7 @@ func (r Retriever) Get(out interface{}, path string) interface{} {
 	return nil
 }
 
-func (r Retriever) get(value reflect.Value, path string) reflect.Value {
+func (r retriever) get(value reflect.Value, path string) reflect.Value {
 	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
 		var resultSlice reflect.Value
 
