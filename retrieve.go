@@ -5,14 +5,52 @@ import (
 	"strings"
 )
 
-// Get retrieves the value at path of struct(s).
-func Get(out interface{}, path string, allowZero bool) interface{} {
-	result := get(reflect.ValueOf(out), path)
+// Get retrieves the value from given path, retriever can be modified with available RetrieverOptions
+func Get(out interface{}, path string, opts ...RetrieverOption) interface{} {
+	return newRetriever(opts...).Get(out, path)
+}
 
+// GetOrElse retrieves the value of the pointer or default.
+func GetOrElse(v interface{}, def interface{}) interface{} {
+	val := reflect.ValueOf(v)
+	if v == nil || (val.Kind() == reflect.Ptr && val.IsNil()) {
+		return def
+	} else if val.Kind() != reflect.Ptr {
+		return v
+	}
+	return val.Elem().Interface()
+}
+
+type RetrieverOption func(retriever *Retriever)
+
+func WithAllowZero() RetrieverOption {
+	return func(r *Retriever) {
+		r.AllowZero = true
+	}
+}
+
+type Retriever struct {
+	AllowZero bool
+}
+
+func newRetriever(opts ...RetrieverOption) *Retriever {
+	r := &Retriever{
+		AllowZero: false,
+	}
+	for _, opt := range opts {
+		opt(r)
+	}
+	// return the modified retriever instance
+	return r
+}
+
+// Get retrieves the value at path of struct(s).
+func (r Retriever) Get(out interface{}, path string) interface{} {
+	result := r.get(reflect.ValueOf(out), path)
 	// valid kind and we can return a result.Interface() without panic
 	if result.Kind() != reflect.Invalid && result.CanInterface() {
 		// if we don't allow zero and the result is a zero value return nil
-		if !allowZero && result.IsZero() {
+		if !r.AllowZero && result.IsZero() {
 			return nil
 		}
 		// if the result kind is a pointer and its nil return nil
@@ -26,8 +64,7 @@ func Get(out interface{}, path string, allowZero bool) interface{} {
 	return nil
 }
 
-
-func get(value reflect.Value, path string) reflect.Value {
+func (r Retriever) get(value reflect.Value, path string) reflect.Value {
 	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
 		var resultSlice reflect.Value
 
@@ -35,7 +72,7 @@ func get(value reflect.Value, path string) reflect.Value {
 
 		if length == 0 {
 			zeroElement := reflect.Zero(value.Type().Elem())
-			pathValue := get(zeroElement, path)
+			pathValue := r.get(zeroElement, path)
 			value = reflect.MakeSlice(reflect.SliceOf(pathValue.Type()), 0, 0)
 
 			return value
@@ -44,7 +81,7 @@ func get(value reflect.Value, path string) reflect.Value {
 		for i := 0; i < length; i++ {
 			item := value.Index(i)
 
-			resultValue := get(item, path)
+			resultValue := r.get(item, path)
 
 			if resultValue.Kind() == reflect.Invalid || resultValue.IsZero() {
 				continue
@@ -83,22 +120,11 @@ func get(value reflect.Value, path string) reflect.Value {
 		case reflect.Map:
 			value = value.MapIndex(reflect.ValueOf(part))
 		case reflect.Slice, reflect.Array:
-			value = get(value, part)
+			value = r.get(value, part)
 		default:
 			return reflect.ValueOf(nil)
 		}
 	}
 
 	return value
-}
-
-// Get retrieves the value of the pointer or default.
-func GetOrElse(v interface{}, def interface{}) interface{} {
-	val := reflect.ValueOf(v)
-	if v == nil || (val.Kind() == reflect.Ptr && val.IsNil()) {
-		return def
-	} else if val.Kind() != reflect.Ptr {
-		return v
-	}
-	return val.Elem().Interface()
 }

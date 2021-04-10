@@ -9,41 +9,41 @@ import (
 func TestGetSlice(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(Get(SliceOf(foo), "ID", false), []int{1})
-	is.Equal(Get(SliceOf(foo), "Bar.Name", false), []string{"Test"})
-	is.Equal(Get(SliceOf(foo), "Bar", false), []*Bar{bar})
-	is.Equal(Get(([]Foo)(nil), "Bar.Name", false), []string{})
-	is.Equal(Get([]Foo{}, "Bar.Name", false), []string{})
-	is.Equal(Get([]*Foo{}, "Bar.Name", false), []string{})
+	is.Equal(Get(SliceOf(foo), "ID"), []int{1})
+	is.Equal(Get(SliceOf(foo), "Bar.Name"), []string{"Test"})
+	is.Equal(Get(SliceOf(foo), "Bar"), []*Bar{bar})
+	is.Equal(Get(([]Foo)(nil), "Bar.Name"), []string{})
+	is.Equal(Get([]Foo{}, "Bar.Name"), []string{})
+	is.Equal(Get([]*Foo{}, "Bar.Name"), []string{})
 }
 
 func TestGetSliceMultiLevel(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(Get(foo, "Bar.Bars.Bar.Name", false), []string{"Level2-1", "Level2-2"})
-	is.Equal(Get(SliceOf(foo), "Bar.Bars.Bar.Name", false), []string{"Level2-1", "Level2-2"})
+	is.Equal(Get(foo, "Bar.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
+	is.Equal(Get(SliceOf(foo), "Bar.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
 }
 
 func TestGetNull(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(Get(foo, "EmptyValue.Int64", false), int64(10))
-	is.Equal(Get(foo, "ZeroValue", false), nil)
-	is.Equal( false, Get(foo, "ZeroBoolValue", true))
-	is.Equal( nil, Get(fooUnexported, "unexported", true))
-	is.Equal( nil, Get(fooUnexported, "unexported", false))
-	is.Equal(Get(foo, "ZeroIntValue", true), 0)
-	is.Equal(Get(foo, "ZeroIntPtrValue", true), nil)
-	is.Equal(Get(foo, "EmptyValue.Int64", true), int64(10))
-	is.Equal(Get(SliceOf(foo), "EmptyValue.Int64", false), []int64{10})
+	is.Equal(Get(foo, "EmptyValue.Int64"), int64(10))
+	is.Equal(Get(foo, "ZeroValue"), nil)
+	is.Equal( false, Get(foo, "ZeroBoolValue", WithAllowZero()))
+	is.Equal( nil, Get(fooUnexported, "unexported", WithAllowZero()))
+	is.Equal( nil, Get(fooUnexported, "unexported", WithAllowZero()))
+	is.Equal(Get(foo, "ZeroIntValue", WithAllowZero()), 0)
+	is.Equal(Get(foo, "ZeroIntPtrValue", WithAllowZero()), nil)
+	is.Equal(Get(foo, "EmptyValue.Int64", WithAllowZero()), int64(10))
+	is.Equal(Get(SliceOf(foo), "EmptyValue.Int64"), []int64{10})
 }
 
 func TestGetNil(t *testing.T) {
 	is := assert.New(t)
-	is.Equal(Get(foo2, "Bar.Name", false), nil)
-	is.Equal(Get(foo2, "Bar.Name", true), "")
-	is.Equal(Get([]*Foo{foo, foo2}, "Bar.Name", false), []string{"Test"})
-	is.Equal(Get([]*Foo{foo, foo2}, "Bar", false), []*Bar{bar})
+	is.Equal(Get(foo2, "Bar.Name"), nil)
+	is.Equal(Get(foo2, "Bar.Name", WithAllowZero()), "")
+	is.Equal(Get([]*Foo{foo, foo2}, "Bar.Name"), []string{"Test"})
+	is.Equal(Get([]*Foo{foo, foo2}, "Bar"), []*Bar{bar})
 }
 
 func TestGetMap(t *testing.T) {
@@ -54,36 +54,36 @@ func TestGetMap(t *testing.T) {
 		},
 	}
 
-	is.Equal("foobar", Get(m, "bar.name", false))
-	is.Equal(nil, Get(m, "foo.name", false))
-	is.Equal([]interface{}{"dark", "dark"}, Get([]map[string]interface{}{m1, m2}, "firstname", false))
-	is.Equal([]interface{}{"test"}, Get([]map[string]interface{}{m1, m2}, "bar.name", false))
+	is.Equal("foobar", Get(m, "bar.name"))
+	is.Equal(nil, Get(m, "foo.name"))
+	is.Equal([]interface{}{"dark", "dark"}, Get([]map[string]interface{}{m1, m2}, "firstname"))
+	is.Equal([]interface{}{"test"}, Get([]map[string]interface{}{m1, m2}, "bar.name"))
 }
 
 func TestGetThroughInterface(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(Get(foo, "BarInterface.Bars.Bar.Name", false), []string{"Level2-1", "Level2-2"})
-	is.Equal(Get(foo, "BarPointer.Bars.Bar.Name", false), []string{"Level2-1", "Level2-2"})
+	is.Equal(Get(foo, "BarInterface.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
+	is.Equal(Get(foo, "BarPointer.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
 }
 
 func TestGetNotFound(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(nil, Get(foo, "id", false))
-	is.Equal(nil, Get(foo, "id.id", false))
-	is.Equal(nil, Get(foo, "Bar.id", false))
-	is.Equal(nil, Get(foo, "Bars.id", false))
+	is.Equal(nil, Get(foo, "id"))
+	is.Equal(nil, Get(foo, "id.id"))
+	is.Equal(nil, Get(foo, "Bar.id"))
+	is.Equal(nil, Get(foo, "Bars.id"))
 }
 
 func TestGetSimple(t *testing.T) {
 	is := assert.New(t)
 
-	is.Equal(Get(foo, "ID", false), 1)
+	is.Equal(Get(foo, "ID"), 1)
 
-	is.Equal(Get(foo, "Bar.Name", false), "Test")
+	is.Equal(Get(foo, "Bar.Name"), "Test")
 
-	result := Get(foo, "Bar.Bars.Name", false)
+	result := Get(foo, "Bar.Bars.Name")
 
 	is.Equal(result, []string{"Level1-1", "Level1-2"})
 }
