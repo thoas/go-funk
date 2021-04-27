@@ -29,9 +29,9 @@ func TestGetNull(t *testing.T) {
 
 	is.Equal(Get(foo, "EmptyValue.Int64"), int64(10))
 	is.Equal(Get(foo, "ZeroValue"), nil)
-	is.Equal( false, Get(foo, "ZeroBoolValue", WithAllowZero()))
-	is.Equal( nil, Get(fooUnexported, "unexported", WithAllowZero()))
-	is.Equal( nil, Get(fooUnexported, "unexported", WithAllowZero()))
+	is.Equal(false, Get(foo, "ZeroBoolValue", WithAllowZero()))
+	is.Equal(nil, Get(fooUnexported, "unexported", WithAllowZero()))
+	is.Equal(nil, Get(fooUnexported, "unexported", WithAllowZero()))
 	is.Equal(Get(foo, "ZeroIntValue", WithAllowZero()), 0)
 	is.Equal(Get(foo, "ZeroIntPtrValue", WithAllowZero()), nil)
 	is.Equal(Get(foo, "EmptyValue.Int64", WithAllowZero()), int64(10))
