@@ -6,6 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestContainsBool(t *testing.T) {
+	is := assert.New(t)
+
+	is.True(ContainsBool([]bool{true, false}, true))
+	is.False(ContainsBool([]bool{true}, false))
+}
+
 func TestContainsInt(t *testing.T) {
 	is := assert.New(t)
 
@@ -33,6 +40,16 @@ func TestContainsString(t *testing.T) {
 
 	is.True(ContainsString([]string{"flo", "gilles"}, "flo"))
 	is.False(ContainsString([]string{"flo", "gilles"}, "alex"))
+}
+
+func TestFilterBool(t *testing.T) {
+	is := assert.New(t)
+
+	r := FilterBool([]bool{true, true, false, true}, func(x bool) bool {
+		return x == true
+	})
+
+	is.Equal(r, []bool{true, true, true})
 }
 
 func TestFilterString(t *testing.T) {
@@ -151,6 +168,7 @@ func TestSumNumeral(t *testing.T) {
 func TestTypesafeReverse(t *testing.T) {
 	is := assert.New(t)
 
+	is.Equal(ReverseBools([]bool{true, false, false}), []bool{false, false, true})
 	is.Equal(ReverseString("abcdefg"), "gfedcba")
 	is.Equal(ReverseInt([]int{1, 2, 3, 4}), []int{4, 3, 2, 1})
 	is.Equal(ReverseInt64([]int64{1, 2, 3, 4}), []int64{4, 3, 2, 1})
@@ -163,6 +181,9 @@ func TestTypesafeReverse(t *testing.T) {
 
 func TestTypesafeIndexOf(t *testing.T) {
 	is := assert.New(t)
+
+	is.Equal(IndexOfBool([]bool{true, false}, false), 1)
+	is.Equal(IndexOfBool([]bool{true}, false), -1)
 
 	is.Equal(IndexOfString([]string{"foo", "bar"}, "bar"), 1)
 	is.Equal(IndexOfString([]string{"foo", "bar"}, "flo"), -1)
@@ -183,6 +204,7 @@ func TestTypesafeIndexOf(t *testing.T) {
 func TestTypesafeLastIndexOf(t *testing.T) {
 	is := assert.New(t)
 
+	is.Equal(LastIndexOfBool([]bool{true, true, false, true}, true), 3)
 	is.Equal(LastIndexOfString([]string{"foo", "bar", "bar"}, "bar"), 2)
 	is.Equal(LastIndexOfInt([]int{1, 2, 2, 3}, 2), 2)
 	is.Equal(LastIndexOfInt64([]int64{1, 2, 2, 3}, 4), -1)
@@ -193,6 +215,7 @@ func TestTypesafeLastIndexOf(t *testing.T) {
 func TestTypesafeUniq(t *testing.T) {
 	is := assert.New(t)
 
+	is.Equal(UniqBool([]bool{true, false, false, true, false}), []bool{true, false})
 	is.Equal(UniqInt64([]int64{0, 1, 1, 2, 3, 0, 0, 12}), []int64{0, 1, 2, 3, 12})
 	is.Equal(UniqInt([]int{0, 1, 1, 2, 3, 0, 0, 12}), []int{0, 1, 2, 3, 12})
 	is.Equal(UniqUInt([]uint{0, 1, 1, 2, 3, 0, 0, 12}), []uint{0, 1, 2, 3, 12})
@@ -213,6 +236,16 @@ func TestTypesafeShuffle(t *testing.T) {
 	for _, entry := range initial {
 		is.True(ContainsInt(results, entry))
 	}
+}
+
+func TestDropBool(t *testing.T) {
+	results := DropBool([]bool{true, false, false, true, true}, 3)
+
+	is := assert.New(t)
+
+	is.Len(results, 2)
+
+	is.Equal([]bool{true, true}, results)
 }
 
 func TestDropString(t *testing.T) {

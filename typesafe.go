@@ -4,6 +4,11 @@ import (
 	"math/rand"
 )
 
+// InBools is an alias of ContainsBool, returns true if a bool is present in a iteratee.
+func InBools(s []bool, v bool) bool {
+	return ContainsBool(s, v)
+}
+
 // InInts is an alias of ContainsInt, returns true if an int is present in a iteratee.
 func InInts(s []int, v int) bool {
 	return ContainsInt(s, v)
@@ -131,6 +136,22 @@ func FindString(s []string, cb func(s string) bool) (string, bool) {
 	}
 
 	return "", false
+}
+
+// FilterBool iterates over a collection of bool, returning an array of
+// all bool elements predicate returns truthy for.
+func FilterBool(s []bool, cb func(s bool) bool) []bool {
+	results := []bool{}
+
+	for _, i := range s {
+		result := cb(i)
+
+		if result {
+			results = append(results, i)
+		}
+	}
+
+	return results
 }
 
 // FilterFloat64 iterates over a collection of float64, returning an array of
@@ -275,6 +296,16 @@ func FilterString(s []string, cb func(s string) bool) []string {
 	}
 
 	return results
+}
+
+// ContainsBool returns true if a boolean is present in a iteratee.
+func ContainsBool(s []bool, v bool) bool {
+	for _, vv := range s {
+		if vv == v {
+			return true
+		}
+	}
+	return false
 }
 
 // ContainsInt returns true if an int is present in a iteratee.
@@ -431,6 +462,14 @@ func SumFloat32(s []float32) (sum float32) {
 	return
 }
 
+// ReverseBools reverses an array of bool
+func ReverseBools(s []bool) []bool {
+	for i, j := 0, len(s)-1; i < len(s)/2; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
 // ReverseStrings reverses an array of string
 func ReverseStrings(s []string) []string {
 	for i, j := 0, len(s)-1; i < len(s)/2; i, j = i+1, j-1 {
@@ -521,6 +560,12 @@ func indexOf(n int, f func(int) bool) int {
 	return -1
 }
 
+// IndexOfBool gets the index at which the first occurrence of a bool value is found in array or return -1
+// if the value cannot be found
+func IndexOfBool(a []bool, x bool) int {
+	return indexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
 // IndexOfInt gets the index at which the first occurrence of an int value is found in array or return -1
 // if the value cannot be found
 func IndexOfInt(a []int, x int) int {
@@ -578,6 +623,12 @@ func lastIndexOf(n int, f func(int) bool) int {
 	return -1
 }
 
+// LastIndexOfBool gets the index at which the first occurrence of a bool value is found in array or return -1
+// if the value cannot be found
+func LastIndexOfBool(a []bool, x bool) int {
+	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
 // LastIndexOfInt gets the index at which the first occurrence of an int value is found in array or return -1
 // if the value cannot be found
 func LastIndexOfInt(a []int, x int) int {
@@ -630,6 +681,22 @@ func LastIndexOfFloat32(a []float32, x float32) int {
 // if the value cannot be found
 func LastIndexOfString(a []string, x string) int {
 	return lastIndexOf(len(a), func(i int) bool { return a[i] == x })
+}
+
+// UniqBool creates an array of bool with unique values.
+func UniqBool(a []bool) []bool {
+	results := []bool{}
+	for _, value := range a {
+		// If results is not empty, there is at most 1 value in it
+		if len(results) == 0 || results[0] != value {
+			results = append(results, value)
+		}
+		// At most 2 unique values
+		if len(results) == 2 {
+			break
+		}
+	}
+	return results
 }
 
 // UniqInt32 creates an array of int32 with unique values.
@@ -848,6 +915,16 @@ func UniqFloat32(a []float32) []float32 {
 	return results
 }
 
+// ShuffleBool creates an array of bool shuffled values using Fisher–Yates algorithm
+func ShuffleBool(a []bool) []bool {
+	for i := range a {
+		j := rand.Intn(i + 1)
+		a[i], a[j] = a[j], a[i]
+	}
+
+	return a
+}
+
 // ShuffleInt creates an array of int shuffled values using Fisher–Yates algorithm
 func ShuffleInt(a []int) []int {
 	for i := range a {
@@ -936,6 +1013,11 @@ func ShuffleFloat64(a []float64) []float64 {
 	}
 
 	return a
+}
+
+// DropBool creates a slice with `n` bools dropped from the beginning.
+func DropBool(s []bool, n int) []bool {
+	return s[n:]
 }
 
 // DropString creates a slice with `n` strings dropped from the beginning.
