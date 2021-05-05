@@ -93,3 +93,33 @@ func TestJoin_RightJoin(t *testing.T) {
 		})
 	}
 }
+
+// Struct which implements the String() method to test StringerJoin().
+type S struct {
+	Value string
+}
+
+func (s S) String() string {
+	return s.Value
+}
+
+func TestJoin_StringerJoin(t *testing.T) {
+	testCases := []struct {
+		Arr    []interface{ String() string }
+		Sep    string
+		Expect string
+	}{
+		{[]interface{ String() string }{}, ", ", ""},
+		{[]interface{ String() string }{S{"foo"}}, ", ", "foo"},
+		{[]interface{ String() string }{S{"foo"}, S{"bar"}, S{"baz"}}, ", ", "foo, bar, baz"},
+	}
+
+	for idx, tt := range testCases {
+		t.Run(fmt.Sprintf("test case #%d", idx+1), func(t *testing.T) {
+			is := assert.New(t)
+
+			actual := StringerJoin(tt.Arr, tt.Sep)
+			is.Equal(tt.Expect, actual)
+		})
+	}
+}
