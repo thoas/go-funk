@@ -1,8 +1,9 @@
 package funk
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestZipEmptyResult(t *testing.T) {
@@ -11,9 +12,7 @@ func TestZipEmptyResult(t *testing.T) {
 	emptySlice := []int{}
 
 	t.Run("NonSliceOrArray", func(t *testing.T) {
-		expected := []Tuple{}
-		result := Zip(map1, array1)
-		assert.Equal(t, result, expected)
+		assert.Panics(t, func() { Zip(map1, array1) }, "It should panic")
 	})
 
 	t.Run("ZerosSized", func(t *testing.T) {

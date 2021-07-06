@@ -14,21 +14,19 @@ type Tuple struct {
 // from each of the input iterables. The returned list is truncated in length
 // to the length of the shortest input iterable.
 func Zip(slice1 interface{}, slice2 interface{}) []Tuple {
-	inValue1 := reflect.ValueOf(slice1)
-	inValue2 := reflect.ValueOf(slice2)
-	kind1 := inValue1.Type().Kind()
-	kind2 := inValue2.Type().Kind()
-
-	result := []Tuple{}
-	for _, kind := range []reflect.Kind{kind1, kind2} {
-		if kind != reflect.Slice && kind != reflect.Array {
-			return result
-		}
+	if !IsCollection(slice1) || !IsCollection(slice2) {
+		panic("First parameter must be a collection")
 	}
 
-	var minLength int
-	length1 := inValue1.Len()
-	length2 := inValue2.Len()
+	var (
+		minLength int
+		inValue1  = reflect.ValueOf(slice1)
+		inValue2  = reflect.ValueOf(slice2)
+		result    = []Tuple{}
+		length1   = inValue1.Len()
+		length2   = inValue2.Len()
+	)
+
 	if length1 <= length2 {
 		minLength = length1
 	} else {
