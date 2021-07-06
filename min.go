@@ -4,12 +4,10 @@ import "strings"
 
 // MinInt validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []int
-// It returns int or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinInt(i []int) interface{} {
+// It returns int
+func MinInt(i []int) int {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min int
 	for idx := 0; idx < len(i); idx++ {
@@ -27,12 +25,10 @@ func MinInt(i []int) interface{} {
 
 // MinInt8 validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []int8
-// It returns int8 or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinInt8(i []int8) interface{} {
+// It returns int8
+func MinInt8(i []int8) int8 {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min int8
 	for idx := 0; idx < len(i); idx++ {
@@ -50,12 +46,10 @@ func MinInt8(i []int8) interface{} {
 
 // MinInt16 validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []int16
-// It returns int16 or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinInt16(i []int16) interface{} {
+// It returns int16
+func MinInt16(i []int16) int16 {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min int16
 	for idx := 0; idx < len(i); idx++ {
@@ -73,12 +67,10 @@ func MinInt16(i []int16) interface{} {
 
 // MinInt32 validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []int32
-// It returns int32 or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinInt32(i []int32) interface{} {
+// It returns int32
+func MinInt32(i []int32) int32 {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min int32
 	for idx := 0; idx < len(i); idx++ {
@@ -96,12 +88,10 @@ func MinInt32(i []int32) interface{} {
 
 // MinInt64 validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []int64
-// It returns int64 or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinInt64(i []int64) interface{} {
+// It returns int64
+func MinInt64(i []int64) int64 {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min int64
 	for idx := 0; idx < len(i); idx++ {
@@ -119,12 +109,10 @@ func MinInt64(i []int64) interface{} {
 
 // MinFloat32 validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []float32
-// It returns float32 or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinFloat32(i []float32) interface{} {
+// It returns float32
+func MinFloat32(i []float32) float32 {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min float32
 	for idx := 0; idx < len(i); idx++ {
@@ -142,12 +130,10 @@ func MinFloat32(i []float32) interface{} {
 
 // MinFloat64 validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []float64
-// It returns float64 or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinFloat64(i []float64) interface{} {
+// It returns float64
+func MinFloat64(i []float64) float64 {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min float64
 	for idx := 0; idx < len(i); idx++ {
@@ -165,12 +151,10 @@ func MinFloat64(i []float64) interface{} {
 
 // MinString validates the input, compares the elements and returns the minimum element in an array/slice.
 // It accepts []string
-// It returns string or nil
-// It returns nil for the following cases:
-//  - input is of length 0
-func MinString(i []string) interface{} {
+// It returns string
+func MinString(i []string) string {
 	if len(i) == 0 {
-		return nil
+		panic("arg is an empty array/slice")
 	}
 	var min string
 	for idx := 0; idx < len(i); idx++ {

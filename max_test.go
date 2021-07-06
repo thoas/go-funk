@@ -1,8 +1,9 @@
 package funk
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMaxWithArrayNumericInput(t *testing.T) {
@@ -19,26 +20,21 @@ func TestMaxWithArrayNumericInput(t *testing.T) {
 	n5 := []int64{}
 	//Calls
 	r1 := MaxInt(d1)
-	c1 := MaxInt(n1)
 	r2 := MaxInt8(d2)
-	c2 := MaxInt8(n2)
 	r3 := MaxInt16(d3)
-	c3 := MaxInt16(n3)
 	r4 := MaxInt32(d4)
-	c4 := MaxInt32(n4)
 	r5 := MaxInt64(d5)
-	c5 := MaxInt64(n5)
 	// Assertions
 	assert.Equal(t, int(44), r1, "It should return the max value in array")
-	assert.Equal(t, nil, c1, "It should return nil")
+	assert.Panics(t, func() { MaxInt(n1) }, "It should panic")
 	assert.Equal(t, int8(9), r2, "It should return the max value in array")
-	assert.Equal(t, nil, c2, "It should return nil")
+	assert.Panics(t, func() { MaxInt8(n2) }, "It should panic")
 	assert.Equal(t, int16(33), r3, "It should return the max value in array")
-	assert.Equal(t, nil, c3, "It should return nil")
+	assert.Panics(t, func() { MaxInt16(n3) }, "It should panic")
 	assert.Equal(t, int32(21), r4, "It should return the max value in array")
-	assert.Equal(t, nil, c4, "It should return nil")
+	assert.Panics(t, func() { MaxInt32(n4) }, "It should panic")
 	assert.Equal(t, int64(9), r5, "It should return the max value in array")
-	assert.Equal(t, nil, c5, "It should return nil")
+	assert.Panics(t, func() { MaxInt64(n5) }, "It should panic")
 
 }
 
@@ -50,14 +46,12 @@ func TestMaxWithArrayFloatInput(t *testing.T) {
 	n2 := []float32{}
 	//Calls
 	r1 := MaxFloat64(d1)
-	c1 := MaxFloat64(n1)
 	r2 := MaxFloat32(d2)
-	c2 := MaxFloat32(n2)
 	// Assertions
 	assert.Equal(t, float64(38.3), r1, "It should return the max value in array")
-	assert.Equal(t, nil, c1, "It should return nil")
+	assert.Panics(t, func() { MaxFloat64(n1) }, "It should panic")
 	assert.Equal(t, float32(7.7), r2, "It should return the max value in array")
-	assert.Equal(t, nil, c2, "It should return nil")
+	assert.Panics(t, func() { MaxFloat32(n2) }, "It should panic")
 }
 
 func TestMaxWithArrayInputWithStrings(t *testing.T) {
@@ -72,12 +66,10 @@ func TestMaxWithArrayInputWithStrings(t *testing.T) {
 	r2 := MaxString(d2)
 	r3 := MaxString(d3)
 	r4 := MaxString(d4)
-	c1 := MaxString(n1)
 	// Assertions
 	assert.Equal(t, "cbd", r1, "It should print cbd because its first char is max in the list")
 	assert.Equal(t, "abe", r2, "It should print abe because its first different char is max in the list")
 	assert.Equal(t, "foo", r3, "It should print foo because its first different char is max in the list")
 	assert.Equal(t, "abc", r4, "It should print abc because its first different char is max in the list")
-	assert.Equal(t, nil, c1, "It should return nil")
+	assert.Panics(t, func() { MaxString(n1) }, "It should panic")
 }
-

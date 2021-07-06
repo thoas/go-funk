@@ -1,8 +1,9 @@
 package funk
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMinWithArrayNumericInput(t *testing.T) {
@@ -19,26 +20,21 @@ func TestMinWithArrayNumericInput(t *testing.T) {
 	n5 := []int64{}
 	//Calls
 	r1 := MinInt(d1)
-	c1 := MinInt(n1)
 	r2 := MinInt8(d2)
-	c2 := MinInt8(n2)
 	r3 := MinInt16(d3)
-	c3 := MinInt16(n3)
 	r4 := MinInt32(d4)
-	c4 := MinInt32(n4)
 	r5 := MinInt64(d5)
-	c5 := MinInt64(n5)
 	// Assertions
 	assert.Equal(t, int(0), r1, "It should return the min value in array")
-	assert.Equal(t, nil, c1, "It should return nil")
+	assert.Panics(t, func() { MinInt(n1) }, "It should panic")
 	assert.Equal(t, int8(1), r2, "It should return the min value in array")
-	assert.Equal(t, nil, c2, "It should return nil")
+	assert.Panics(t, func() { MinInt8(n2) }, "It should panic")
 	assert.Equal(t, int16(2), r3, "It should return the min value in array")
-	assert.Equal(t, nil, c3, "It should return nil")
+	assert.Panics(t, func() { MinInt16(n3) }, "It should panic")
 	assert.Equal(t, int32(3), r4, "It should return the min value in array")
-	assert.Equal(t, nil, c4, "It should return nil")
+	assert.Panics(t, func() { MinInt32(n4) }, "It should panic")
 	assert.Equal(t, int64(1), r5, "It should return the min value in array")
-	assert.Equal(t, nil, c5, "It should return nil")
+	assert.Panics(t, func() { MinInt64(n5) }, "It should panic")
 
 }
 
@@ -50,14 +46,12 @@ func TestMinWithArrayFloatInput(t *testing.T) {
 	n2 := []float32{}
 	//Calls
 	r1 := MinFloat64(d1)
-	c1 := MinFloat64(n1)
 	r2 := MinFloat32(d2)
-	c2 := MinFloat32(n2)
 	// Assertions
 	assert.Equal(t, float64(2), r1, "It should return the min value in array")
-	assert.Equal(t, nil, c1, "It should return nil")
+	assert.Panics(t, func() { MinFloat64(n1) }, "It should panic")
 	assert.Equal(t, float32(1.3), r2, "It should return the min value in array")
-	assert.Equal(t, nil, c2, "It should return nil")
+	assert.Panics(t, func() { MinFloat32(n2) }, "It should panic")
 }
 
 func TestMinWithArrayInputWithStrings(t *testing.T) {
@@ -72,12 +66,10 @@ func TestMinWithArrayInputWithStrings(t *testing.T) {
 	r2 := MinString(d2)
 	r3 := MinString(d3)
 	r4 := MinString(d4)
-	c1 := MinString(n1)
 	// Assertions
 	assert.Equal(t, "abc", r1, "It should print cbd because its first char is min in the list")
 	assert.Equal(t, "abc", r2, "It should print abe because its first different char is min in the list")
 	assert.Equal(t, " ", r3, "It should print foo because its first different char is min in the list")
 	assert.Equal(t, "aaa", r4, "It should print abc because its first different char is min in the list")
-	assert.Equal(t, nil, c1, "It should return nil")
+	assert.Panics(t, func() { MinString(n1) }, "It should panic")
 }
-
