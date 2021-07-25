@@ -160,6 +160,25 @@ func TestFilter(t *testing.T) {
 	is.Equal(r, []int{2, 4})
 }
 
+func TestFilterWithArgument(t *testing.T) {
+	is := assert.New(t)
+
+	predicates := []func(int, int) bool{
+		func(x int, y int) bool {
+			return x%y == 0
+		},
+		func(x int, y int) bool {
+			return x > 2
+		},
+	}
+
+	predicateArgument := 2
+
+	r := FilterWithArgument([]int{1, 2, 3, 4}, predicates, predicateArgument)
+
+	is.Equal(r, []int{4})
+}
+
 func TestFind(t *testing.T) {
 	is := assert.New(t)
 

@@ -261,6 +261,26 @@ see also, typesafe implementations: FilterInt_, FilterInt64_, FilterFloat32_, Fi
 .. _FilterInt64: https://godoc.org/github.com/thoas/go-funk#FilterInt64
 .. _FilterString: https://godoc.org/github.com/thoas/go-funk#FilterString
 
+funk.FilterWithArguments
+...........
+
+Filters a slice based on a slice of predicates passing a argument to all predicates.
+
+.. code-block:: go
+
+    predicates := []func(int, int) bool{
+    func(x int, y int) bool {
+        return x%y == 0
+    },
+    func(x int, y int) bool {
+        return x > 2
+    },
+    }
+
+    predicateArgument := 2
+
+    r := FilterWithArgument([]int{1, 2, 3, 4}, predicates, predicateArgument) // []int{4}
+
 funk.Reduce
 ...........
 
