@@ -337,3 +337,17 @@ func TestDropFloat64(t *testing.T) {
 
 	is.Equal([]float64{4.4}, results)
 }
+
+func TestChunkStrings(t *testing.T) {
+	is := assert.New(t)
+
+	results := ChunkStrings([]string{"foo", "bar", "foo", "bar", "bar"}, 2)
+
+	is.Len(results, 3)
+	is.Len(results[0], 2)
+	is.Len(results[1], 2)
+	is.Len(results[2], 1)
+	is.Equal([]string{"foo", "bar"}, results[0])
+	is.Equal([]string{"foo", "bar"}, results[1])
+	is.Equal([]string{"bar"}, results[2])
+}

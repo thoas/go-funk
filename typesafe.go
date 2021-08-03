@@ -1064,3 +1064,98 @@ func DropFloat32(s []float32, n int) []float32 {
 func DropFloat64(s []float64, n int) []float64 {
 	return s[n:]
 }
+
+// ChunkStrings creates an array of strings split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkStrings(arr []string, size int) [][]string {
+	var results [][]string
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
+
+// ChunkInts creates an array of ints split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkInts(arr []int, size int) [][]int {
+	var results [][]int
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
+
+// ChunkInt32s creates an array of ints split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkInt32s(arr []int32, size int) [][]int32 {
+	var results [][]int32
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
+
+// ChunkInt64s creates an array of ints split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkInt64s(arr []int64, size int) [][]int64 {
+	var results [][]int64
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
+
+// ChunkFloat64s creates an array of floats split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkFloat64s(arr []float64, size int) [][]float64 {
+	var results [][]float64
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
