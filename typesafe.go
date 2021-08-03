@@ -1103,7 +1103,7 @@ func ChunkInts(arr []int, size int) [][]int {
 	return results
 }
 
-// ChunkInt32s creates an array of ints split into groups with the length of size.
+// ChunkInt32s creates an array of int32s split into groups with the length of size.
 // If array can't be split evenly, the final chunk will be
 // the remaining element.
 func ChunkInt32s(arr []int32, size int) [][]int32 {
@@ -1122,7 +1122,7 @@ func ChunkInt32s(arr []int32, size int) [][]int32 {
 	return results
 }
 
-// ChunkInt64s creates an array of ints split into groups with the length of size.
+// ChunkInt64s creates an array of int64s split into groups with the length of size.
 // If array can't be split evenly, the final chunk will be
 // the remaining element.
 func ChunkInt64s(arr []int64, size int) [][]int64 {
@@ -1141,7 +1141,7 @@ func ChunkInt64s(arr []int64, size int) [][]int64 {
 	return results
 }
 
-// ChunkFloat64s creates an array of floats split into groups with the length of size.
+// ChunkFloat64s creates an array of float64s split into groups with the length of size.
 // If array can't be split evenly, the final chunk will be
 // the remaining element.
 func ChunkFloat64s(arr []float64, size int) [][]float64 {
