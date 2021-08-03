@@ -30,9 +30,7 @@ func OuterJoinInt(lx, rx []int) []int {
 	rjoin := RightJoinInt(lx, rx)
 
 	result := make([]int, len(ljoin)+len(rjoin))
-	for i, v := range ljoin {
-		result[i] = v
-	}
+	copy(result, ljoin)
 	for i, v := range rjoin {
 		result[len(ljoin)+i] = v
 	}
@@ -94,9 +92,7 @@ func OuterJoinInt32(lx, rx []int32) []int32 {
 	rjoin := RightJoinInt32(lx, rx)
 
 	result := make([]int32, len(ljoin)+len(rjoin))
-	for i, v := range ljoin {
-		result[i] = v
-	}
+	copy(result, ljoin)
 	for i, v := range rjoin {
 		result[len(ljoin)+i] = v
 	}
@@ -158,9 +154,7 @@ func OuterJoinInt64(lx, rx []int64) []int64 {
 	rjoin := RightJoinInt64(lx, rx)
 
 	result := make([]int64, len(ljoin)+len(rjoin))
-	for i, v := range ljoin {
-		result[i] = v
-	}
+	copy(result, ljoin)
 	for i, v := range rjoin {
 		result[len(ljoin)+i] = v
 	}
@@ -222,9 +216,7 @@ func OuterJoinString(lx, rx []string) []string {
 	rjoin := RightJoinString(lx, rx)
 
 	result := make([]string, len(ljoin)+len(rjoin))
-	for i, v := range ljoin {
-		result[i] = v
-	}
+	copy(result, ljoin)
 	for i, v := range rjoin {
 		result[len(ljoin)+i] = v
 	}
@@ -286,9 +278,7 @@ func OuterJoinFloat32(lx, rx []float32) []float32 {
 	rjoin := RightJoinFloat32(lx, rx)
 
 	result := make([]float32, len(ljoin)+len(rjoin))
-	for i, v := range ljoin {
-		result[i] = v
-	}
+	copy(result, ljoin)
 	for i, v := range rjoin {
 		result[len(ljoin)+i] = v
 	}
@@ -350,9 +340,7 @@ func OuterJoinFloat64(lx, rx []float64) []float64 {
 	rjoin := RightJoinFloat64(lx, rx)
 
 	result := make([]float64, len(ljoin)+len(rjoin))
-	for i, v := range ljoin {
-		result[i] = v
-	}
+	copy(result, ljoin)
 	for i, v := range rjoin {
 		result[len(ljoin)+i] = v
 	}

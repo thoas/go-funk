@@ -97,14 +97,14 @@ func Difference(x interface{}, y interface{}) (interface{}, interface{}) {
 
 	for i := 0; i < xValue.Len(); i++ {
 		v := xValue.Index(i).Interface()
-		if Contains(y, v) == false {
+		if !Contains(y, v) {
 			leftSlice = reflect.Append(leftSlice, xValue.Index(i))
 		}
 	}
 
 	for i := 0; i < yValue.Len(); i++ {
 		v := yValue.Index(i).Interface()
-		if Contains(x, v) == false {
+		if !Contains(x, v) {
 			rightSlice = reflect.Append(rightSlice, yValue.Index(i))
 		}
 	}
@@ -118,13 +118,13 @@ func DifferenceString(x []string, y []string) ([]string, []string) {
 	rightSlice := []string{}
 
 	for _, v := range x {
-		if ContainsString(y, v) == false {
+		if !ContainsString(y, v) {
 			leftSlice = append(leftSlice, v)
 		}
 	}
 
 	for _, v := range y {
-		if ContainsString(x, v) == false {
+		if !ContainsString(x, v) {
 			rightSlice = append(rightSlice, v)
 		}
 	}
@@ -138,13 +138,13 @@ func DifferenceInt64(x []int64, y []int64) ([]int64, []int64) {
 	rightSlice := []int64{}
 
 	for _, v := range x {
-		if ContainsInt64(y, v) == false {
+		if !ContainsInt64(y, v) {
 			leftSlice = append(leftSlice, v)
 		}
 	}
 
 	for _, v := range y {
-		if ContainsInt64(x, v) == false {
+		if !ContainsInt64(x, v) {
 			rightSlice = append(rightSlice, v)
 		}
 	}
@@ -178,13 +178,13 @@ func DifferenceInt(x []int, y []int) ([]int, []int) {
 	rightSlice := []int{}
 
 	for _, v := range x {
-		if ContainsInt(y, v) == false {
+		if !ContainsInt(y, v) {
 			leftSlice = append(leftSlice, v)
 		}
 	}
 
 	for _, v := range y {
-		if ContainsInt(x, v) == false {
+		if !ContainsInt(x, v) {
 			rightSlice = append(rightSlice, v)
 		}
 	}
