@@ -554,7 +554,7 @@ Creates an array of the own enumerable map values or struct field values.
 
 .. code-block:: go
 
-    funk.Values(map[string]int{"one": 1, "two": 2}) // []string{1, 2} (iteration order is not guaranteed)
+    funk.Values(map[string]int{"one": 1, "two": 2}) // []int{1, 2} (iteration order is not guaranteed)
 
     foo := &Foo{
         ID:        1,
