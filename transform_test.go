@@ -120,6 +120,50 @@ func TestToMap(t *testing.T) {
 	}
 }
 
+func TestToSet(t *testing.T) {
+	is := assert.New(t)
+
+	type Foo struct {
+		ID   int
+		Name string
+	}
+
+	var (
+		f1 = Foo{ID: 1, Name: "hello"}
+		f2 = Foo{ID: 1, Name: "hello"}
+	)
+
+	// [2]Foo -> map[Foo]struct{}
+	array := [2]Foo{f1, f2}
+
+	resultOfArray := ToSet(array)
+	is.True(reflect.TypeOf(resultOfArray).Kind() == reflect.Map)
+
+	setFromArray, ok := resultOfArray.(map[Foo]struct{})
+	is.True(ok)
+	is.True(len(setFromArray) == 1)
+
+	for k, v := range setFromArray {
+		is.True(reflect.TypeOf(v).Size() == 0)
+		is.True(k == f1)
+	}
+
+	// []*Foo -> map[*Foo]struct{}
+	slice := []*Foo{&f1, &f2, &f1, &f2}
+
+	resultOfSlice := ToSet(slice)
+	is.True(reflect.TypeOf(resultOfSlice).Kind() == reflect.Map)
+
+	setFromSlice, ok := resultOfSlice.(map[*Foo]struct{})
+	is.True(ok)
+	is.True(len(setFromSlice) == 2)
+
+	for k, v := range setFromSlice {
+		is.True(reflect.TypeOf(v).Size() == 0)
+		is.True(k == &f1 || k == &f2)
+	}
+}
+
 func TestChunk(t *testing.T) {
 	is := assert.New(t)
 
