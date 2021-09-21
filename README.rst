@@ -220,7 +220,7 @@ see also, typesafe implementations: LastIndexOfInt_, LastIndexOfInt64_, LastInde
 funk.ToMap
 ..........
 
-Transforms a slice of structs to a map based on a ``pivot`` field.
+Transforms a slice or an array of structs to a map based on a ``pivot`` field.
 
 .. code-block:: go
 
