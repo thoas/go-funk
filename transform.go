@@ -364,7 +364,6 @@ func Uniq(in interface{}) interface{} {
 		result := makeSlice(value, 0)
 
 		seen := make(map[interface{}]bool, length)
-		j := 0
 
 		for i := 0; i < length; i++ {
 			val := value.Index(i)
@@ -376,7 +375,6 @@ func Uniq(in interface{}) interface{} {
 
 			seen[v] = true
 			result = reflect.Append(result, val)
-			j++
 		}
 
 		return result.Interface()
