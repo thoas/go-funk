@@ -98,6 +98,33 @@ func ToMap(in interface{}, pivot string) interface{} {
 	return collection.Interface()
 }
 
+// ToSet transforms a collection of instances to a Set.
+// []T => map[T]struct{}
+func ToSet(in interface{}) interface{} {
+	// input value must be a collection
+	if !IsCollection(in) {
+		panic(fmt.Sprintf("%v must be a slice or an array", in))
+	}
+
+	var (
+		empty      = struct{}{}
+		emptyType  = reflect.TypeOf(empty)
+		emptyValue = reflect.ValueOf(empty)
+	)
+
+	value := reflect.ValueOf(in)
+	elemType := value.Type().Elem()
+
+	// key of the set will be the input type
+	collection := reflect.MakeMap(reflect.MapOf(elemType, emptyType))
+
+	for i := 0; i < value.Len(); i++ {
+		collection.SetMapIndex(value.Index(i), emptyValue)
+	}
+
+	return collection.Interface()
+}
+
 func mapSlice(arrValue reflect.Value, funcValue reflect.Value) reflect.Value {
 	funcType := funcValue.Type()
 

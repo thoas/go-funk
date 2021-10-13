@@ -242,6 +242,33 @@ Transforms a slice of structs to a map based on a ``pivot`` field.
 
     mapping := funk.ToMap(results, "ID") // map[int]*Foo{1: f, 2: b}
 
+funk.ToSet
+..........
+
+Transforms an array or a slice to a set (a map with zero-size values).
+
+.. code-block:: go
+
+    f := Foo{
+        ID:        1,
+        FirstName: "Gilles",
+        LastName:  "Fabio",
+        Age:       70,
+    }
+
+    b := Foo{
+        ID:        2,
+        FirstName: "Florent",
+        LastName:  "Messa",
+        Age:       80,
+    }
+
+    mapping := funk.ToSet([]Foo{f, b}) // map[Foo]stuct{}{f: struct{}{}, b: struct{}{}}
+
+    mapping := funk.ToSet([4]int{1, 1, 2, 2}) // map[int]struct{}{1: struct{}{}, 2: struct{}{}}
+
+
+
 funk.Filter
 ...........
 
