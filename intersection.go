@@ -73,11 +73,11 @@ func IntersectString(x []string, y []string) []string {
 
 // Difference returns the difference between two collections.
 func Difference(x interface{}, y interface{}) (interface{}, interface{}) {
-	if !IsCollection(x) {
-		panic("First parameter must be a collection")
+	if !IsIteratee(x) {
+		panic("First parameter must be an iteratee")
 	}
-	if !IsCollection(y) {
-		panic("Second parameter must be a collection")
+	if !IsIteratee(y) {
+		panic("Second parameter must be an iteratee")
 	}
 
 	xValue := reflect.ValueOf(x)
@@ -90,26 +90,55 @@ func Difference(x interface{}, y interface{}) (interface{}, interface{}) {
 		panic("Parameters must have the same type")
 	}
 
-	leftType := reflect.SliceOf(xType.Elem())
-	leftSlice := reflect.MakeSlice(leftType, 0, 0)
-	rightType := reflect.SliceOf(yType.Elem())
-	rightSlice := reflect.MakeSlice(rightType, 0, 0)
+	if xType.Kind() == reflect.Map {
+		leftType := reflect.MapOf(xType.Key(), xType.Elem())
+		rightType := reflect.MapOf(xType.Key(), xType.Elem())
+		leftMap := reflect.MakeMap(leftType)
+		rightMap := reflect.MakeMap(rightType)
 
-	for i := 0; i < xValue.Len(); i++ {
-		v := xValue.Index(i).Interface()
-		if !Contains(y, v) {
-			leftSlice = reflect.Append(leftSlice, xValue.Index(i))
+		xIter := xValue.MapRange()
+		for xIter.Next() {
+			k := xIter.Key()
+			xv := xIter.Value()
+			yv := yValue.MapIndex(k)
+			equalTo := equal(xv.Interface(), true)
+			if !yv.IsValid() || !equalTo(yv, yv) {
+				leftMap.SetMapIndex(k, xv)
+			}
 		}
-	}
 
-	for i := 0; i < yValue.Len(); i++ {
-		v := yValue.Index(i).Interface()
-		if !Contains(x, v) {
-			rightSlice = reflect.Append(rightSlice, yValue.Index(i))
+		yIter := yValue.MapRange()
+		for yIter.Next() {
+			k := yIter.Key()
+			yv := yIter.Value()
+			xv := xValue.MapIndex(k)
+			equalTo := equal(yv.Interface(), true)
+			if !xv.IsValid() || !equalTo(xv, xv) {
+				rightMap.SetMapIndex(k, yv)
+			}
 		}
-	}
+		return leftMap.Interface(), rightMap.Interface()
+	} else {
+		leftType := reflect.SliceOf(xType.Elem())
+		rightType := reflect.SliceOf(yType.Elem())
+		leftSlice := reflect.MakeSlice(leftType, 0, 0)
+		rightSlice := reflect.MakeSlice(rightType, 0, 0)
 
-	return leftSlice.Interface(), rightSlice.Interface()
+		for i := 0; i < xValue.Len(); i++ {
+			v := xValue.Index(i).Interface()
+			if !Contains(y, v) {
+				leftSlice = reflect.Append(leftSlice, xValue.Index(i))
+			}
+		}
+
+		for i := 0; i < yValue.Len(); i++ {
+			v := yValue.Index(i).Interface()
+			if !Contains(x, v) {
+				rightSlice = reflect.Append(rightSlice, yValue.Index(i))
+			}
+		}
+		return leftSlice.Interface(), rightSlice.Interface()
+	}
 }
 
 // DifferenceString returns the difference between two collections of strings.
