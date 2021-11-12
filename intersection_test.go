@@ -36,6 +36,10 @@ func TestDifference(t *testing.T) {
 	r1, r2 = Difference([]string{"foo", "bar", "hello", "bar"}, []string{"foo", "bar"})
 	is.Equal(r1, []string{"hello"})
 	is.Equal(r2, []string{})
+
+	r1, r2 = Difference(map[string]string{"foo": "bar", "hello": "baz"}, map[string]string{"foo": "bar", "bar": "baz"})
+	is.Equal(r1, map[string]string{"hello": "baz"})
+	is.Equal(r2, map[string]string{"bar": "baz"})
 }
 
 func TestDifferenceString(t *testing.T) {
