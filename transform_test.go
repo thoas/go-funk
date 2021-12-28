@@ -148,6 +148,115 @@ func TestToMap(t *testing.T) {
 	}
 }
 
+func TestGroupBy(t *testing.T) {
+	is := assert.New(t)
+
+	f1 := Foo{
+		ID:        1,
+		FirstName: "Dark",
+		LastName:  "Vador",
+		Age:       30,
+		Bar: &Bar{
+			Name: "Test1",
+		},
+	}
+
+	f2 := Foo{
+		ID:        1,
+		FirstName: "Light",
+		LastName:  "Vador",
+		Age:       30,
+		Bar: &Bar{
+			Name: "Test2",
+		},
+	}
+
+	// []*Foo -> Map<int, *Foo>
+	sliceResults := []*Foo{&f1, &f2}
+
+	{ // group by same value
+
+		groupedByID := GroupBy(sliceResults, func(f *Foo) int { return f.ID })
+		is.True(reflect.TypeOf(groupedByID).Kind() == reflect.Map)
+
+		mapping, ok := groupedByID.(map[int][]*Foo)
+
+		is.True(ok)
+		is.True(len(mapping) == 1)
+
+		for _, result := range sliceResults {
+			items, ok := mapping[result.ID]
+
+			is.True(ok)
+			is.True(len(items) == 2)
+			is.True(reflect.DeepEqual(items, sliceResults))
+		}
+
+	}
+
+	{ // group by diff value
+
+		groupedByFirstName := GroupBy(sliceResults, func(f *Foo) string { return f.FirstName })
+		is.True(reflect.TypeOf(groupedByFirstName).Kind() == reflect.Map)
+
+		mapping, ok := groupedByFirstName.(map[string][]*Foo)
+
+		is.True(ok)
+		is.True(len(mapping) == 2)
+
+		for _, result := range sliceResults {
+			items, ok := mapping[result.FirstName]
+
+			is.True(ok)
+			is.True(len(items) == 1)
+			is.True(reflect.DeepEqual(items, []*Foo{result}))
+		}
+	}
+
+	{ // group by inner and diff value
+
+		groupedByBarName := GroupBy(sliceResults, func(f *Foo) string { return f.Bar.Name })
+		is.True(reflect.TypeOf(groupedByBarName).Kind() == reflect.Map)
+
+		mapping, ok := groupedByBarName.(map[string][]*Foo)
+
+		is.True(ok)
+		is.True(len(mapping) == 2)
+
+		for _, result := range sliceResults {
+			items, ok := mapping[result.Bar.Name]
+
+			is.True(ok)
+			is.True(len(items) == 1)
+			is.True(reflect.DeepEqual(items, []*Foo{result}))
+		}
+	}
+
+	{ // group by some other method
+
+		testGroupBySpecialHashMethod := func(f *Foo) int {
+			return f.Age + f.ID + f.ZeroIntValue + len(f.FirstName)
+		}
+
+		groupedByHash := GroupBy(sliceResults, testGroupBySpecialHashMethod)
+		is.True(reflect.TypeOf(groupedByHash).Kind() == reflect.Map)
+
+		mappingByID, ok := groupedByHash.(map[int][]*Foo)
+
+		is.True(ok)
+		is.True(len(mappingByID) == 2)
+
+		for _, result := range sliceResults {
+			items, ok := mappingByID[testGroupBySpecialHashMethod(result)]
+
+			is.True(ok)
+			is.True(len(items) == 1)
+			is.True(reflect.DeepEqual(items, []*Foo{result}))
+		}
+	}
+
+}
+
 func TestToSet(t *testing.T) {
 	is := assert.New(t)
 
