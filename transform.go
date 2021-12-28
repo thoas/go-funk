@@ -101,7 +101,7 @@ func ToMap(in interface{}, pivot string) interface{} {
 }
 
 // GroupBy transforms a collection of instances to a Map.
-// []T => map[type of <pivotFunc>.out]T
+// []T => map[type of <pivotFunc>.out][]T
 func GroupBy(list interface{}, pivotFunc interface{}) interface{} {
 
 	if !IsCollection(list) {

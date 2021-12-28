@@ -171,12 +171,11 @@ func TestGroupBy(t *testing.T) {
 		},
 	}
 
-	// []*Foo -> Map<int, *Foo>
-	sliceResults := []*Foo{&f1, &f2}
+	listValues := []*Foo{&f1, &f2}
 
 	{ // group by same value
 
-		groupedByID := GroupBy(sliceResults, func(f *Foo) int { return f.ID })
+		groupedByID := GroupBy(listValues, func(f *Foo) int { return f.ID })
 		is.True(reflect.TypeOf(groupedByID).Kind() == reflect.Map)
 
 		mapping, ok := groupedByID.(map[int][]*Foo)
@@ -184,19 +183,19 @@ func TestGroupBy(t *testing.T) {
 		is.True(ok)
 		is.True(len(mapping) == 1)
 
-		for _, result := range sliceResults {
+		for _, result := range listValues {
 			items, ok := mapping[result.ID]
 
 			is.True(ok)
 			is.True(len(items) == 2)
-			is.True(reflect.DeepEqual(items, sliceResults))
+			is.True(reflect.DeepEqual(items, listValues))
 		}
 
 	}
 
 	{ // group by diff value
 
-		groupedByFirstName := GroupBy(sliceResults, func(f *Foo) string { return f.FirstName })
+		groupedByFirstName := GroupBy(listValues, func(f *Foo) string { return f.FirstName })
 		is.True(reflect.TypeOf(groupedByFirstName).Kind() == reflect.Map)
 
 		mapping, ok := groupedByFirstName.(map[string][]*Foo)
@@ -204,7 +203,7 @@ func TestGroupBy(t *testing.T) {
 		is.True(ok)
 		is.True(len(mapping) == 2)
 
-		for _, result := range sliceResults {
+		for _, result := range listValues {
 			items, ok := mapping[result.FirstName]
 
 			is.True(ok)
@@ -215,7 +214,7 @@ func TestGroupBy(t *testing.T) {
 
 	{ // group by inner and diff value
 
-		groupedByBarName := GroupBy(sliceResults, func(f *Foo) string { return f.Bar.Name })
+		groupedByBarName := GroupBy(listValues, func(f *Foo) string { return f.Bar.Name })
 		is.True(reflect.TypeOf(groupedByBarName).Kind() == reflect.Map)
 
 		mapping, ok := groupedByBarName.(map[string][]*Foo)
@@ -223,7 +222,7 @@ func TestGroupBy(t *testing.T) {
 		is.True(ok)
 		is.True(len(mapping) == 2)
 
-		for _, result := range sliceResults {
+		for _, result := range listValues {
 			items, ok := mapping[result.Bar.Name]
 
 			is.True(ok)
@@ -238,7 +237,7 @@ func TestGroupBy(t *testing.T) {
 			return f.Age + f.ID + f.ZeroIntValue + len(f.FirstName)
 		}
 
-		groupedByHash := GroupBy(sliceResults, testGroupBySpecialHashMethod)
+		groupedByHash := GroupBy(listValues, testGroupBySpecialHashMethod)
 		is.True(reflect.TypeOf(groupedByHash).Kind() == reflect.Map)
 
 		mappingByID, ok := groupedByHash.(map[int][]*Foo)
@@ -246,7 +245,7 @@ func TestGroupBy(t *testing.T) {
 		is.True(ok)
 		is.True(len(mappingByID) == 2)
 
-		for _, result := range sliceResults {
+		for _, result := range listValues {
 			items, ok := mappingByID[testGroupBySpecialHashMethod(result)]
 
 			is.True(ok)
