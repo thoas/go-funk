@@ -100,9 +100,9 @@ func ToMap(in interface{}, pivot string) interface{} {
 	return collection.Interface()
 }
 
-// GroupBy transforms a collection of instances to a Map.
+// GroupByF transforms a collection of instances to a Map.
 // []T => map[type of <pivotFunc>.out][]T
-func GroupBy(list interface{}, pivotFunc interface{}) interface{} {
+func GroupByF(list interface{}, pivotFunc interface{}) interface{} {
 
 	if !IsCollection(list) {
 		panic(fmt.Sprintf("%v must be a collection (slice or array)", list))
@@ -145,6 +145,41 @@ func GroupBy(list interface{}, pivotFunc interface{}) interface{} {
 	}
 
 	return resultR.Interface()
+}
+
+// ToMapF transforms a collection of instances to a Map.
+// []T => map[type of <pivotFunc>.out]T.
+// It differs from ToMap in that it takes a function
+// instead of a strings as second arg for pivot
+func ToMapF(list interface{}, pivotFunc interface{}) interface{} {
+
+	if !IsCollection(list) {
+		panic(fmt.Sprintf("%v must be a collection (slice or array)", list))
+	}
+
+	// cheating here by using funk.Map, to get funk validation :).
+	// Could have used reflect to call the pivot function, but then
+	// I would need to re-implement all nice checks in go-funk
+	keys := Map(list, pivotFunc)
+	count := reflect.ValueOf(keys).Len()
+
+	keysR := reflect.ValueOf(keys)
+	valuesR := reflect.ValueOf(list)
+
+	valueType := valuesR.Type().Elem()
+	keyType := reflect.TypeOf(pivotFunc).Out(0)
+
+	resultType := reflect.MapOf(keyType, valueType)
+	resultR := reflect.MakeMapWithSize(resultType, count)
+
+	for i := 0; i < count; i++ {
+		keyR := keysR.Index(i)
+		valueR := valuesR.Index(i)
+		resultR.SetMapIndex(keyR, valueR)
+	}
+
+	return resultR.Interface()
+
 }
 
 // ToSet transforms a collection of instances to a Set.

@@ -148,6 +148,69 @@ func TestToMap(t *testing.T) {
 	}
 }
 
+func TestToMapF(t *testing.T) {
+	is := assert.New(t)
+
+	f1 := Foo{
+		ID:        1,
+		FirstName: "Dark",
+		LastName:  "Vador",
+		Age:       30,
+		Bar: &Bar{
+			Name: "Test",
+		},
+	}
+
+	f2 := Foo{
+		ID:        1,
+		FirstName: "Light",
+		LastName:  "Vador",
+		Age:       30,
+		Bar: &Bar{
+			Name: "Test",
+		},
+	}
+
+	// []*Foo -> Map<int, *Foo>
+	sliceResults := []*Foo{&f1, &f2}
+
+	instanceMapByID := ToMapF(sliceResults, func(f *Foo) int { return f.ID })
+	is.True(reflect.TypeOf(instanceMapByID).Kind() == reflect.Map)
+
+	mappingByID, ok := instanceMapByID.(map[int]*Foo)
+	is.True(ok)
+	is.True(len(mappingByID) == 1)
+
+	for _, result := range sliceResults {
+		item, ok := mappingByID[result.ID]
+
+		is.True(ok)
+		is.True(reflect.TypeOf(item).Kind() == reflect.Ptr)
+		is.True(reflect.TypeOf(item).Elem().Kind() == reflect.Struct)
+
+		is.Equal(item.ID, result.ID)
+	}
+
+	// Array<Foo> -> Map<string, Foo>
+	arrayResults := [4]Foo{f1, f1, f2, f2}
+
+	instanceMapByFirstName := ToMapF(arrayResults, func(f Foo) string { return f.FirstName })
+	is.True(reflect.TypeOf(instanceMapByFirstName).Kind() == reflect.Map)
+
+	mappingByFirstName, ok := instanceMapByFirstName.(map[string]Foo)
+	is.True(ok)
+	is.True(len(mappingByFirstName) == 2)
+
+	for _, result := range arrayResults {
+		item, ok := mappingByFirstName[result.FirstName]
+
+		is.True(ok)
+		is.True(reflect.TypeOf(item).Kind() == reflect.Struct)
+
+		is.Equal(item.FirstName, result.FirstName)
+	}
+}
+
 func TestGroupBy(t *testing.T) {
 	is := assert.New(t)
 
@@ -175,7 +238,7 @@ func TestGroupBy(t *testing.T) {
 
 	{ // group by same value
 
-		groupedByID := GroupBy(listValues, func(f *Foo) int { return f.ID })
+		groupedByID := GroupByF(listValues, func(f *Foo) int { return f.ID })
 		is.True(reflect.TypeOf(groupedByID).Kind() == reflect.Map)
 
 		mapping, ok := groupedByID.(map[int][]*Foo)
@@ -195,7 +258,7 @@ func TestGroupBy(t *testing.T) {
 
 	{ // group by diff value
 
-		groupedByFirstName := GroupBy(listValues, func(f *Foo) string { return f.FirstName })
+		groupedByFirstName := GroupByF(listValues, func(f *Foo) string { return f.FirstName })
 		is.True(reflect.TypeOf(groupedByFirstName).Kind() == reflect.Map)
 
 		mapping, ok := groupedByFirstName.(map[string][]*Foo)
@@ -214,7 +277,7 @@ func TestGroupBy(t *testing.T) {
 
 	{ // group by inner and diff value
 
-		groupedByBarName := GroupBy(listValues, func(f *Foo) string { return f.Bar.Name })
+		groupedByBarName := GroupByF(listValues, func(f *Foo) string { return f.Bar.Name })
 		is.True(reflect.TypeOf(groupedByBarName).Kind() == reflect.Map)
 
 		mapping, ok := groupedByBarName.(map[string][]*Foo)
@@ -237,7 +300,7 @@ func TestGroupBy(t *testing.T) {
 			return f.Age + f.ID + f.ZeroIntValue + len(f.FirstName)
 		}
 
-		groupedByHash := GroupBy(listValues, testGroupBySpecialHashMethod)
+		groupedByHash := GroupByF(listValues, testGroupBySpecialHashMethod)
 		is.True(reflect.TypeOf(groupedByHash).Kind() == reflect.Map)
 
 		mappingByID, ok := groupedByHash.(map[int][]*Foo)
