@@ -654,6 +654,29 @@ see also, typesafe implementations: UniqInt_, UniqInt64_, UniqFloat32_, UniqFloa
 .. _UniqInt64: https://godoc.org/github.com/thoas/go-funk#UniqInt64
 .. _UniqString: https://godoc.org/github.com/thoas/go-funk#UniqString
 
+funk.UniqBy
+.........
+
+Creates an array with unique values returned by a callback.
+
+.. code-block:: go
+
+    funk.UniqBy([]int{0, 1, 1, 2, 3, 0, 0, 12}, func(nbr int) int {
+		return nbr % 3
+	}) // []int{0, 1, 2}
+
+    foo1 := Foo{
+        ID: 42,
+        FirstName: "Bob",
+    }
+    foo2 := Foo{
+        ID: 42,
+        FirstName: "Bob",
+    }
+    funk.UniqBy([]Foo{foo1, foo2}, func(f Foo) int {
+		return f.ID
+	}) // []Foo{ Foo{ID: 42, Firstname: "Bob"} }
+
 funk.Drop
 .........
 

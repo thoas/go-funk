@@ -256,6 +256,41 @@ func TestUniq(t *testing.T) {
 	is.Equal(results, []string{"foo", "bar"})
 }
 
+func TestUniqBy(t *testing.T) {
+	is := assert.New(t)
+
+	results := UniqBy([]int{0, 1, 1, 2, 3, 0, 0, 12}, func(nbr int) int {
+		return nbr % 3
+	})
+	fmt.Println(results)
+	is.Len(results, 3)
+	is.Equal(results, []int{0, 1, 2})
+
+	type foobar struct {
+		foo string
+		bar string
+	}
+
+	foobar1 := foobar{
+		foo: "foo",
+		bar: "bar",
+	}
+	foobar2 := foobar{
+		foo: "foo",
+		bar: "baz",
+	}
+	foobar3 := foobar{
+		foo: "foo",
+		bar: "bar",
+	}
+
+	results = UniqBy([]foobar{foobar1, foobar2, foobar3}, func(f foobar) string {
+		return f.foo + f.bar
+	})
+	is.Len(results, 2)
+	is.Equal(results, []foobar{foobar1, foobar2})
+}
+
 func TestConvertSlice(t *testing.T) {
 	instances := []*Foo{foo, foo2}
 
