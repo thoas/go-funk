@@ -704,7 +704,6 @@ func UniqInt32(a []int32) []int32 {
 	var (
 		length  = len(a)
 		seen    = make(map[int32]struct{}, length)
-		j       = 0
 		results = make([]int32, 0)
 	)
 
@@ -717,7 +716,6 @@ func UniqInt32(a []int32) []int32 {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -729,7 +727,6 @@ func UniqInt64(a []int64) []int64 {
 		length  = len(a)
 		seen    = make(map[int64]struct{}, length)
 		results = make([]int64, 0)
-		j       = 0
 	)
 
 	for i := 0; i < length; i++ {
@@ -741,7 +738,6 @@ func UniqInt64(a []int64) []int64 {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -753,7 +749,6 @@ func UniqInt(a []int) []int {
 		length  = len(a)
 		seen    = make(map[int]struct{}, length)
 		results = make([]int, 0)
-		j       = 0
 	)
 
 	for i := 0; i < length; i++ {
@@ -765,7 +760,6 @@ func UniqInt(a []int) []int {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -776,7 +770,6 @@ func UniqUInt32(a []uint32) []uint32 {
 	var (
 		length  = len(a)
 		seen    = make(map[uint32]struct{}, length)
-		j       = 0
 		results = make([]uint32, 0)
 	)
 
@@ -789,7 +782,6 @@ func UniqUInt32(a []uint32) []uint32 {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -800,7 +792,6 @@ func UniqUInt64(a []uint64) []uint64 {
 	var (
 		length  = len(a)
 		seen    = make(map[uint64]struct{}, length)
-		j       = 0
 		results = make([]uint64, 0)
 	)
 
@@ -813,7 +804,6 @@ func UniqUInt64(a []uint64) []uint64 {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -824,7 +814,6 @@ func UniqUInt(a []uint) []uint {
 	var (
 		length  = len(a)
 		seen    = make(map[uint]struct{}, length)
-		j       = 0
 		results = make([]uint, 0)
 	)
 
@@ -837,7 +826,6 @@ func UniqUInt(a []uint) []uint {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -848,7 +836,6 @@ func UniqString(a []string) []string {
 	var (
 		length  = len(a)
 		seen    = make(map[string]struct{}, length)
-		j       = 0
 		results = make([]string, 0)
 	)
 
@@ -861,7 +848,6 @@ func UniqString(a []string) []string {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -872,7 +858,6 @@ func UniqFloat64(a []float64) []float64 {
 	var (
 		length  = len(a)
 		seen    = make(map[float64]struct{}, length)
-		j       = 0
 		results = make([]float64, 0)
 	)
 
@@ -885,7 +870,6 @@ func UniqFloat64(a []float64) []float64 {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
@@ -896,7 +880,6 @@ func UniqFloat32(a []float32) []float32 {
 	var (
 		length  = len(a)
 		seen    = make(map[float32]struct{}, length)
-		j       = 0
 		results = make([]float32, 0)
 	)
 
@@ -909,7 +892,6 @@ func UniqFloat32(a []float32) []float32 {
 
 		seen[v] = struct{}{}
 		results = append(results, v)
-		j++
 	}
 
 	return results
