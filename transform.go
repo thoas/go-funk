@@ -412,6 +412,44 @@ func Uniq(in interface{}) interface{} {
 	panic(fmt.Sprintf("Type %s is not supported by Uniq", valueType.String()))
 }
 
+// Uniq creates an array with unique values.
+func UniqBy(in interface{}, mapFunc interface{}) interface{} {
+	if !IsFunction(mapFunc) {
+		panic("Second argument must be function")
+	}
+
+	value := reflect.ValueOf(in)
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	funcValue := reflect.ValueOf(mapFunc)
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		length := value.Len()
+
+		result := makeSlice(value, 0)
+
+		seen := make(map[interface{}]bool, length)
+
+		for i := 0; i < length; i++ {
+			val := value.Index(i)
+			v := funcValue.Call([]reflect.Value{val})[0].Interface()
+
+			if _, ok := seen[v]; ok {
+				continue
+			}
+
+			seen[v] = true
+			result = reflect.Append(result, val)
+		}
+
+		return result.Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by Uniq", valueType.String()))
+}
+
 // ConvertSlice converts a slice type to another,
 // a perfect example would be to convert a slice of struct to a slice of interface.
 func ConvertSlice(in interface{}, out interface{}) {
