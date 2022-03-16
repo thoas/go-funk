@@ -295,6 +295,13 @@ func TestSet_SlicePassDirectly(t *testing.T) {
 			SetVal:   "val",
 			Expected: []*Bar{{Name: "val"}, {Name: "val"}},
 		},
+		// Array of ptr
+		{
+			Original: [2]*Bar{{Name: "a"}, {Name: "b"}},
+			Path:     "Name",
+			SetVal:   "val",
+			Expected: [2]*Bar{{Name: "val"}, {Name: "val"}},
+		},
 		// slice of struct
 		{
 			Original: []Bar{{Name: "a"}, {Name: "b"}},
