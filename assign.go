@@ -77,7 +77,7 @@ func set(inValue reflect.Value, setValue reflect.Value, parts []string) error {
 			}
 			inValue = fValue
 			i++
-		case reflect.Slice | reflect.Array:
+		case reflect.Slice, reflect.Array:
 			// set all its elements
 			length := inValue.Len()
 			for j := 0; j < length; j++ {
