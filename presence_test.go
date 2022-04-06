@@ -40,34 +40,12 @@ func TestContains(t *testing.T) {
 	is := assert.New(t)
 
 	is.True(Contains([]string{"foo", "bar"}, "bar"))
-	is.True(Contains([...]string{"foo", "bar"}, "bar"))
-	is.Panics(func() { Contains(1, 2) })
 
 	is.True(Contains(results, f))
 	is.False(Contains(results, nil))
 	is.False(Contains(results, b))
 
-	is.True(Contains("florent", "rent"))
-	is.False(Contains("florent", "gilles"))
-
-	mapping := ToMap(results, "ID")
-
-	is.True(Contains(mapping, 1))
-	is.False(Contains(mapping, 2))
-
-	is.False(Contains(mapping, func (key int, val *Foo) bool {
-		return key == 4
-	}))
-	is.True(Contains(mapping, func (key int, val *Foo) bool {
-		return key == 1
-	}))
-
-	is.False(Contains(mapping, func (_ int, val *Foo) bool {
-		return val.FirstName == "NotPresent"
-	}))
-	is.True(Contains(mapping, func (_ int, val *Foo) bool {
-		return val.FirstName == "Harald"
-	}))
+	is.False(Contains([]string{"florent"}, "gilles"))
 }
 
 func TestEvery(t *testing.T) {
@@ -79,13 +57,8 @@ func TestEvery(t *testing.T) {
 	is.False(Every(results, nil))
 	is.False(Every(results, f, b))
 
-	is.True(Every("florent", "rent", "flo"))
-	is.False(Every("florent", "rent", "gilles"))
-
-	mapping := ToMap(results, "ID")
-
-	is.True(Every(mapping, 1, 3))
-	is.False(Every(mapping, 2, 3))
+	is.True(Every([]string{"florent"}, "rent", "flo"))
+	is.False(Every([]string{"florent"}, "rent", "gilles"))
 }
 
 func TestSome(t *testing.T) {
@@ -99,18 +72,9 @@ func TestSome(t *testing.T) {
 	is.False(Some(results, nil))
 	is.True(Some(results, f, b))
 
-	is.True(Some("zeeshan", "zee", "tam"))
-	is.False(Some("zeeshan", "zi", "tam"))
-
 	persons := []Person{
-		Person{
-			name: "Zeeshan",
-			age:  23,
-		},
-		Person{
-			name: "Bob",
-			age:  26,
-		},
+		{name: "Zeeshan", age: 23},
+		{name: "Bob", age: 26},
 	}
 
 	person := Person{"Zeeshan", 23}
@@ -119,21 +83,12 @@ func TestSome(t *testing.T) {
 
 	is.True(Some(persons, person, person2))
 	is.False(Some(persons, person2, person3))
-
-	mapping := ToMap(results, "ID")
-
-	is.True(Some(mapping, 1, 2))
-	is.True(Some(mapping, 4, 1))
-	is.False(Some(mapping, 4, 5))
 }
 
 func TestIndexOf(t *testing.T) {
 	is := assert.New(t)
 
 	is.Equal(IndexOf([]string{"foo", "bar"}, "bar"), 1)
-	is.Equal(IndexOf([]string{"foo", "bar"}, func (value string) bool {
-		return value == "bar"
-	}), 1)
 
 	is.Equal(IndexOf(results, f), 0)
 	is.Equal(IndexOf(results, b), -1)
@@ -143,9 +98,6 @@ func TestLastIndexOf(t *testing.T) {
 	is := assert.New(t)
 
 	is.Equal(LastIndexOf([]string{"foo", "bar", "bar"}, "bar"), 2)
-	is.Equal(LastIndexOf([]string{"foo", "bar", "bar"}, func (value string) bool {
-		return value == "bar"
-	}), 2)
 	is.Equal(LastIndexOf([]int{1, 2, 2, 3}, 2), 2)
 	is.Equal(LastIndexOf([]int{1, 2, 2, 3}, 4), -1)
 }
@@ -163,13 +115,20 @@ func TestFilter(t *testing.T) {
 func TestFind(t *testing.T) {
 	is := assert.New(t)
 
-	r := Find([]int{1, 2, 3, 4}, func(x int) bool {
+	r1, ok1 := Find([]int{1, 2, 3, 4}, func(x int) bool {
 		return x%2 == 0
 	})
+	r2, ok2 := Find([]int{1, 2, 3, 4}, func(x int) bool {
+		return x%2 == 5
+	})
 
-	is.Equal(r, 2)
+	is.Equal(r1, 2)
+	is.True(ok1)
 
+	is.Equal(r2, 0)
+	is.False(ok2)
 }
+
 func TestFindKey(t *testing.T) {
 	is := assert.New(t)
 

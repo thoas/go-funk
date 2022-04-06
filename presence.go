@@ -1,61 +1,35 @@
 package funk
 
 import (
-	"fmt"
 	"reflect"
-	"strings"
 )
 
 // Filter iterates over elements of collection, returning an array of
 // all elements predicate returns truthy for.
-func Filter(arr interface{}, predicate interface{}) interface{} {
-	if !IsIteratee(arr) {
-		panic("First parameter must be an iteratee")
-	}
-
-	if !IsFunction(predicate, 1, 1) {
-		panic("Second argument must be function")
-	}
-
-	funcValue := reflect.ValueOf(predicate)
-
-	funcType := funcValue.Type()
-
-	if funcType.Out(0).Kind() != reflect.Bool {
-		panic("Return argument should be a boolean")
-	}
-
-	arrValue := reflect.ValueOf(arr)
-
-	arrType := arrValue.Type()
-
-	// Get slice type corresponding to array type
-	resultSliceType := reflect.SliceOf(arrType.Elem())
-
-	// MakeSlice takes a slice kind type, and makes a slice.
-	resultSlice := reflect.MakeSlice(resultSliceType, 0, 0)
-
-	for i := 0; i < arrValue.Len(); i++ {
-		elem := arrValue.Index(i)
-
-		result := funcValue.Call([]reflect.Value{elem})[0].Interface().(bool)
-
-		if result {
-			resultSlice = reflect.Append(resultSlice, elem)
+func Filter[T any](arr []T, predicate func(T) bool) []T {
+	res := make([]T, 0, len(arr))
+	for _, e := range arr {
+		if predicate(e) {
+			res = append(res, e)
 		}
 	}
-
-	return resultSlice.Interface()
+	return res
 }
 
 // Find iterates over elements of collection, returning the first
-// element predicate returns truthy for.
-func Find(arr interface{}, predicate interface{}) interface{} {
-	_, val := FindKey(arr, predicate)
-	return val
+// element predicate returns truthy for and true as a second argument.
+// If no elements found - nil value for given type will be returned with false.
+func Find[T any](arr []T, predicate func(T) bool) (def T, ok bool) {
+	for _, e := range arr {
+		if predicate(e) {
+			return e, true
+		}
+	}
+	return def, ok
 }
 
-// Find iterates over elements of collection, returning the first
+// todo: should only work with maps?
+// FindKey iterates over elements of collection, returning the first
 // element of an array and random of a map which predicate returns truthy for.
 func FindKey(arr interface{}, predicate interface{}) (matchKey, matchEle interface{}) {
 	if !IsIteratee(arr) {
@@ -104,90 +78,42 @@ func FindKey(arr interface{}, predicate interface{}) (matchKey, matchEle interfa
 	return nil, nil
 }
 
+// todo: to use callback as a second arg - need to write another method: IndexOfBy
 // IndexOf gets the index at which the first occurrence of value is found in array or return -1
 // if the value cannot be found
-func IndexOf(in interface{}, elem interface{}) int {
-	inValue := reflect.ValueOf(in)
-
-	elemValue := reflect.ValueOf(elem)
-
-	inType := inValue.Type()
-
-	if inType.Kind() == reflect.String {
-		return strings.Index(inValue.String(), elemValue.String())
-	}
-
-	if inType.Kind() == reflect.Slice {
-		equalTo := equal(elem)
-		for i := 0; i < inValue.Len(); i++ {
-			if equalTo(reflect.Value{}, inValue.Index(i)) {
-				return i
-			}
+func IndexOf[T comparable](in []T, elem T) int {
+	for i, e := range in {
+		if e == elem {
+			return i
 		}
 	}
-
 	return -1
 }
 
+// todo: to use callback as a second arg - need to write another method: LastIndexOfBy
 // LastIndexOf gets the index at which the last occurrence of value is found in array or return -1
 // if the value cannot be found
-func LastIndexOf(in interface{}, elem interface{}) int {
-	inValue := reflect.ValueOf(in)
-
-	elemValue := reflect.ValueOf(elem)
-
-	inType := inValue.Type()
-
-	if inType.Kind() == reflect.String {
-		return strings.LastIndex(inValue.String(), elemValue.String())
-	}
-
-	if inType.Kind() == reflect.Slice {
-		length := inValue.Len()
-
-		equalTo := equal(elem)
-		for i := length - 1; i >= 0; i-- {
-			if equalTo(reflect.Value{}, inValue.Index(i)) {
-				return i
-			}
+func LastIndexOf[T comparable](in []T, elem T) int {
+	for i := len(in) - 1; i >= 0; i-- {
+		if in[i] == elem {
+			return i
 		}
 	}
-
 	return -1
 }
 
 // Contains returns true if an element is present in a iteratee.
-func Contains(in interface{}, elem interface{}) bool {
-	inValue := reflect.ValueOf(in)
-	elemValue := reflect.ValueOf(elem)
-	inType := inValue.Type()
-
-	switch inType.Kind() {
-	case reflect.String:
-		return strings.Contains(inValue.String(), elemValue.String())
-	case reflect.Map:
-		equalTo := equal(elem, true)
-		for _, key := range inValue.MapKeys() {
-			if equalTo(key, inValue.MapIndex(key)) {
-				return true
-			}
+func Contains[T comparable](in []T, elem T) bool {
+	for _, e := range in {
+		if e == elem {
+			return true
 		}
-	case reflect.Slice, reflect.Array:
-		equalTo := equal(elem)
-		for i := 0; i < inValue.Len(); i++ {
-			if equalTo(reflect.Value{}, inValue.Index(i)) {
-				return true
-			}
-		}
-	default:
-		panic(fmt.Sprintf("Type %s is not supported by Contains, supported types are String, Map, Slice, Array", inType.String()))
 	}
-
 	return false
 }
 
-// Every returns true if every element is present in a iteratee.
-func Every(in interface{}, elements ...interface{}) bool {
+// Every returns true if every element is present in an array.
+func Every[T comparable](in []T, elements ...T) bool {
 	for _, elem := range elements {
 		if !Contains(in, elem) {
 			return false
@@ -196,8 +122,8 @@ func Every(in interface{}, elements ...interface{}) bool {
 	return true
 }
 
-// Some returns true if atleast one element is present in an iteratee.
-func Some(in interface{}, elements ...interface{}) bool {
+// Some returns true if at least one element is present in an array.
+func Some[T comparable](in []T, elements ...T) bool {
 	for _, elem := range elements {
 		if Contains(in, elem) {
 			return true
