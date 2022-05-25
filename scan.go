@@ -25,14 +25,20 @@ func ForEach(arr interface{}, predicate interface{}) {
 		}
 
 		arrElemType := arrValue.Type().Elem()
+		arrElemPointerType := reflect.New(arrElemType).Type()
+		usePointer := arrElemPointerType.ConvertibleTo(funcType.In(0))
 
 		// Checking whether element type is convertible to function's first argument's type.
-		if !arrElemType.ConvertibleTo(funcType.In(0)) {
+		if !arrElemType.ConvertibleTo(funcType.In(0)) && !usePointer {
 			panic("Map function's argument is not compatible with type of array.")
 		}
 
 		for i := 0; i < arrValue.Len(); i++ {
-			funcValue.Call([]reflect.Value{arrValue.Index(i)})
+			if usePointer {
+				funcValue.Call([]reflect.Value{arrValue.Index(i).Addr()})
+			} else {
+				funcValue.Call([]reflect.Value{arrValue.Index(i)})
+			}
 		}
 	}
 
@@ -79,14 +85,21 @@ func ForEachRight(arr interface{}, predicate interface{}) {
 		}
 
 		arrElemType := arrValue.Type().Elem()
+		arrElemPointerType := reflect.New(arrElemType).Type()
+		usePointer := arrElemPointerType.ConvertibleTo(funcType.In(0))
 
 		// Checking whether element type is convertible to function's first argument's type.
-		if !arrElemType.ConvertibleTo(funcType.In(0)) {
+		if !arrElemType.ConvertibleTo(funcType.In(0)) && !usePointer {
 			panic("Map function's argument is not compatible with type of array.")
 		}
 
 		for i := arrValue.Len() - 1; i >= 0; i-- {
-			funcValue.Call([]reflect.Value{arrValue.Index(i)})
+			if usePointer {
+				funcValue.Call([]reflect.Value{arrValue.Index(i).Addr()})
+			} else {
+				funcValue.Call([]reflect.Value{arrValue.Index(i)})
+			}
+
 		}
 	}
 

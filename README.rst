@@ -597,11 +597,17 @@ funk.ForEach
 
 Range over an iteratee (map, slice).
 
+Or update element in slice(Not map, reflect#Value#MapIndex#CanSet is false).
+
 .. code-block:: go
 
     funk.ForEach([]int{1, 2, 3, 4}, func(x int) {
         fmt.Println(x)
     })
+
+    foo := []int{1,2,3}
+    funk.ForEach(foo, func(x *int){ *x = *x * 2})
+    fmt.Println(foo) // []int{2, 4, 6}
 
 funk.ForEachRight
 ............

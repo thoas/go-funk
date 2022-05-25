@@ -19,6 +19,23 @@ func TestForEach(t *testing.T) {
 
 	is.Equal(results, []int{2, 4})
 
+	toModify := []int{1, 2, 3}
+	ForEach(toModify, func(x *int) { *x = *x * 2 })
+
+	is.Equal(toModify, []int{2, 4, 6})
+
+	toModify = []int{}
+	ForEach(toModify, func(x *int) {})
+
+	is.Equal(toModify, []int{})
+
+	strModify := []string{"a", "b"}
+	ForEach(strModify, func(s *string) {
+		*s = *s + *s
+	})
+
+	is.Equal(strModify, []string{"aa", "bb"})
+
 	mapping := map[int]string{
 		1: "Florent",
 		2: "Gilles",
@@ -39,6 +56,23 @@ func TestForEachRight(t *testing.T) {
 	})
 
 	is.Equal(results, []int{8, 6, 4, 2})
+
+	toModify := []int{1, 2, 3}
+	ForEach(toModify, func(x *int) { *x = *x * 2 })
+
+	is.Equal(toModify, []int{2, 4, 6})
+
+	toModify = []int{}
+	ForEach(toModify, func(x *int) {})
+
+	is.Equal(toModify, []int{})
+
+	strModify := []string{"a", "b"}
+	ForEach(strModify, func(s *string) {
+		*s = *s + *s
+	})
+
+	is.Equal(strModify, []string{"aa", "bb"})
 
 	mapping := map[int]string{
 		1: "Florent",
