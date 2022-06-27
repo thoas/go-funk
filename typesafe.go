@@ -1123,6 +1123,63 @@ func ChunkInt64s(arr []int64, size int) [][]int64 {
 	return results
 }
 
+// ChunkUInts creates an array of uints split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkUInts(arr []uint, size int) [][]uint {
+	var results [][]uint
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
+
+// ChunkUInt32s creates an array of uint32s split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkUInt32s(arr []uint32, size int) [][]uint32 {
+	var results [][]uint32
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
+
+// ChunkUInt64s creates an array of uint64s split into groups with the length of size.
+// If array can't be split evenly, the final chunk will be
+// the remaining element.
+func ChunkUInt64s(arr []uint64, size int) [][]uint64 {
+	var results [][]uint64
+
+	for i := 0; i < len(arr); i += size {
+		end := i + size
+
+		if end > len(arr) {
+			end = len(arr)
+		}
+
+		results = append(results, arr[i:end])
+	}
+
+	return results
+}
+
 // ChunkFloat64s creates an array of float64s split into groups with the length of size.
 // If array can't be split evenly, the final chunk will be
 // the remaining element.
