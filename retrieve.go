@@ -80,7 +80,17 @@ func get(value reflect.Value, path string) reflect.Value {
 		return resultSlice
 	}
 
-	parts := strings.Split(path, ".")
+	quoted := false
+	parts := strings.FieldsFunc(path, func(r rune) bool {
+		if r == '"' {
+			quoted = !quoted
+		}
+		return !quoted && r == '.'
+	})
+
+	for i, part := range parts {
+		parts[i] = strings.Trim(part, "\"")
+	}
 
 	for _, part := range parts {
 		value = redirectValue(value)
