@@ -90,6 +90,9 @@ func get(value reflect.Value, path string) reflect.Value {
 		case reflect.Invalid:
 			continue
 		case reflect.Struct:
+			if isNilIndirection(value, part) {
+				return reflect.ValueOf(nil)
+			}
 			value = value.FieldByName(part)
 		case reflect.Map:
 			value = value.MapIndex(reflect.ValueOf(part))
@@ -101,4 +104,31 @@ func get(value reflect.Value, path string) reflect.Value {
 	}
 
 	return value
+}
+
+func isNilIndirection(v reflect.Value, name string) bool {
+	vType := v.Type()
+	for i := 0; i < vType.NumField(); i++ {
+		field := vType.Field(i)
+		if !field.Anonymous {
+			return false
+		}
+
+		fieldType := field.Type
+		if fieldType.Kind() == reflect.Ptr {
+			fieldType = field.Type.Elem()
+		}
+		if fieldType.Kind() != reflect.Struct {
+			return false
+		}
+
+		for j := 0; j < fieldType.NumField(); j++ {
+			anonField := fieldType.Field(j)
+			if anonField.Name == name {
+				return v.Field(i).IsNil()
+			}
+		}
+	}
+
+	return false
 }
