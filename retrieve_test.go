@@ -97,9 +97,7 @@ func TestGetOrElse(t *testing.T) {
 	is.Equal("foobar", GetOrElse(nil, "foobar"))
 
 	t.Run("nil with type", func(t *testing.T) {
-		// simple nil comparison is not sufficient for nil with type.
-		is.False(interface{}((*string)(nil)) == nil)
-		// test GetOrElse coveers this case
+		// test GetOrElse covers this case
 		is.Equal("foobar", GetOrElse((*string)(nil), "foobar"))
 	})
 }
