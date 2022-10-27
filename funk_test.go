@@ -124,3 +124,13 @@ type FooUnexported struct {
 var fooUnexported = &FooUnexported{
 	unexported: true,
 }
+
+type EmbeddedStruct struct {
+	EmbeddedField *string
+}
+
+type RootStruct struct {
+	*EmbeddedStruct
+
+	RootField *string
+}

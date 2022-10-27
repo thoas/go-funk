@@ -101,3 +101,11 @@ func TestGetOrElse(t *testing.T) {
 		is.Equal("foobar", GetOrElse((*string)(nil), "foobar"))
 	})
 }
+
+func TestEmbeddedStruct(t *testing.T) {
+	is := assert.New(t)
+
+	root := RootStruct{}
+	is.Equal(Get(root, "EmbeddedField"), nil)
+	is.Equal(Get(root, "EmbeddedStruct.EmbeddedField"), nil)
+}
