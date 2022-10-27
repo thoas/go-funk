@@ -102,10 +102,17 @@ func TestGetOrElse(t *testing.T) {
 	})
 }
 
-func TestEmbeddedStruct(t *testing.T) {
+func TestEmbeddedStructPointer(t *testing.T) {
 	is := assert.New(t)
 
-	root := RootStruct{}
+	root := RootStructPointer{}
 	is.Equal(Get(root, "EmbeddedField"), nil)
 	is.Equal(Get(root, "EmbeddedStruct.EmbeddedField"), nil)
+}
+
+func TestEmbeddedStructNotPointer(t *testing.T) {
+	is := assert.New(t)
+
+	root := RootStructNotPointer{}
+	is.Equal(Get(root, "EmbeddedField"), nil)
 }

@@ -129,8 +129,14 @@ type EmbeddedStruct struct {
 	EmbeddedField *string
 }
 
-type RootStruct struct {
+type RootStructPointer struct {
 	*EmbeddedStruct
+
+	RootField *string
+}
+
+type RootStructNotPointer struct {
+	EmbeddedStruct
 
 	RootField *string
 }
