@@ -9,7 +9,7 @@ import (
 func Get(out interface{}, path string, opts ...option) interface{} {
 	options := newOptions(opts...)
 
-	result := get(reflect.ValueOf(out), path)
+	result := get(reflect.ValueOf(out), path, opts...)
 	// valid kind and we can return a result.Interface() without panic
 	if result.Kind() != reflect.Invalid && result.CanInterface() {
 		// if we don't allow zero and the result is a zero value return nil
