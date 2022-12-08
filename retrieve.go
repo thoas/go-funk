@@ -38,7 +38,9 @@ func GetOrElse(v interface{}, def interface{}) interface{} {
 	return val.Elem().Interface()
 }
 
-func get(value reflect.Value, path string) reflect.Value {
+func get(value reflect.Value, path string, opts ...option) reflect.Value {
+	options := newOptions(opts...)
+
 	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
 		var resultSlice reflect.Value
 
@@ -57,7 +59,7 @@ func get(value reflect.Value, path string) reflect.Value {
 
 			resultValue := get(item, path)
 
-			if resultValue.Kind() == reflect.Invalid || resultValue.IsZero() {
+			if resultValue.Kind() == reflect.Invalid || (resultValue.IsZero() && !options.allowZero) {
 				continue
 			}
 
