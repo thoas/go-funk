@@ -67,6 +67,21 @@ func TestGetThroughInterface(t *testing.T) {
 	is.Equal(Get(foo, "BarPointer.Bars.Bar.Name"), []string{"Level2-1", "Level2-2"})
 }
 
+func TestGetWithAllowZero(t *testing.T) {
+	is := assert.New(t)
+
+	var test []struct {
+		Age int
+	}
+
+	for i := 0; i < 10; i++ {
+		test = append(test, struct{ Age int }{Age: i})
+	}
+
+	is.Equal(Get(test, "Age").([]int), []int{1, 2, 3, 4, 5, 6, 7, 8, 9})
+	is.Equal(Get(test, "Age", WithAllowZero()).([]int), []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9})
+}
+
 func TestGetNotFound(t *testing.T) {
 	is := assert.New(t)
 

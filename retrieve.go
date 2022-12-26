@@ -9,7 +9,7 @@ import (
 func Get(out interface{}, path string, opts ...option) interface{} {
 	options := newOptions(opts...)
 
-	result := get(reflect.ValueOf(out), path)
+	result := get(reflect.ValueOf(out), path, opts...)
 	// valid kind and we can return a result.Interface() without panic
 	if result.Kind() != reflect.Invalid && result.CanInterface() {
 		// if we don't allow zero and the result is a zero value return nil
@@ -38,7 +38,9 @@ func GetOrElse(v interface{}, def interface{}) interface{} {
 	return val.Elem().Interface()
 }
 
-func get(value reflect.Value, path string) reflect.Value {
+func get(value reflect.Value, path string, opts ...option) reflect.Value {
+	options := newOptions(opts...)
+
 	if value.Kind() == reflect.Slice || value.Kind() == reflect.Array {
 		var resultSlice reflect.Value
 
@@ -57,7 +59,7 @@ func get(value reflect.Value, path string) reflect.Value {
 
 			resultValue := get(item, path)
 
-			if resultValue.Kind() == reflect.Invalid || resultValue.IsZero() {
+			if resultValue.Kind() == reflect.Invalid || (resultValue.IsZero() && !options.allowZero) {
 				continue
 			}
 
