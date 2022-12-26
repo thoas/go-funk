@@ -449,11 +449,15 @@ Retrieves the value at path of struct(s) or map(s).
         "FirstName": "Dark",
         "LastName":  "Vador",
         "Age":       30,
+        "Labels": map[string]interface{} {
+            "example.com/hello": "world",
+        },
     } // foo2.Bar is nil
 
     funk.Get(bar, "Name") // "Test"
     funk.Get([]map[string]interface{}{foo1, foo2}, "Bar.Name") // []string{"Test"}
     funk.Get(foo2, "Bar.Name") // nil
+    funk.Get(foo2, `Labels."example.com/hello"`) // world
 
 
 ``funk.Get`` also handles ``nil`` values:
@@ -503,7 +507,7 @@ Set value at a path of a struct
 .. code-block:: go
 
     var bar Bar = Bar{
-        Name: "level-0", 
+        Name: "level-0",
         Bar: &Bar{
             Name: "level-1",
             Bars: []*Bar{
@@ -825,14 +829,14 @@ Generates a sharded string with a fixed length and depth.
 funk.Subset
 .............
 
-Returns true if a collection is a subset of another 
+Returns true if a collection is a subset of another
 
 .. code-block:: go
 
     funk.Subset([]int{1, 2, 4}, []int{1, 2, 3, 4, 5}) // true
     funk.Subset([]string{"foo", "bar"},[]string{"foo", "bar", "hello", "bar", "hi"}) //true
-   
-    
+
+
 Performance
 -----------
 

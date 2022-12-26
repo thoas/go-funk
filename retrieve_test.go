@@ -50,12 +50,15 @@ func TestGetMap(t *testing.T) {
 	is := assert.New(t)
 	m := map[string]interface{}{
 		"bar": map[string]interface{}{
-			"name": "foobar",
+			"name":              "foobar",
+			"example.com/hello": "world",
 		},
 	}
 
 	is.Equal("foobar", Get(m, "bar.name"))
+	is.Equal("world", Get(m, `bar."example.com/hello"`))
 	is.Equal(nil, Get(m, "foo.name"))
+	is.Equal(nil, Get(m, `foo."example.com/hello"`))
 	is.Equal([]interface{}{"dark", "dark"}, Get([]map[string]interface{}{m1, m2}, "firstname"))
 	is.Equal([]interface{}{"test"}, Get([]map[string]interface{}{m1, m2}, "bar.name"))
 }
