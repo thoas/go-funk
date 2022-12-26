@@ -112,14 +112,11 @@ func isNilIndirection(v reflect.Value, name string) bool {
 	vType := v.Type()
 	for i := 0; i < vType.NumField(); i++ {
 		field := vType.Field(i)
-		if !isEmbeddedStructField(field) {
+		if !isEmbeddedStructPointerField(field) {
 			return false
 		}
 
-		fieldType := field.Type
-		if fieldType.Kind() == reflect.Ptr {
-			fieldType = field.Type.Elem()
-		}
+		fieldType := field.Type.Elem()
 
 		_, found := fieldType.FieldByName(name)
 		if found {
@@ -130,13 +127,9 @@ func isNilIndirection(v reflect.Value, name string) bool {
 	return false
 }
 
-func isEmbeddedStructField(field reflect.StructField) bool {
+func isEmbeddedStructPointerField(field reflect.StructField) bool {
 	if !field.Anonymous {
 		return false
-	}
-
-	if field.Type.Kind() == reflect.Struct {
-		return true
 	}
 
 	return field.Type.Kind() == reflect.Ptr && field.Type.Elem().Kind() == reflect.Struct
