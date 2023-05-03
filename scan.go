@@ -164,6 +164,29 @@ func Last(arr interface{}) interface{} {
 	panic(fmt.Sprintf("Type %s is not supported by Last", valueType.String()))
 }
 
+// ElementAt gets the element of array at the given index.
+func ElementAt(arr interface{}, index int) interface{} {
+	value := redirectValue(reflect.ValueOf(arr))
+	valueType := value.Type()
+
+	kind := value.Kind()
+
+	if kind == reflect.Array || kind == reflect.Slice {
+		if value.Len() == 0 {
+			return nil
+		}
+
+		if index < 0 || index >= value.Len() {
+			// maybe panic?
+			return nil
+		}
+
+		return value.Index(index).Interface()
+	}
+
+	panic(fmt.Sprintf("Type %s is not supported by ElementAt", valueType.String()))
+}
+
 // Initial gets all but the last element of array.
 func Initial(arr interface{}) interface{} {
 	value := redirectValue(reflect.ValueOf(arr))
@@ -201,5 +224,5 @@ func Tail(arr interface{}) interface{} {
 		return value.Slice(1, length).Interface()
 	}
 
-	panic(fmt.Sprintf("Type %s is not supported by Initial", valueType.String()))
+	panic(fmt.Sprintf("Type %s is not supported by Tail", valueType.String()))
 }
