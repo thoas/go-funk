@@ -206,7 +206,7 @@ if the value cannot be found.
     funk.LastIndexOf([]string{"foo", "bar", "bar"}, "bar") // 2
     funk.LastIndexOf([]string{"foo", "bar"}, func(value string) bool {
         return value == "bar"
-    }) // 2
+    }) // 1
     funk.LastIndexOf([]string{"foo", "bar"}, "gilles") // -1
 
 see also, typesafe implementations: LastIndexOfInt_, LastIndexOfInt64_, LastIndexOfFloat32_, LastIndexOfFloat64_, LastIndexOfString_
