@@ -204,7 +204,7 @@ if the value cannot be found.
 
     // slice of string
     funk.LastIndexOf([]string{"foo", "bar", "bar"}, "bar") // 2
-    funk.LastIndexOf([]string{"foo", "bar"}, func(value string) bool {
+    funk.LastIndexOf([]string{"foo", "bar", "bar"}, func(value string) bool {
         return value == "bar"
     }) // 2
     funk.LastIndexOf([]string{"foo", "bar"}, "gilles") // -1
