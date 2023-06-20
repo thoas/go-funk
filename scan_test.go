@@ -103,6 +103,21 @@ func TestLast(t *testing.T) {
 	is.Equal(Last([]int{1, 2, 3, 4}), 4)
 }
 
+func TestElementAt(t *testing.T) {
+	is := assert.New(t)
+
+	for k, v := range map[int]interface{}{
+		-1: nil,
+		0:  1,
+		1:  2,
+		2:  3,
+		3:  4,
+		5:  nil,
+	} {
+		is.Equal(ElementAt([]int{1, 2, 3, 4}, k), v)
+	}
+}
+
 func TestTail(t *testing.T) {
 	is := assert.New(t)
 
