@@ -1,13 +1,14 @@
 package funk
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFillMismatchedTypes(t *testing.T) {
 	_, err := Fill([]string{"a", "b"}, 1)
-	assert.EqualError(t, err, "Cannot fill '[]string' with 'int'")
+	assert.EqualError(t, err, "cannot fill '[]string' with 'int'")
 }
 
 func TestFillUnfillableTypes(t *testing.T) {
@@ -23,7 +24,7 @@ func TestFillUnfillableTypes(t *testing.T) {
 
 	for _, unfillable := range types {
 		_, err := Fill(unfillable, 1)
-		assert.EqualError(t, err, "Can only fill slices and arrays")
+		assert.EqualError(t, err, "can only fill slices and arrays")
 	}
 }
 

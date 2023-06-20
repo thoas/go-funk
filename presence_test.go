@@ -55,17 +55,17 @@ func TestContains(t *testing.T) {
 	is.True(Contains(mapping, 1))
 	is.False(Contains(mapping, 2))
 
-	is.False(Contains(mapping, func (key int, val *Foo) bool {
+	is.False(Contains(mapping, func(key int, val *Foo) bool {
 		return key == 4
 	}))
-	is.True(Contains(mapping, func (key int, val *Foo) bool {
+	is.True(Contains(mapping, func(key int, val *Foo) bool {
 		return key == 1
 	}))
 
-	is.False(Contains(mapping, func (_ int, val *Foo) bool {
+	is.False(Contains(mapping, func(_ int, val *Foo) bool {
 		return val.FirstName == "NotPresent"
 	}))
-	is.True(Contains(mapping, func (_ int, val *Foo) bool {
+	is.True(Contains(mapping, func(_ int, val *Foo) bool {
 		return val.FirstName == "Harald"
 	}))
 }
@@ -103,11 +103,11 @@ func TestSome(t *testing.T) {
 	is.False(Some("zeeshan", "zi", "tam"))
 
 	persons := []Person{
-		Person{
+		{
 			name: "Zeeshan",
 			age:  23,
 		},
-		Person{
+		{
 			name: "Bob",
 			age:  26,
 		},
@@ -131,7 +131,7 @@ func TestIndexOf(t *testing.T) {
 	is := assert.New(t)
 
 	is.Equal(IndexOf([]string{"foo", "bar"}, "bar"), 1)
-	is.Equal(IndexOf([]string{"foo", "bar"}, func (value string) bool {
+	is.Equal(IndexOf([]string{"foo", "bar"}, func(value string) bool {
 		return value == "bar"
 	}), 1)
 
@@ -143,7 +143,7 @@ func TestLastIndexOf(t *testing.T) {
 	is := assert.New(t)
 
 	is.Equal(LastIndexOf([]string{"foo", "bar", "bar"}, "bar"), 2)
-	is.Equal(LastIndexOf([]string{"foo", "bar", "bar"}, func (value string) bool {
+	is.Equal(LastIndexOf([]string{"foo", "bar", "bar"}, func(value string) bool {
 		return value == "bar"
 	}), 2)
 	is.Equal(LastIndexOf([]int{1, 2, 2, 3}, 2), 2)

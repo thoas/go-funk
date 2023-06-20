@@ -128,10 +128,10 @@ func TestChainFilter_SideEffect(t *testing.T) {
 	type foo struct {
 		bar string
 	}
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, chain.Value())
 
 	filtered := chain.Filter(func(x *foo) bool {
 		x.bar = "__" + x.bar + "__"
@@ -140,8 +140,8 @@ func TestChainFilter_SideEffect(t *testing.T) {
 	is.Equal([]*foo{}, filtered.Value())
 
 	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, chain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestChainFlatten(t *testing.T) {
@@ -318,10 +318,10 @@ func TestChainMap_SideEffect(t *testing.T) {
 	type foo struct {
 		bar string
 	}
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, chain.Value())
 
 	mapped := chain.Map(func(x *foo) (string, bool) {
 		x.bar = "__" + x.bar + "__"
@@ -330,8 +330,8 @@ func TestChainMap_SideEffect(t *testing.T) {
 	is.Equal(map[string]bool{"__foo__": false, "__bar__": false}, mapped.Value())
 
 	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, chain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestChainReverse(t *testing.T) {
@@ -492,8 +492,8 @@ func TestChainContains(t *testing.T) {
 			Contains: "bar",
 		},
 		{
-			In:       []string{"foo", "bar"},
-			Contains: func (value string) bool {
+			In: []string{"foo", "bar"},
+			Contains: func(value string) bool {
 				return value == "bar"
 			},
 		},
@@ -526,8 +526,8 @@ func TestChainContains(t *testing.T) {
 			Contains: 2,
 		},
 		{
-			In:       map[int]*Foo{1: f, 3: c},
-			Contains: func (key int, foo *Foo) bool {
+			In: map[int]*Foo{1: f, 3: c},
+			Contains: func(key int, foo *Foo) bool {
 				return key == 3 && foo.FirstName == "Harald"
 			},
 		},
@@ -625,10 +625,10 @@ func TestChainFind_SideEffect(t *testing.T) {
 	type foo struct {
 		bar string
 	}
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, chain.Value())
 
 	result := chain.Find(func(x *foo) bool {
 		x.bar = "__" + x.bar + "__"
@@ -637,8 +637,8 @@ func TestChainFind_SideEffect(t *testing.T) {
 	is.Nil(result)
 
 	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, chain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestChainForEach(t *testing.T) {
@@ -690,20 +690,20 @@ func TestChainForEach_SideEffect(t *testing.T) {
 		bar string
 	}
 	var out []*foo
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, chain.Value())
 
 	chain.ForEach(func(x *foo) {
 		x.bar = "__" + x.bar + "__"
 		out = append(out, x)
 	})
-	is.Equal([]*foo{&foo{"__foo__"}, &foo{"__bar__"}}, out)
+	is.Equal([]*foo{{"__foo__"}, {"__bar__"}}, out)
 
 	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, chain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestChainForEachRight(t *testing.T) {
@@ -755,20 +755,20 @@ func TestChainForEachRight_SideEffect(t *testing.T) {
 		bar string
 	}
 	var out []*foo
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	chain := Chain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, chain.Value())
 
 	chain.ForEachRight(func(x *foo) {
 		x.bar = "__" + x.bar + "__"
 		out = append(out, x)
 	})
-	is.Equal([]*foo{&foo{"__bar__"}, &foo{"__foo__"}}, out)
+	is.Equal([]*foo{{"__bar__"}, {"__foo__"}}, out)
 
 	// Side effect: in and chain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, chain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, chain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestChainHead(t *testing.T) {
@@ -823,8 +823,8 @@ func TestChainIndexOf(t *testing.T) {
 			Item: "bar",
 		},
 		{
-			In:   []string{"foo", "bar"},
-			Item: func (value string) bool {
+			In: []string{"foo", "bar"},
+			Item: func(value string) bool {
 				return value == "bar"
 			},
 		},
@@ -907,8 +907,8 @@ func TestChainLastIndexOf(t *testing.T) {
 			Item: "bar",
 		},
 		{
-			In:   []string{"foo", "bar", "bar"},
-			Item: func (value string) bool {
+			In: []string{"foo", "bar", "bar"},
+			Item: func(value string) bool {
 				return value == "bar"
 			},
 		},

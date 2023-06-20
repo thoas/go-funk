@@ -128,10 +128,10 @@ func TestLazyFilter_SideEffect(t *testing.T) {
 	type foo struct {
 		bar string
 	}
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	LazyChain := LazyChain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
 
 	filtered := LazyChain.Filter(func(x *foo) bool {
 		x.bar = "__" + x.bar + "__"
@@ -140,8 +140,8 @@ func TestLazyFilter_SideEffect(t *testing.T) {
 	is.Equal([]*foo{}, filtered.Value())
 
 	// Side effect: in and LazyChain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestLazyFlatten(t *testing.T) {
@@ -318,10 +318,10 @@ func TestLazyMap_SideEffect(t *testing.T) {
 	type foo struct {
 		bar string
 	}
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	LazyChain := LazyChain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
 
 	mapped := LazyChain.Map(func(x *foo) (string, bool) {
 		x.bar = "__" + x.bar + "__"
@@ -330,8 +330,8 @@ func TestLazyMap_SideEffect(t *testing.T) {
 	is.Equal(map[string]bool{"__foo__": false, "__bar__": false}, mapped.Value())
 
 	// Side effect: in and LazyChain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestLazyReverse(t *testing.T) {
@@ -492,8 +492,8 @@ func TestLazyContains(t *testing.T) {
 			Contains: "bar",
 		},
 		{
-			In:       []string{"foo", "bar"},
-			Contains: func (value string) bool {
+			In: []string{"foo", "bar"},
+			Contains: func(value string) bool {
 				return value == "bar"
 			},
 		},
@@ -526,8 +526,8 @@ func TestLazyContains(t *testing.T) {
 			Contains: 2,
 		},
 		{
-			In:       map[int]*Foo{1: f, 3: c},
-			Contains: func (key int, foo *Foo) bool {
+			In: map[int]*Foo{1: f, 3: c},
+			Contains: func(key int, foo *Foo) bool {
 				return key == 3 && foo.FirstName == "Harald"
 			},
 		},
@@ -625,10 +625,10 @@ func TestLazyFind_SideEffect(t *testing.T) {
 	type foo struct {
 		bar string
 	}
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	LazyChain := LazyChain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
 
 	result := LazyChain.Find(func(x *foo) bool {
 		x.bar = "__" + x.bar + "__"
@@ -637,8 +637,8 @@ func TestLazyFind_SideEffect(t *testing.T) {
 	is.Nil(result)
 
 	// Side effect: in and LazyChain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestLazyForEach(t *testing.T) {
@@ -690,20 +690,20 @@ func TestLazyForEach_SideEffect(t *testing.T) {
 		bar string
 	}
 	var out []*foo
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	LazyChain := LazyChain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
 
 	LazyChain.ForEach(func(x *foo) {
 		x.bar = "__" + x.bar + "__"
 		out = append(out, x)
 	})
-	is.Equal([]*foo{&foo{"__foo__"}, &foo{"__bar__"}}, out)
+	is.Equal([]*foo{{"__foo__"}, {"__bar__"}}, out)
 
 	// Side effect: in and LazyChain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestLazyForEachRight(t *testing.T) {
@@ -755,20 +755,20 @@ func TestLazyForEachRight_SideEffect(t *testing.T) {
 		bar string
 	}
 	var out []*foo
-	in := []*foo{&foo{"foo"}, &foo{"bar"}}
+	in := []*foo{{"foo"}, {"bar"}}
 
 	LazyChain := LazyChain(in)
-	is.Equal([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
+	is.Equal([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
 
 	LazyChain.ForEachRight(func(x *foo) {
 		x.bar = "__" + x.bar + "__"
 		out = append(out, x)
 	})
-	is.Equal([]*foo{&foo{"__bar__"}, &foo{"__foo__"}}, out)
+	is.Equal([]*foo{{"__bar__"}, {"__foo__"}}, out)
 
 	// Side effect: in and LazyChain.Value modified
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, LazyChain.Value())
-	is.NotEqual([]*foo{&foo{"foo"}, &foo{"bar"}}, in)
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, LazyChain.Value())
+	is.NotEqual([]*foo{{"foo"}, {"bar"}}, in)
 }
 
 func TestLazyHead(t *testing.T) {
@@ -823,8 +823,8 @@ func TestLazyIndexOf(t *testing.T) {
 			Item: "bar",
 		},
 		{
-			In:   []string{"foo", "bar"},
-			Item: func (value string) bool {
+			In: []string{"foo", "bar"},
+			Item: func(value string) bool {
 				return value == "bar"
 			},
 		},
@@ -907,8 +907,8 @@ func TestLazyLastIndexOf(t *testing.T) {
 			Item: "bar",
 		},
 		{
-			In:   []string{"foo", "bar", "bar"},
-			Item: func (value string) bool {
+			In: []string{"foo", "bar", "bar"},
+			Item: func(value string) bool {
 				return value == "bar"
 			},
 		},

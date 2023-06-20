@@ -11,14 +11,14 @@ func Fill(in interface{}, fillValue interface{}) (interface{}, error) {
 	inValue := reflect.ValueOf(in)
 	inKind := inValue.Type().Kind()
 	if inKind != reflect.Slice && inKind != reflect.Array {
-		return nil, errors.New("Can only fill slices and arrays")
+		return nil, errors.New("can only fill slices and arrays")
 	}
 
 	inType := reflect.TypeOf(in).Elem()
 	value := reflect.ValueOf(fillValue)
 	if inType != value.Type() {
 		return nil, fmt.Errorf(
-			"Cannot fill '%s' with '%s'", reflect.TypeOf(in), value.Type(),
+			"cannot fill '%s' with '%s'", reflect.TypeOf(in), value.Type(),
 		)
 	}
 

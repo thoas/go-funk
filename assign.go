@@ -22,7 +22,7 @@ import (
 // is a short hand wrapper to discard error return
 func Set(in interface{}, val interface{}, path string) error {
 	if in == nil {
-		return errors.New("Cannot Set nil")
+		return errors.New("cannot set nil")
 	}
 	parts := []string{}
 	if path != "" {
@@ -36,7 +36,7 @@ func setByParts(in interface{}, val interface{}, parts []string) error {
 
 	if in == nil {
 		// nil interface can happen during traversing the path
-		return errors.New("Cannot traverse nil/uninitialized interface{}")
+		return errors.New("cannot traverse nil/uninitialized interface{}")
 	}
 
 	inValue := reflect.ValueOf(in)
