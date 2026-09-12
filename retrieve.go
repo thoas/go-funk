@@ -119,28 +119,18 @@ func get(value reflect.Value, path string, opts ...option) reflect.Value {
 }
 
 func isNilIndirection(v reflect.Value, name string) bool {
-	vType := v.Type()
-	for i := 0; i < vType.NumField(); i++ {
-		field := vType.Field(i)
-		if !isEmbeddedStructPointerField(field) {
-			return false
-		}
-
-		fieldType := field.Type.Elem()
-
-		_, found := fieldType.FieldByName(name)
-		if found {
-			return v.Field(i).IsNil()
-		}
-	}
-
-	return false
-}
-
-func isEmbeddedStructPointerField(field reflect.StructField) bool {
-	if !field.Anonymous {
+	field, ok := v.Type().FieldByName(name)
+	if !ok {
 		return false
 	}
-
-	return field.Type.Kind() == reflect.Ptr && field.Type.Elem().Kind() == reflect.Struct
+	for _, index := range field.Index {
+		if v.Kind() == reflect.Ptr {
+			if v.IsNil() {
+				return true
+			}
+			v = v.Elem()
+		}
+		v = v.Field(index)
+	}
+	return false
 }

@@ -134,3 +134,25 @@ func TestEmbeddedStructNotPointer(t *testing.T) {
 	root := RootStructNotPointer{}
 	is.Equal(Get(root, "EmbeddedField"), nil)
 }
+
+func TestGetPromotedFieldThroughNilPointer(t *testing.T) {
+	type Embedded struct{ Name string }
+	type WithPrefix struct {
+		ID int
+		*Embedded
+	}
+	type Nested struct{ *WithPrefix }
+	type Shadowed struct {
+		*Embedded
+		Name string
+	}
+	for _, value := range []interface{}{
+		WithPrefix{},
+		Nested{},
+		Nested{WithPrefix: &WithPrefix{}},
+	} {
+		assert.NotPanics(t, func() { assert.Nil(t, Get(value, "Name")) })
+	}
+	assert.Equal(t, "direct", Get(Shadowed{Name: "direct"}, "Name"))
+	assert.Equal(t, "promoted", Get(WithPrefix{Embedded: &Embedded{Name: "promoted"}}, "Name"))
+}
