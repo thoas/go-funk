@@ -207,6 +207,15 @@ func TestChunk(t *testing.T) {
 	is.Len(Chunk([]int{1, 2, 3}, 0), 3)
 }
 
+func TestChunkArray(t *testing.T) {
+	t.Run("partial final chunk", func(t *testing.T) {
+		assert.Equal(t, [][]int{{1, 2}, {3, 4}, {5}}, Chunk([5]int{1, 2, 3, 4, 5}, 2))
+	})
+	t.Run("empty array", func(t *testing.T) {
+		assert.Equal(t, [][]int{}, Chunk([0]int{}, 2))
+	})
+}
+
 func TestFlatten(t *testing.T) {
 	is := assert.New(t)
 

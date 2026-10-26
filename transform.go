@@ -22,6 +22,9 @@ func Chunk(arr interface{}, size int) interface{} {
 	arrValue := reflect.ValueOf(arr)
 
 	arrType := arrValue.Type()
+	if arrType.Kind() == reflect.Array {
+		arrType = reflect.SliceOf(arrType.Elem())
+	}
 
 	resultSliceType := reflect.SliceOf(arrType)
 
